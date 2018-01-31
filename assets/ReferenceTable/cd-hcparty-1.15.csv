@@ -1,0 +1,120 @@
+Code;Meaning English;Meaning Dutch;Meaning French;Meaning German;SNOMED-CT
+deptanatomopathology;anatomopathology;anatomo-pathologie;anatomopathologie;pathologische Anatomie 
+deptanesthesiology;anesthesiology;anesthesiologie;anesthésiologie;Anästhesiologe
+deptbacteriology;bacteriology;bacteriologie;bactériologie;Bakteriologie
+deptcardiology;cardiology;cardiologie;cardiologie;Kardiologie
+deptdermatology;dermatology;dermatologie;dermatologie;Dermatologie
+deptdietetics;dietetics;diëtetiek;diététique;Diätetik
+deptemergency;emergency;spoeddiensten;services d'urgence;Notfalldienst
+deptgastroenterology;gastroenterology;gastro-enterologie;gastroentérologie;Gastroenterologie
+deptgeneralpractice;general practice;algemene geneeskunde;médecine générale;Allgemeinmedizin
+deptgenetics;genetics;genetica;génétique;Genetik
+deptgeriatry;geriatry;geriatrie;gériatrie;Geriatrie
+deptgynecology;gynecology;gynaecologie;gynécologie;Gynäkologie
+depthematology;hematology;hematologie;hématologie;Hämatologie
+deptintensivecare;intensive care;intensieve zorgen;soins intensifs;Intensivmedizin
+deptkinesitherapy;kinesitherapy;kinesitherapie;kinésithérapie;Bewegungstherapie
+deptlaboratory;Laboratory service or department within an organisation;Laboratoriumdienst of -afdeling binnen een organisatie;Service / Département laboratoire au sein d'une organisation;Laboratorium Dienst/Abteilung in einer Organisation
+deptmedicine;internal medecine;interne geneeskunde;médicine interne;Innere Medizin
+deptmolecularbiology;molecular biology;moleculaire biologie;biologie moléculaire;Molekularbiologie
+deptneonatalogy;neonatalogy;neonatologie;néonatologie;Neonatologie
+deptnephrology;nephrology;nefrologie;néphrologie;Nephrologie
+deptneurology;neurology;neurologie;neurologie;Neurologie
+deptnte;nose-throat-ear;oto-rhino-laryngologie;oto-rhino-laryngologie;Otorhinolaryngologie
+deptnuclear;nuclear;nucleaire geneeskunde;médecine nucléaire;Nuklearmedizin
+deptoncology;oncology;oncologie;oncologie;Onkologie
+deptophtalmology;ophtalmology;oftalmologie;ophtalmologie;Augenheilkunde
+deptpediatry;pediatry;pediatrie;pédiatrie;Pädiatrie
+deptpharmacy;Pharmacy service or department within an organisation;Apotheekdienst of -afdeling binnen een organisatie;Service / Département pharmacie au sein d'une organisation;Pharmazie Dienst/Abteilung in einer Organisation
+deptphysiotherapy;physiotherapy;fysiotherapie;physiothérapie;Physiotherapie
+deptpneumology;pneumology;pulmonologie;pneumologie;Pulmonologie
+deptpsychiatry;psychiatry;psychiatrie;psychiatrie;Psychiatrie
+deptradiology;radiology;radiologie;radiologie;Radiologie
+deptradiotherapy;radiotherapy;radiotherapie;radiothérapie;Strahlentherapie
+deptrhumatology (deprecated);rhumatology;reumatologie;rhumatologie;Rheumatologie
+deptstomatology;stomatology;stomatologie;stomatologie;Stomatologie
+deptsurgery;surgery;chirurgie;chirurgie;Chirurgie
+depttoxicology;toxicology;toxicologie;toxicologie;Toxikologie
+depturology;urology;urologie;urologie;Urologie
+orghospital;hospital;ziekenhuis;hôpital;Krankenhaus
+orginsurance;insurance;verzekering;assurance;Versicherung
+orglaboratory;Independent laboratory;Onafhankelijk laboratorium;laboratoire indépendant;Unabhängiges Laboratorium
+orgpublichealth;public health organisation;openbare gezondheidsdienst;service public de santé;Gesundheitsbehörde
+persbiologist;medical laboratory technician;medisch laboratoriumtechnoloog;technicien de laboratoire médical;medizinischer Labortechniker
+persdentist;dentist;tandarts;dentiste;Zahnarzt
+persnurse;nurse;verpleegkundige;infirmier;Krankenpfleger/in
+persparamedical;paramedical;paramedisch personeel;personnel paramédical;medizinisches Hilfspersonal 
+perspharmacist;pharmacist;apotheker;pharmacien;Apotheker
+persphysician;physician;arts;médecin;Arzt
+perssocialworker;social worker;maatschappelijk werker;travailleur social;Sozialarbeiter
+perstechnician;Medical Imaging Technician;Technicus medische beeldvorming;Technicien d'imagerie médicale;medizinische Bildgebung Techniker
+persadministrative;administrative;administratieve medewerker;personnel admistratif;Büroangestellte(r) 
+persmidwife;midwife;vroedvrouw;sage-femme;Hebamme
+application;software application;softwaretoepassing;application logicielle;Softwareapplikation
+deptorthopedy;orthopedy;orthopedie;orthopédie;Orthopädie
+orgpractice;practice organisation;praktijk;cabinet;Praxis
+orgpharmacy;Independent pharmacy;Onafhankelijke apotheek;Pharmacie indépendante;Unabhängige Apotheke
+deptalgology;algology;algologie;algologie;Algologie
+deptcardiacsurgery;cardiac surgery;hartchirurgie;chirurgie cardiaque;Herzchirurgie
+depthandsurgery;hand surgery;handchirurgie;chirurgie de la main;Handchirurgie
+deptmaxillofacialsurgery;maxillofacial surgery;mond-, kaak- en aangezichtschirurgie;chirurgie maxillofaciale;Mund-Kiefer-Gesichtschirurgie 
+deptpediatricsurgery;pediatric surgery;kinderchirurgie;chirurgie pédiatrique;Kinderchirurgie 
+deptplasticandreparatorysurgery;plastic and reparatory surgery;plastische en reconstructieve chirurgie;chirurgie esthétique et réparatrice;plastische Chirurgie und Reparaturchirurgie
+deptthoracicsurgery;thoracic surgery;thoraxchirurgie;chirurgie thoracique;Thoraxchirurgie 
+deptvascularsurgery;vascular surgery;vasculaire chirurgie;chirurgie vasculaire;Vaskuläre Chirurgie
+deptvisceraldigestiveabdominalsurgery;visceral digestive abdominal surgery;digestieve/viscerale chirurgie/buikchirurgie;chirurgie abdominale, digestive et viscérale;Viszeralchirurgie/Abdominalchirurgie/Bauchchirurgie
+deptdentistry;dentistry;tandheelkunde;dentisterie;Zahnheilkunde
+deptdiabetology;diabetology;diabetologie;diabétologie;Diabetologie
+deptendocrinology;endocrinology;endocrinologie/hormonenleer;endocrinologie;Endokrinologie
+deptoccupationaltherapy;occupational therapy;ergotherapie;ergothérapie;Ergotherapie
+deptmajorburns;major burns;brandwondencentrum;grands brûlés;Zentrum für Schwerbrandverletzte
+deptinfectiousdisease;infectious disease;infectieziekte;maladie infectieuse;Infektionskrankheit 
+deptspeechtherapy;speech therapy;logopedie;logopédie;Sprachtherapie
+deptsportsmedecine;sports medecine;sportgeneeskunde;médecine des sports;Sportmedizin
+deptphysicalmedecine;physical medecine;fysische geneeskunde;médecine physique;physikalische Medizin
+depttropicalmedecine;tropical medecine;tropische geneeskunde;médecine tropicale;Tropenmedizin
+deptneurosurgery;neuro surgery;neurologie;neurologie;Neurologie
+deptnutritiondietetics;nutrition dietetics;diëtetiek ;diététique nutritionnelle;Diätetik
+deptobstetrics;obstetrics;verloskunde;obstétrique;Geburtshilfe
+deptchildandadolescentpsychiatry;child and adolescent psychiatry;kinder- en jeugdpsychiatrie;psychiatrie de l'enfant et de l'adolescent;Kinder-und Jugendpsychologie 
+deptpodiatry;podiatry;podiatrie;podiatrie;Podiatrie
+deptpsychology;psychology;psychologie;psychologie;Psychologie
+deptrevalidation;revalidation;revalidatie;rééducation;Rehabilitation
+deptsenology;senology;senologie;sénologie;Senologie
+deptsocialservice;social service;sociale dienst;service social;Sozialdienst
+deptpediatricintensivecare;pediatric intensive care;intensieve zorg voor kinderen;soins intensifs pédiatriques;Intensivpflege für Kinder
+deptpalliativecare;palliative care;palliatieve zorg;soins palliatifs;Palliativpflege
+deptrheumatology;rheumatology;reumatologie;rhumatologie;Rheumatologie
+persambulancefirstaid;ambulance first aid;ambulance eerste hulp;ambulance premier secours;Krankenwagen erste Hilfe
+persaudician;audician;audicien;audicien;Hörgeräteakustiker
+persaudiologist;audiologist;audioloog;audiologue;Audiologe
+perscaregiver;caregiver;mantelzorger;soignant informel;Pflegeperson
+persdietician;dietician;dietist;diététicien;Diätist
+perseducator;educator;opvoeder;éducateur;Erzieher
+perslogopedist;logopedist;logopedist;logopède;Logopäde
+persoccupationaltherapist;occupational therapist;ergotherapeut;ergothérapeute;Ergotherapeut
+persorthopedist (deprecated);orthopedist;orthopedist;orthopédiste;Orthopädist
+persorthoptist;orthoptist;orthoptist;orthoptiste;Orthoptist
+persoptician;optician;opticien;opticien;Optiker
+perspharmacyassistant;pharmacy assistant;apothekersassistent;assistant en pharmacie;Apothekenhelfer
+persphysiotherapist;physiotherapist;kinesitherapeut;kinésithérapeute;Krankengymnast
+perspodologist;podologist;podologist;podologue;Podologe
+perspracticalnurse;practical nurse;verzorgende;aide-soignante;Pfleger
+perspsychologist;psychologist;psycholoog;psychologue;Psychologe 
+orgprimaryhealthcarecenter;primary health care center;medisch huis;Maison médicale;Gesundheitspflege der ersten Linie
+guardpost;Guard post;wachtpost;poste de garde;Wachposten
+groupofphysicianssameaddress;Group of physicians same address;groepering van artsen zelfde adres;regroupement de médecins même adresse;Gruppierung von Ärzten gleiche Adresse
+groupofphysiciansdifferentaddress;Group of physicians different address;Groepering van artsen verschillend adres;Regroupement de médecins adresse différente;Gruppierung von Ärzten andere Adresse
+groupofnurses;Group of nurses;Groepering van verplegers;Regroupement d'infirmiers;Krankenpflegeverein
+certificateholder;Certificate holder;Houder van certificaat;Titulaire du certificat;Zertifikatsinhaber
+perstrussmaker;Truss maker;Bandagist;Bandagiste;Bandagist
+patient;Patient;Patient;Patient;Patient
+persorthotist;Orthotist;Orthopedische technieker;Orthésiste/Prothésiste;Orthopädietechniker
+perspatientdriver;Patient driver (not urgent);Ziekenvervoerder (niet urgent);Transporteur de patient (non urgent);Patientenfahrer (nicht dringend)
+orgprevention;Prevention organisation;Preventiedienst;Service de pévention;Präventionsdienst
+perspharmacistclinicalbiologist;pharmacist-clinical biologist;apotheker-klinisch bioloog;pharmacien-biologiste clinicien;Apotheker-klinische Biologe
+hub;hub;hub;hub;hub
+deptnursing;nursing;verpleegkunde;soins infirmiers;Krankenpflege
+persoraldentalhygienist;Oral dental hygienist;Mondhygiënist;Hygiéniste bucco-dentaire;Dentalhygieniker
+persclinicalpsychologist;Clinical psychologist;Klinisch psycholoog;Psychologue clinicien;Klinischer Psychologe
+persclinicalorthopedagogist;Clinical orthopedagogist;Klinisch orthopedagoog;Orthopédagogue clinicien;Klinischer Orthopädagoge

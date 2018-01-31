@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Medikit.Installer" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Company)" UpgradeCode="46c81c78-884c-473c-a999-042891cbf632">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="Medikit.Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="licenseAgreement.rtf" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Medikit.Installer" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <ComponentGroupRef Id="Medikit.Installer.Binaries"/>
+      <Component Id="RegisterChromeNativeHost">
+        <RegistryKey Root="HKCU"
+                     Key="Software\Google\Chrome\NativeMessagingHosts\medikit.authenticate"
+              Action="createAndRemoveOnUninstall">
+          <RegistryValue Type="string" Value="[INSTALLFOLDER]medikit.authenticate.manifest.json" KeyPath="yes"/>
+        </RegistryKey>        
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

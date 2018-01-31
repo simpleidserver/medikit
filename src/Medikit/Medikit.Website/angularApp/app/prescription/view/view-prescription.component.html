@@ -1,0 +1,35 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <ul>
+            <li><div class="mat-h1"><a [routerLink]="['/prescription']">{{ "prescriptions" | translate }}</a></div></li>
+            <li class="separator"><div class="mat-h1">\</div></li>
+            <li><div class="mat-h1">{{ 'prescription' | translate }}</div></li>
+        </ul>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <div fxFlex="30%">
+                <mat-card>
+                    <mat-card-content>
+                        <form>
+                            <mat-form-field appearance="outline">
+                                <mat-label>{{ "nb-prescriptions" | translate }}</mat-label>
+                                <input matInput type="number">
+                            </mat-form-field>
+                            <button mat-raised-button color="primary">{{ "update" | translate }}</button>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div fxFlex="70%">
+                <mat-card>
+                    <mat-card-content>
+                        <prescription-viewer [(pharmaPrescription)]="prescription"></prescription-viewer>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

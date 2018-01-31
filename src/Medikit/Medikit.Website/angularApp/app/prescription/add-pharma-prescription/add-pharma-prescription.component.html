@@ -1,0 +1,244 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <ul>
+            <li>
+                <div class="mat-h1">
+                    <a [routerLink]="['/prescription']">{{ "prescriptions" | translate }}</a>
+                </div>
+            </li>
+            <li class="separator"><div class="mat-h1">\</div></li>
+            <li>
+                <div class="mat-h1">
+                    {{ "add-prescription" | translate }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <mat-horizontal-stepper linear #stepper>
+            <mat-step>
+                <ng-template matStepLabel>{{ "patient" | translate }}</ng-template>
+                <form [formGroup]="patientFormGroup" fxLayout="column">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ "niss" | translate }}</mat-label>
+                        <input matInput placeholder="{{ 'enter-niss' | translate }}" formControlName="niss" required>
+                        <button mat-icon-button matSuffix (click)="checkNiss($event)">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <mat-error *ngIf="patientFormGroup.get('niss').hasError('required')">
+                            {{ "niss-required" | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="patientFormGroup.get('niss').hasError('pattern')">
+                            {{ "niss-invalid" | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="patientFormGroup.get('niss').errors && patientFormGroup.get('niss').errors.unknownNiss">
+                            {{ "niss-unknown" | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ "firstname" | translate }}</mat-label>
+                        <input matInput formControlName="firstname" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ "lastname" | translate }}</mat-label>
+                        <input matInput formControlName="lastname" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{ "birthdate" | translate }}</mat-label>
+                        <input matInput formControlName="birthdate" />
+                    </mat-form-field>
+                </form>
+                <div>
+                    <button mat-raised-button (click)="nextStep()" [disabled]="nextPatientFormBtnDisabled">{{ "next" | translate }}</button>
+                </div>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>{{ "medication" | translate }}</ng-template>
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <div fxFlex="50%">
+                        <!-- Search drug -->
+                        <form [formGroup]="drugSearchFormGroup" (submit)="refreshSearchDrug()">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>{{ "drug" | translate }}</mat-label>
+                                <input matInput placeholder="{{ 'enter-drug' | translate }}" formControlName="drugName">
+                                <mat-spinner diameter="20" matSuffix *ngIf="isLoadingDrugs"></mat-spinner>
+                                <button mat-icon-button matSuffix type="submit" *ngIf="!isLoadingDrugs">
+                                    <mat-icon>search</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </form>
+                        <mat-selection-list [(ngModel)]="selectedMedicinalPackages">
+                            <mat-accordion>
+                                <mat-expansion-panel *ngFor="let medicinalProduct of medicinalProducts;">
+                                    <mat-expansion-panel-header>
+                                        {{ medicinalProduct.Names | translateenum }}
+                                    </mat-expansion-panel-header>
+                                    <mat-list-option *ngFor="let package of medicinalProduct.Packages" [value]="package">
+                                        {{ package.PrescriptionNames | translateenum }} ({{ package.DeliveryMethods[0].Code }})
+                                    </mat-list-option>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </mat-selection-list>
+                        <mat-paginator [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10]"></mat-paginator>
+                        <form [formGroup]="drugFormGroup" (submit)="confirmAddDrug()">
+                            <mat-accordion>
+                                <!-- Posology -->
+                                <mat-expansion-panel hideToggle>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{ 'posology' | translate }}
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+
+                                        </mat-panel-description>
+                                        <mat-icon matTooltip="{{ 'posology-info' | translate }}">info</mat-icon>
+                                    </mat-expansion-panel-header>
+                                    <mat-checkbox formControlName="isPosologyFreeText">{{ "posology-free-text" | translate }}</mat-checkbox>
+                                    <!-- Free text - Posology -->
+                                    <div *ngIf="drugFormGroup.get('isPosologyFreeText').value">
+                                        <mat-form-field appearance="outline" class="full-width">
+                                            <mat-label>{{ "posology" | translate }}</mat-label>
+                                            <textarea matInput formControlName="posologyText"></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- Structured - Posology -->
+                                    <div *ngIf="!drugFormGroup.get('isPosologyFreeText').value" formGroupName="structuredPosology">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>{{ "unit" | translate }}</mat-label>
+                                            <mat-select formControlName="unit">
+                                                <mat-option *ngFor="let unit of administrationUnits" [value]="unit">
+                                                    {{ unit.Translations | translateenum }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <h4>{{ 'pharma-product-intake' | translate }}</h4>
+                                        <div fxLayout="row" fxLayoutGap="10px">
+                                            <mat-form-field appearance="outline" fxFlex="50%">
+                                                <mat-label>{{ "low" | translate }}</mat-label>
+                                                <input matInput placeholder="{{ 'enter-low' | translate }}" type="number" formControlName="low">
+                                                <mat-icon matSuffix matTooltip="{{ 'low-pharma-product-unit-per-intake' | translate }}">info</mat-icon>
+                                            </mat-form-field>
+                                            <mat-form-field appearance="outline" fxFlex="50%">
+                                                <mat-label>{{ "high" | translate }}</mat-label>
+                                                <input matInput placeholder="{{ 'enter-high' | translate }}" type="number" formControlName="high">
+                                                <mat-icon matSuffix matTooltip="{{ 'high-pharma-product-unit-per-intake' | translate }}">info</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                        <h4>{{ 'intake-in-given-period' | translate }}</h4>
+                                        <div fxLayout="row" fxLayoutGap="10px" formGroupName="takes">
+                                            <mat-form-field appearance="outline" fxFlex="50%">
+                                                <mat-label>{{ 'low' | translate }}</mat-label>
+                                                <input matInput placeholder="{{ 'enter-low' | translate }}" type="number" formControlName="low">
+                                                <mat-icon matSuffix matTooltip="{{ 'low-number-intake' | translate }}">info</mat-icon>
+                                            </mat-form-field>
+                                            <mat-form-field appearance="outline" fxFlex="50%">
+                                                <mat-label>{{ 'high' | translate }}</mat-label>
+                                                <input matInput placeholder="{{ 'enter-high' | translate }}" type="number" formControlName="high">
+                                                <mat-icon matSuffix matTooltip="{{ 'high-number-intake' | translate }}">info</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <!-- Duration -->
+                                <mat-expansion-panel hideToggle>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{ 'duration' | translate }}
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+
+                                        </mat-panel-description>
+                                        <mat-icon matTooltip="{{ 'duration-info' | translate }}">info</mat-icon>
+                                    </mat-expansion-panel-header>
+                                    <div formGroupName="duration" fxLayout="row" fxLayoutGap="10px">
+                                        <mat-form-field appearance="outline" fxFlex="50%">
+                                            <mat-label>{{ "duration" | translate }}</mat-label>
+                                            <input matInput placeholder="{{ 'enter-duration' | translate }}" type="number" formControlName="value">
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" fxFlex="50%">
+                                            <mat-label>{{ "duration-unit" | translate }}</mat-label>
+                                            <mat-select formControlName="unit">
+                                                <mat-option *ngFor="let unit of timeUnits" [value]="unit.Code">
+                                                    {{ unit.Translations | translateenum }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-expansion-panel>
+                                <!-- Instructions -->
+                                <mat-expansion-panel hideToggle>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{ 'instructions' | translate }}
+                                        </mat-panel-title>
+                                        <mat-panel-description>
+
+                                        </mat-panel-description>
+                                        <mat-icon matTooltip="{{ 'instructions-info' | translate }}">info</mat-icon>
+                                    </mat-expansion-panel-header>
+                                    <!-- Instruction for patient -->
+                                    <mat-form-field appearance="outline" class="full-width" floatLabel="never">
+                                        <mat-label>{{ "instruction-for-patient" | translate }}</mat-label>
+                                        <textarea matInput formControlName="instructionforpatient"></textarea>
+                                    </mat-form-field>
+                                    <!-- Instruction for reimbursement -->
+                                    <mat-form-field appearance="outline" class="full-width" floatLabel="never">
+                                        <mat-label>{{ "instruction-for-reimbursement" | translate }}</mat-label>
+                                        <textarea matInput formControlName="instructionforreimbursement"></textarea>
+                                    </mat-form-field>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            <button mat-raised-button color="primary">{{ "add" | translate }}</button>
+                        </form>
+                    </div>
+                    <div fxFlex="50%">
+                        <mat-card *ngFor="let prescribePharmadDrug of prescribePharmadDrugs; let index = index;">
+                            <mat-card-header>
+                                <mat-card-title>{{ prescribePharmadDrug.PackageNames | translateenum }} ({{ prescribePharmadDrug.PackageCode }})</mat-card-title>
+                                <span class="spacer"></span>
+                                <button mat-icon-button (click)="deleteDrugPrescription(prescribePharmadDrug.TechnicalId)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <h4>{{ 'posology' | translate }}</h4>
+                                <div *ngIf="prescribePharmadDrug.Posology.Type == 'structured'">
+                                    <p>
+                                        Unit per intake <b>{{ getAdministrationUnitTranslations(prescribePharmadDrug.Posology.Unit) | translateenum }}</b>
+                                    </p>
+                                    <p>
+                                        Nb product intake <b>[{{ prescribePharmadDrug.Posology.LowPharmaUnitsPerTakes }} - {{ prescribePharmadDrug.Posology.HighPharmaUnitsPerTakes }}]</b>
+                                    </p>
+                                    <p>
+                                        Nb take <b>[{{ prescribePharmadDrug.Posology.Takes.LowNumberTakes }} - {{ prescribePharmadDrug.Posology.Takes.HighNumberTakes }}]</b>
+                                    </p>
+                                </div>
+                                <div *ngIf="prescribePharmadDrug.Posology.Type == 'freetext'">
+                                    {{ prescribePharmadDrug.Posology.Content }}
+                                </div>
+                                <h4>{{ 'duration' | translate }}</h4>
+                                <div *ngIf="prescribePharmadDrug.Duration">
+                                    <span>{{ prescribePharmadDrug.Duration.Value }} {{ getTimeUnitTranslations(prescribePharmadDrug.Duration.Unit) | translateenum }}</span>
+                                </div>
+                                <h4>{{ 'instructions' | translate }}</h4>
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "instruction-for-patient" | translate }}</mat-label>
+                                    <textarea matInput disabled>{{ prescribePharmadDrug.InstructionForPatient }}</textarea>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "instruction-for-reimbursement" | translate }}</mat-label>
+                                    <textarea matInput disabled>{{ prescribePharmadDrug.InstructionForReimbursement }}</textarea>
+                                </mat-form-field>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+                <div>
+                    <button mat-raised-button (click)="previousStep()">{{ "back" | translate }}</button>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+</div>

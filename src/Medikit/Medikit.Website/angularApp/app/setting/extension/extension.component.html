@@ -1,0 +1,68 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <ul>
+            <li>
+                <div class="mat-h1">
+                    <a [routerLink]="['/setting']">{{ "settings" | translate }}</a>
+                </div>
+            </li>
+            <li class="separator"><div class="mat-h1">\</div></li>
+            <li>
+                <div class="mat-h1">
+                    {{ "extension" | translate }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
+        <mat-card *ngIf="!isExtensionInstalled">
+            <mat-card-content>
+                <button mat-raised-button color="primary">{{ "download-extension" | translate }}</button>
+            </mat-card-content>
+        </mat-card>
+        <div *ngIf="isExtensionInstalled" fxLayout="row" fxLayoutGap="50px">
+            <mat-card fxFlex="50%">
+                <mat-card-header>
+                    <mat-card-title>{{ "update-profession" }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="medicalProfessionForm" (ngSubmit)="onSubmitMedicalProfession(medicalProfessionForm.value)" fxLayout="column">
+                        <mat-form-field>
+                            <mat-label>{{ "choose-medical-profession" }}</mat-label>
+                            <mat-select formControlName="profession">
+                                <mat-option *ngFor="let medicalProfession of medicalProfessions" [value]="medicalProfession.namespace">
+                                    {{ medicalProfession.displayName }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button mat-raised-button color="primary">{{ "update" | translate }}</button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex="50%">
+                <mat-card-header>
+                    <mat-card-title>{{ "update-identity-certificate" }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="identityCertificateForm" (ngSubmit)="onSubmitIdentityCertificate(identityCertificateForm.value)" fxLayout="column">
+                        <mat-form-field>
+                            <mat-label>{{ "choose-identity-certificate" }}</mat-label>
+                            <mat-select formControlName="certificate">
+                                <mat-option *ngFor="let certificate of certificates" [value]="certificate">
+                                    {{ certificate }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>{{ "password" | translate }}</mat-label>
+                            <input type="password" matInput formControlName="password">
+                        </mat-form-field>
+                        <button mat-raised-button color="primary">{{ "update" | translate }}</button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <div class="mat-h1">{{ "settings" | translate }}</div>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-card fxFlex="20%">
+                <mat-card-content class="tile-content">
+                    <button mat-fab color="primary" [routerLink]="['/setting/extension']">
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

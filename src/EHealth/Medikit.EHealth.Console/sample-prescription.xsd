@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ehealth.fgov.be/standards/kmehr/schema/v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="kmehrmessage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="header">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="standard">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="cd">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:unsignedInt">
+                            <xs:attribute name="S" type="xs:string" use="required" />
+                            <xs:attribute name="SV" type="xs:decimal" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="unbounded" name="id">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="S" type="xs:string" use="required" />
+                      <xs:attribute name="SV" type="xs:string" use="required" />
+                      <xs:attribute name="SL" type="xs:string" use="optional" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="date" type="xs:date" />
+              <xs:element name="time" type="xs:time" />
+              <xs:element name="sender">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="hcparty">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="id">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:unsignedLong">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="cd">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" name="name" type="xs:string" />
+                          <xs:element minOccurs="0" name="firstname" type="xs:string" />
+                          <xs:element minOccurs="0" name="familyname" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="recipient">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="hcparty">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="id">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="cd">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="name" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="externalsource">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="source">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="cd">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="version" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="folder">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedByte">
+                      <xs:attribute name="S" type="xs:string" use="required" />
+                      <xs:attribute name="SV" type="xs:decimal" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="patient">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="id">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:unsignedLong">
+                            <xs:attribute name="S" type="xs:string" use="required" />
+                            <xs:attribute name="SV" type="xs:decimal" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="firstname" type="xs:string" />
+                    <xs:element name="familyname" type="xs:string" />
+                    <xs:element name="birthdate">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="date" type="xs:date" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="sex">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="cd">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="transaction">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="id">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:unsignedByte">
+                            <xs:attribute name="S" type="xs:string" use="required" />
+                            <xs:attribute name="SV" type="xs:decimal" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="cd">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="S" type="xs:string" use="required" />
+                            <xs:attribute name="SV" type="xs:decimal" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="date" type="xs:date" />
+                    <xs:element name="time" type="xs:time" />
+                    <xs:element name="author">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="hcparty">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="id">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:unsignedLong">
+                                        <xs:attribute name="S" type="xs:string" use="required" />
+                                        <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="cd">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="S" type="xs:string" use="required" />
+                                        <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="name" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="iscomplete" type="xs:boolean" />
+                    <xs:element name="isvalidated" type="xs:boolean" />
+                    <xs:element name="expirationdate" type="xs:date" />
+                    <xs:element name="heading">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="id">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:unsignedByte">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="cd">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="S" type="xs:string" use="required" />
+                                  <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="item">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="id">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:unsignedByte">
+                                        <xs:attribute name="S" type="xs:string" use="required" />
+                                        <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="cd">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="S" type="xs:string" use="required" />
+                                        <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element maxOccurs="unbounded" name="content">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" name="cd">
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                              <xs:attribute name="S" type="xs:string" use="required" />
+                                              <xs:attribute name="SL" type="xs:string" use="required" />
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element minOccurs="0" name="medicinalproduct">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="intendedcd">
+                                              <xs:complexType>
+                                                <xs:simpleContent>
+                                                  <xs:extension base="xs:unsignedInt">
+                                                    <xs:attribute name="S" type="xs:string" use="required" />
+                                                    <xs:attribute name="SV" type="xs:string" use="required" />
+                                                  </xs:extension>
+                                                </xs:simpleContent>
+                                              </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="intendedname" type="xs:string" />
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="beginmoment">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="date" type="xs:date" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="lifecycle">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="cd">
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute name="S" type="xs:string" use="required" />
+                                              <xs:attribute name="SV" type="xs:decimal" use="required" />
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="quantity">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="decimal" type="xs:unsignedByte" />
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="posology">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="text">
+                                        <xs:complexType>
+                                          <xs:simpleContent>
+                                            <xs:extension base="xs:string">
+                                              <xs:attribute name="L" type="xs:string" use="required" />
+                                            </xs:extension>
+                                          </xs:simpleContent>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

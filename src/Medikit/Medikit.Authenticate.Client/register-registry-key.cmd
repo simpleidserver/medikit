@@ -1,0 +1,1 @@
+REG ADD "HKCU\Software\Google\Chrome\NativeMessagingHosts\medikit.authenticate" /ve /t REG_SZ /d "C:\Projects\medikit\src\Medikit\Medikit.Authenticate.Client\medikit.authenticate.manifest.json" /f

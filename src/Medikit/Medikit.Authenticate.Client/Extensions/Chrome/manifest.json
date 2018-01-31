@@ -1,0 +1,25 @@
+{
+    "name": "Medikit extension",
+    "version": "1.0.0",
+    "minimum_chrome_version": "40.0",
+    "manifest_version": 2,
+    "description": "Authenticate with your EID or certificate against EHEALTH",
+    "icons": {
+    },
+    "content_scripts": [{
+        "matches": [
+			"https://medikit.be/*", 
+			"http://localhost:8080/*", 
+			"http://simpleidserver.northeurope.cloudapp.azure.com/medikit/*", 
+			"https://simpleidserver.northeurope.cloudapp.azure.com/medikit/*"
+		],
+        "js": ["content.js"],
+        "run_at": "document_start",
+        "all_frames": true
+    }],
+    "background": {
+        "scripts": ["background.js"],
+		"persistent": false
+    },
+    "permissions": ["nativeMessaging"]
+}

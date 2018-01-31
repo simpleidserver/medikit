@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\EID\Medikit.EID\Medikit.EID.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\KGSS\Store\" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,2 @@
+xsd /c cd-1_30.xsd dt-1_30.xsd id-1_30.xsd kmehr_elements-1_30.xsd ..\..\external\XSD\xmldsig-core-schema.xsd ..\..\external\XSD\xenc-schema.xsd /n:Medikit.EHealth.Kmehr.Xsd
+rename xenc-schema.cs KmehrSchema.cs
