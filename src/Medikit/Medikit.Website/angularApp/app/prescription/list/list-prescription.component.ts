@@ -42,10 +42,8 @@ export class ListPrescriptionComponent implements OnInit {
         }
 
         const self: any = this;
-        this.medikitExtensionService.getEhealthCertificateAuth().then(function () {
+        this.medikitExtensionService.getEhealthCertificateAuth().subscribe(function () {
             self.isEhealthSessionActive = true;
-        }).catch(function () {
-
         });
     }
 

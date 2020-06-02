@@ -20,8 +20,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <PowershellScript>$(MSBuildThisFileDirectory)init.ps1</PowershellScript>
-    <InputDir>..\Medikit.Authenticate.Client</InputDir>
-    <OutputFile>$(MSBuildThisFileDirectory)assets.wxs</OutputFile>
+    <InputDir>$(ProjectDir)..\Medikit.Authenticate.Client</InputDir>
+    <OutputFile>$(ProjectDir)assets.wxs</OutputFile>
+    <FilterXslt>$(ProjectDir)FilterBinaries.xslt</FilterXslt>
     <DefineConstants>ProductVersion=1.0.0.0;Company=SimpleIdServer;Medikit.Installer=$(InputDir)\bin\release\netcoreapp3.1\publish</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FilterBinaries.xslt" />
     <Content Include="init.ps1" />
     <Content Include="licenseAgreement.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -46,6 +48,6 @@
     <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
   </Target>
   <Target Name="BeforeBuild">
-    <Exec Command="powershell -executionpolicy bypass -NoProfile -NoLogo $(PowershellScript) '$(InputDir)' '$(OutputFile)'" />
+    <Exec Command="powershell -executionpolicy bypass -NoProfile -NoLogo $(PowershellScript) '$(InputDir)' '$(OutputFile)' '$(FilterXslt)'" />
   </Target>
 </Project>

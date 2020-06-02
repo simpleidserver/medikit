@@ -1,0 +1,14 @@
+[Unit]
+Description=Medikit API
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/dotnet /home/ftpuser/src/build/results/services/Medikit.Api.Host/Medikit.Api.Host.dll --server.urls="http://*:7000"
+KillMode=process
+TimeoutStopSec=5s
+Restart=always
+WorkingDirectory=/home/ftpuser/src/build/results/services/Medikit.Api.Host
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target

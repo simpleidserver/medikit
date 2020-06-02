@@ -31,10 +31,10 @@ namespace Medikit.Api.Host
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()));
-            var userProfile = Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), "ehealth", "keystore");
+            var certificatesPath = Path.Combine(_env.ContentRootPath, "Certificates");
             services.AddMedikitApiApplication(eheathCallback: o =>
             {
-                o.OrgCertificateStore = Path.Combine(userProfile, "CBE=0543979265 20200417-143522.acc-p12");
+                o.OrgCertificateStore = Path.Combine(certificatesPath, "CBE=0543979265 20200417-143522.acc-p12");
                 o.OrgCertificateStorePassword = "AJH9ka/fh%.?75WF";
             })
                 .ImportTableReference(Path.Combine(Directory.GetCurrentDirectory(), "ReferenceTables"))

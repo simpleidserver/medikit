@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { Component, Input, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
 import { TranslateService } from "@ngx-translate/core";
 import { Translation } from '@app/Translation';
@@ -7,7 +7,6 @@ import { formatDate } from "@angular/common";
 var PDFObject = require('pdfobject');
 var jsPDF = require('jspdf');
 var JsBarCode = require('jsbarcode');
-var { createCanvas } = require("canvas");
 
 @Component({
     selector: 'prescription-viewer',
@@ -16,6 +15,8 @@ var { createCanvas } = require("canvas");
 export class PrescriptionViewerComponent implements OnInit {
     private _prescription: PharmaPrescription;
     private _nbPrescriptions: number = 1;
+    @ViewChild('barcode')
+    barCodeCanvas: ElementRef<HTMLCanvasElement>;
 
     constructor(private translateService: TranslateService) { }
 
@@ -59,9 +60,8 @@ export class PrescriptionViewerComponent implements OnInit {
         const medicalPrescriptionCellWidth: number = 30;
         const txtPaddingLeft: number = 5;
         const txtPaddingTop: number = 10;
-        var canvas = createCanvas();
-        JsBarCode(canvas, "BE" + this._prescription.Type + this._prescription.Id);
-        var url = canvas.toDataURL("image/jpeg");
+        JsBarCode(this.barCodeCanvas.nativeElement, "BE" + this._prescription.Type + this._prescription.Id);
+        var url = this.barCodeCanvas.nativeElement.toDataURL("image/jpeg");
         var doc = new jsPDF('p', 'px');
         var pageWidth = doc.internal.pageSize.getWidth();
         var widthPrescription = (pageWidth / 2) - margin;

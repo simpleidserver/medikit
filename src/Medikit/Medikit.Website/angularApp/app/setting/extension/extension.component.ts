@@ -35,12 +35,12 @@ export class ExtensionComponent implements OnInit {
             this.isExtensionInstalled = false;
         }
 
-        this.medikitExtensionService.getMedicalProfessions().then(function (e: any) {
+        this.medikitExtensionService.getMedicalProfessions().subscribe(function (e: any) {
             self.medicalProfessionForm.controls['profession'].setValue(e.content['current_profession']);
             e.content['professions'].forEach((m : any) => {
                 self.medicalProfessions.push(new MedicalProfession(m['display_name'], m['namespace']));
             });
-            self.medikitExtensionService.getIdentityCertificates().then(function (e: any) {
+            self.medikitExtensionService.getIdentityCertificates().subscribe(function (e: any) {
                 self.identityCertificateForm.controls['certificate'].setValue(e.content['current_certificate']);
                 self.certificates = e.content['certificates'];
             });
@@ -49,7 +49,7 @@ export class ExtensionComponent implements OnInit {
 
     onSubmitMedicalProfession(form: any) {
         const self = this;
-        this.medikitExtensionService.chooseMedicalProfession(form.profession).then(function (e: any) {
+        this.medikitExtensionService.chooseMedicalProfession(form.profession).subscribe(function (e: any) {
             if (e.type === 'error') {
                 self.snackBar.open(self.translateService.instant('profession-not-updated'), self.translateService.instant('undo'), {
                     duration: 2000,
@@ -64,7 +64,7 @@ export class ExtensionComponent implements OnInit {
 
     onSubmitIdentityCertificate(form: any) {
         const self = this;
-        this.medikitExtensionService.chooseIdentityCertificate(form.certificate, form.password).then(function (e: any) {
+        this.medikitExtensionService.chooseIdentityCertificate(form.certificate, form.password).subscribe(function (e: any) {
             if (e.type === 'error') {
                 self.snackBar.open(self.translateService.instant('identity-certificate-not-updated'), self.translateService.instant('undo'), {
                     duration: 2000,

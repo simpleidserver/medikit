@@ -26,12 +26,12 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <ComponentGroupRef Id="Medikit.Installer.Binaries"/>
-      <Component Id="RegisterChromeNativeHost">
-        <RegistryKey Root="HKCU"
-                     Key="Software\Google\Chrome\NativeMessagingHosts\medikit.authenticate"
-              Action="createAndRemoveOnUninstall">
-          <RegistryValue Type="string" Value="[INSTALLFOLDER]medikit.authenticate.manifest.json" KeyPath="yes"/>
-        </RegistryKey>        
+      <Component Id="WindowsService">
+        <File Name="Medikit.Authenticate.Client.exe" Source="$(var.Medikit.Installer)\Medikit.Authenticate.Client.exe" Vital="yes" KeyPath="yes" />
+        <ServiceInstall Type="ownProcess" Vital="yes" Name="Medikit Service" DisplayName="Medikit Service" Start="auto" ErrorControl="ignore" Interactive="no">
+          <ServiceConfig DelayedAutoStart="yes" OnInstall="yes" OnReinstall="no" />
+        </ServiceInstall>
+        <ServiceControl Id="StartService" Start="install" Remove="uninstall" Name="Medikit Service" Wait="no" />
       </Component>
 		</ComponentGroup>
 	</Fragment>
