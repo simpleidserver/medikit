@@ -1,6 +1,6 @@
 # Medikit
 
-[![Build status](https://ci.appveyor.com/api/projects/status/shtqlxhbda6gtdag?svg=true)](https://ci.appveyor.com/project/simpleidserver/medikit)
+[![Build status](https://ci.appveyor.com/api/projects/status/9o0464me7554nla1?svg=true)](https://ci.appveyor.com/project/simpleidserver/medikit)
 
 ## Contributing
 

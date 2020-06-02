@@ -17,3 +17,5 @@ test: off
 artifacts:
 - path: build\results\services\**\*.*
   name: Services
+- path: build\results\*.msi
+  name: Installer
