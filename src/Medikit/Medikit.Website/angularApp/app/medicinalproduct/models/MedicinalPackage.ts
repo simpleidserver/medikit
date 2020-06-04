@@ -1,4 +1,4 @@
-﻿import { Translation } from "@app/Translation";
+﻿import { Translation } from "@app/infrastructure/Translation";
 import { MedicinalDeliveryMethod } from "./MedicinalDeliveryMethod";
 
 export class MedicinalPackage {

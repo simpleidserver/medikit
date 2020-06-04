@@ -1,8 +1,13 @@
 @mixin app-theme($theme) {
     $primary: map-get($theme, primary);
+    $background: map-get($theme, background);
 
     .is-active {
         background-color: rgb(245, 245, 245) !important;
+    }
+
+    .active {
+        background: mat-color($background, 'hover');
     }
 
     .breadcrumb {

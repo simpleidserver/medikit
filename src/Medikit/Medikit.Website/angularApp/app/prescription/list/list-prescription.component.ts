@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { MedikitExtensionService } from '../../services/medikitextension.service';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
 import { LoadPharmaPrescriptions } from './actions/pharma-prescription';
 import { PharmaPrescriptionsState } from './states/pharma-prescription-state';
 

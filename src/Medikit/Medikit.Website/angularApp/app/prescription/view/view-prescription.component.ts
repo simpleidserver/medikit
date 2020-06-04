@@ -4,7 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { PharmaPrescription } from '../models/pharma-prescription';
 import { LoadPharmaPrescription } from './actions/pharma-prescription';
 import { PharmaPrescriptionState } from './states/pharma-prescription-state';
-import { MedikitExtensionService } from '../../services/medikitextension.service';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
 

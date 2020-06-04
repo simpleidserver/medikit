@@ -7,10 +7,22 @@
         <span class="spacer"></span>
         <button mat-button [matMenuTriggerFor]="languages">{{ "languages" | translate }}</button>
         <mat-menu #languages="matMenu">
-            <button mat-menu-item (click)="chooseLanguage('fr')">{{ "french" | translate }}</button>
-            <button mat-menu-item (click)="chooseLanguage('nl')">{{ "dutch" | translate }}</button>
-            <button mat-menu-item (click)="chooseLanguage('en')">{{ "english" | translate }}</button>
+            <button mat-menu-item (click)="chooseLanguage('fr')" [class.active]="activeLanguage === 'fr'">{{ "french" | translate }}</button>
+            <button mat-menu-item (click)="chooseLanguage('nl')" [class.active]="activeLanguage === 'nl'">{{ "dutch" | translate }}</button>
+            <button mat-menu-item (click)="chooseLanguage('en')" [class.active]="activeLanguage === 'en'">{{ "english" | translate }}</button>
         </mat-menu>
+        <div *ngIf="isConnected">
+            <button mat-button [matMenuTriggerFor]="welcomeMenu">
+                {{ "welcome" | translate:{name:name} }}
+            </button>
+            <mat-menu #welcomeMenu="matMenu">
+                <button mat-menu-item (click)="disconnect()">{{ "disconnect" | translate }}</button>
+            </mat-menu>
+        </div>
+        <div *ngIf="!isConnected">
+            <button mat-raised-button color="primary" (click)="login()">{{ "authenticate" | translate }}</button>
+            <button mat-raised-button color="primary" (click)="chooseSession()">{{ "choose-session" | translate }}</button>
+        </div>
     </mat-toolbar>
     <mat-sidenav-container class="sidenav-container">
         <mat-sidenav class="sidenav" #sidenav mode="side" opened [fixedInViewport]="false" [fixedTopGap]="0" [fixedBottomGap]="0">

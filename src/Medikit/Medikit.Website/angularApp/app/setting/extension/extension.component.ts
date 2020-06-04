@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MedikitExtensionService } from '../../services/medikitextension.service';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';

@@ -1,5 +1,5 @@
 ﻿import { ReferenceTableRecord } from "./reference-table-record";
-import { Translation } from "@app/Translation";
+import { Translation } from "@app/infrastructure/Translation";
 
 export class ReferenceTable {
     constructor() {

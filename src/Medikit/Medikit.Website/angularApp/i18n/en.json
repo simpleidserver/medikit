@@ -1,4 +1,14 @@
 {
+  "welcome": "Welcome {{name}}",
+  "disconnect": "Disconnect",
+  "authenticate": "Authenticate",
+  "choose-session": "Choose session",
+  "languages": "Languages",
+  "french": "French",
+  "dutch": "Dutch",
+  "english": "English",
+  "prescriptions": "Prescriptions",
+  "home": "Home",
   "patient": "Patient",
   "medication": "Medication",
   "drug": "Drug"

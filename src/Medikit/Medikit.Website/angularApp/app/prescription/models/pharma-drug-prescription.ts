@@ -1,6 +1,6 @@
 ﻿import { PharmaPosology, PharmaPosologyFreeText } from "./pharma-posology";
 import { PharmaDuration } from "./pharma-duration";
-import { Translation } from "@app/Translation";
+import { Translation } from "@app/infrastructure/Translation";
 
 export class PharmaDrugPrescription {
     constructor() {

@@ -8,7 +8,7 @@ import { SearchMedicinalProduct } from '@app/medicinalproduct/models/SearchMedic
 import { MedicinalProductService } from '@app/medicinalproduct/services/medicinalproduct-service';
 import { ReferenceTableRecord } from '@app/referencetable/models/reference-table-record';
 import { ReferenceTableService } from '@app/referencetable/services/reference-table-service';
-import { Translation } from '@app/Translation';
+import { Translation } from "@app/infrastructure/Translation";
 import { ScannedActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';

@@ -4,6 +4,7 @@
     <TypeScriptToolsVersion>3.6</TypeScriptToolsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="angularApp\app\auth.config.ts" />
     <None Remove="angularApp\app\prescription\view\view-prescription.component.ts" />
     <None Remove="angularApp\app\services\medikitextension.service.ts" />
   </ItemGroup>
@@ -14,6 +15,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="angularApp\app\auth.config.ts" />
     <TypeScriptCompile Include="angularApp\app\prescription\view\view-prescription.component.ts" />
     <TypeScriptCompile Include="angularApp\app\services\medikitextension.service.ts" />
   </ItemGroup>

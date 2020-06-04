@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { TranslateEnumPipe } from '@app/pipes/translateenum.pipe';
-import { MaterialModule } from '@app/shared/material.module';
-import { SharedModule } from '@app/shared/shared.module';
+import { TranslateEnumPipe } from '@app/infrastructure/pipes/translateenum.pipe';
+import { MaterialModule } from '@app/infrastructure/material.module';
+import { SharedModule } from '@app/infrastructure/shared.module';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';

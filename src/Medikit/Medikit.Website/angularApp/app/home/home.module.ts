@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MaterialModule } from '@app/shared/material.module';
-import { SharedModule } from '@app/shared/shared.module';
+import { MaterialModule } from '@app/infrastructure/material.module';
+import { SharedModule } from '@app/infrastructure/shared.module';
 import { HomeComponent } from './components/home.component';
 import { HomeRoutes } from './home.routes';
 
