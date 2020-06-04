@@ -1,5 +1,5 @@
 import { PharmaPosologyFreeText } from "./pharma-posology";
-import { Translation } from "@app/Translation";
+import { Translation } from "@app/infrastructure/Translation";
 var PharmaDrugPrescription = (function () {
     function PharmaDrugPrescription() {
         this.PackageNames = [];

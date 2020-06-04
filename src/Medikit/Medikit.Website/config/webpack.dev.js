@@ -134,6 +134,7 @@ module.exports = {
             { from: './angularApp/images/*.*', to: 'assets/images', flatten: true },
             { from: './angularApp/i18n/*.*', to: 'assets/i18n', flatten: true },
             { from: './angularApp/fonts/*.*', to: 'assets/fonts', flatten: true },
+            { from: './angularApp/images/*.*', to: 'assets/images', flatten: true },
             { from: './node_modules/ngx-monaco-editor/assets/monaco', to: 'assets/monaco' }
         ]),
 

@@ -20,7 +20,7 @@ var ViewPharmaPrescriptionEffects = (function () {
         this.prescriptionService = prescriptionService;
         this.getPrescription$ = this.actions$
             .pipe(ofType(ActionTypes.LOAD_PHARMA_PRESCRIPTION), mergeMap(function (evt) {
-            return _this.prescriptionService.getPrescription(evt.prescriptionId)
+            return _this.prescriptionService.getPrescription(evt.prescriptionId, evt.samlAssertion)
                 .pipe(map(function (prescription) { return { type: ActionTypes.PHARMA_PRESCRIPTION_LOADED, prescription: prescription }; }), catchError(function () { return of({ type: ActionTypes.ERROR_LOAD_PHARMA_PRESCRIPTION }); }));
         }));
     }

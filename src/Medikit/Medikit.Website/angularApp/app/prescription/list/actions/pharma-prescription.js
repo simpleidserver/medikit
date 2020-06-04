@@ -5,7 +5,10 @@ export var ActionTypes;
     ActionTypes["ERROR_LOAD_PHARMA_PRESCRIPTIONS"] = "[PharmaPrescription] ERROR_LOAD_PHARMA_PRESCRIPTIONS";
 })(ActionTypes || (ActionTypes = {}));
 var LoadPharmaPrescriptions = (function () {
-    function LoadPharmaPrescriptions() {
+    function LoadPharmaPrescriptions(patientNiss, page, samlAssertion) {
+        this.patientNiss = patientNiss;
+        this.page = page;
+        this.samlAssertion = samlAssertion;
         this.type = ActionTypes.LOAD_PHARMA_PRESCRIPTIONS;
     }
     return LoadPharmaPrescriptions;

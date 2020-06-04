@@ -5,25 +5,14 @@
 </div>
 <div fxLayout="row">
     <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
-        <div fxLayout="row" fxLayoutGap="10px">
-            <mat-card fxFlex="70%">
+        <div>
+            <mat-card>
                 <form [formGroup]="searchForm" (ngSubmit)="onSubmit(searchForm.value)">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="{{ 'enter-niss' | translate }}" name="niss" formControlName="niss" />
                     </mat-form-field>
-                    <button mat-raised-button color="primary">{{ 'search' | translate }}</button>
+                    <button mat-raised-button color="primary" [disabled]="!sessionExists">{{ 'search' | translate }}</button>
                 </form>
-            </mat-card>
-            <mat-card fxFlex="30%">
-                <mat-card-content>
-                    <div fxLayout="column" fxLayoutGap="10px">
-                        <button mat-raised-button color="primary" *ngIf="!isExtensionInstalled">{{ "DOWNLOAD_EXTENSION" | translate }}</button>
-                        <button mat-raised-button color="primary" *ngIf="isExtensionInstalled && isEhealthSessionActive" [routerLink]="['/prescription/add-pharma']">{{ "ADD_PRESCRIPTION" | translate }}</button>
-                        <button mat-raised-button color="primary" *ngIf="isExtensionInstalled && !isEhealthSessionActive" (click)="authenticateEHEALTH()">{{ "AUTHENTICATE_EHEALTH" | translate }}</button>
-                        <button mat-raised-button color="primary" *ngIf="isExtensionInstalled && isEhealthSessionActive" (click)="disconnectEHEALTH()">{{ "DISCONNECT_EHEALTH" | translate }}</button>
-                        <button mat-raised-button color="primary" *ngIf="isExtensionInstalled" [routerLink]="['/setting/extension']">{{ "CONFIGURE_EXTENSION" | translate }}</button>
-                    </div>
-                </mat-card-content>
             </mat-card>
         </div>
         <div>

@@ -7,14 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Component, Input } from "@angular/core";
+import { Component, Input, ViewChild, ElementRef } from "@angular/core";
 import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
 import { TranslateService } from "@ngx-translate/core";
 import { formatDate } from "@angular/common";
 var PDFObject = require('pdfobject');
 var jsPDF = require('jspdf');
 var JsBarCode = require('jsbarcode');
-var createCanvas = require("canvas").createCanvas;
 var PrescriptionViewerComponent = (function () {
     function PrescriptionViewerComponent(translateService) {
         this.translateService = translateService;
@@ -60,9 +59,8 @@ var PrescriptionViewerComponent = (function () {
         var medicalPrescriptionCellWidth = 30;
         var txtPaddingLeft = 5;
         var txtPaddingTop = 10;
-        var canvas = createCanvas();
-        JsBarCode(canvas, "BE" + this._prescription.Type + this._prescription.Id);
-        var url = canvas.toDataURL("image/jpeg");
+        JsBarCode(this.barCodeCanvas.nativeElement, "BE" + this._prescription.Type + this._prescription.Id);
+        var url = this.barCodeCanvas.nativeElement.toDataURL("image/jpeg");
         var doc = new jsPDF('p', 'px');
         var pageWidth = doc.internal.pageSize.getWidth();
         var widthPrescription = (pageWidth / 2) - margin;
@@ -152,6 +150,10 @@ var PrescriptionViewerComponent = (function () {
         }
         return "";
     };
+    __decorate([
+        ViewChild('barcode'),
+        __metadata("design:type", ElementRef)
+    ], PrescriptionViewerComponent.prototype, "barCodeCanvas", void 0);
     __decorate([
         Input(),
         __metadata("design:type", Number),

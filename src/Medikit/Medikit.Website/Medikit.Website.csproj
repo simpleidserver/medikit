@@ -5,8 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="angularApp\app\auth.config.ts" />
+    <None Remove="angularApp\app\infrastructure\auth-guard.service.ts" />
     <None Remove="angularApp\app\prescription\view\view-prescription.component.ts" />
-    <None Remove="angularApp\app\services\medikitextension.service.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -16,7 +16,13 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="angularApp\app\auth.config.ts" />
+    <TypeScriptCompile Include="angularApp\app\infrastructure\services\auth-guard.service.ts" />
     <TypeScriptCompile Include="angularApp\app\prescription\view\view-prescription.component.ts" />
-    <TypeScriptCompile Include="angularApp\app\services\medikitextension.service.ts" />
+    <TypeScriptCompile Include="angularApp\app\infrastructure\services\medikitextension.service.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="angularApp\app\status\components\401\" />
+    <Folder Include="angularApp\app\status\components\404\" />
+    <Folder Include="angularApp\images\" />
   </ItemGroup>
 </Project>

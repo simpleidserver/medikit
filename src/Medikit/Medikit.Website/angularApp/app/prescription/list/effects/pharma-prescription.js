@@ -19,8 +19,8 @@ var ListPharmaPrescriptionEffects = (function () {
         this.actions$ = actions$;
         this.prescriptionService = prescriptionService;
         this.getOpenedPrescriptions$ = this.actions$
-            .pipe(ofType(ActionTypes.LOAD_PHARMA_PRESCRIPTIONS), mergeMap(function () {
-            return _this.prescriptionService.getOpenedPrescriptions()
+            .pipe(ofType(ActionTypes.LOAD_PHARMA_PRESCRIPTIONS), mergeMap(function (evt) {
+            return _this.prescriptionService.getOpenedPrescriptions(evt.patientNiss, evt.page, evt.samlAssertion)
                 .pipe(map(function (prescriptionIds) { return { type: ActionTypes.PHARMA_PRESCRIPTIONS_LOADED, prescriptionIds: prescriptionIds }; }), catchError(function () { return of({ type: ActionTypes.ERROR_LOAD_PHARMA_PRESCRIPTIONS }); }));
         }));
     }

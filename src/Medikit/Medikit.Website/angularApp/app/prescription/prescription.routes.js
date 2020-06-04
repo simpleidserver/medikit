@@ -3,8 +3,7 @@ import { ListPrescriptionComponent } from './list/list-prescription.component';
 import { AddPharmaPrescriptionComponent } from './add-pharma-prescription/add-pharma-prescription.component';
 import { ViewPrescriptionComponent } from './view/view-prescription.component';
 var routes = [
-    { path: '', redirectTo: 'list', pathMatch: 'full' },
-    { path: 'list', component: ListPrescriptionComponent },
+    { path: '', component: ListPrescriptionComponent },
     { path: 'add-pharma', component: AddPharmaPrescriptionComponent },
     { path: ':id', component: ViewPrescriptionComponent }
 ];

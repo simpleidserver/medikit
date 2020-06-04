@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace Medikit.Authenticate.Client
 {
@@ -39,7 +40,7 @@ namespace Medikit.Authenticate.Client
 
         private IServiceCollection RegisterService(IServiceCollection services)
         {
-            var certificatesPath = Path.Combine(_env.ContentRootPath, "Certificates");
+            var certificatesPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Certificates");
             services.AddTransient<IOperation, PingOperation>();
             services.AddTransient<IOperation, ChooseIdentityCertificateOperation>();
             services.AddTransient<IOperation, ChooseMedicalProfessionOperation>();

@@ -8,53 +8,90 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { EhealthSessionService } from '../../services/ehealthsession.service';
-var ListPrescriptionComponent = (function () {
-    function ListPrescriptionComponent(store, ehealthSessionService) {
-        this.store = store;
-        this.ehealthSessionService = ehealthSessionService;
-        this.prescriptionIds = [];
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
+var MedicalProfession = (function () {
+    function MedicalProfession(displayName, namespace) {
+        this.displayName = displayName;
+        this.namespace = namespace;
     }
-    ListPrescriptionComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.isExtensionInstalled = this.ehealthSessionService.isExtensionInstalled();
-        console.log(this.isExtensionInstalled);
-        var session = this.ehealthSessionService.getEhealthSession();
-        if (session) {
-            this.isEhealthSessionValid = true;
+    return MedicalProfession;
+}());
+var ExtensionComponent = (function () {
+    function ExtensionComponent(medikitExtensionService, snackBar, translateService) {
+        this.medikitExtensionService = medikitExtensionService;
+        this.snackBar = snackBar;
+        this.translateService = translateService;
+        this.medicalProfessionForm = new FormGroup({
+            profession: new FormControl()
+        });
+        this.identityCertificateForm = new FormGroup({
+            certificate: new FormControl(),
+            password: new FormControl()
+        });
+        this.medicalProfessions = [];
+        this.certificates = [];
+    }
+    ExtensionComponent.prototype.ngOnInit = function () {
+        var self = this;
+        if (this.medikitExtensionService.isExtensionInstalled()) {
+            this.isExtensionInstalled = true;
         }
         else {
-            this.isEhealthSessionValid = false;
+            this.isExtensionInstalled = false;
         }
-        this.store.pipe(select('pharmaPrescriptionLst')).subscribe(function (st) {
-            _this.prescriptionIds = st.prescriptionIds;
-        });
-        this.refresh();
-    };
-    ListPrescriptionComponent.prototype.refresh = function () {
-    };
-    ListPrescriptionComponent.prototype.authenticateEHEALTH = function () {
-        if (!this.ehealthSessionService.isExtensionInstalled()) {
-            return;
-        }
-        this.ehealthSessionService.getEHEALTHCertificateAuth().then(function () {
-            console.log("coucou");
-            this.isEhealthSessionValid = true;
-        }).catch(function () {
+        this.medikitExtensionService.getMedicalProfessions().subscribe(function (e) {
+            self.medicalProfessionForm.controls['profession'].setValue(e.content['current_profession']);
+            e.content['professions'].forEach(function (m) {
+                self.medicalProfessions.push(new MedicalProfession(m['display_name'], m['namespace']));
+            });
+            self.medikitExtensionService.getIdentityCertificates().subscribe(function (e) {
+                self.identityCertificateForm.controls['certificate'].setValue(e.content['current_certificate']);
+                self.certificates = e.content['certificates'];
+            });
         });
     };
-    ListPrescriptionComponent.prototype.disconnectEHEALTH = function () {
+    ExtensionComponent.prototype.onSubmitMedicalProfession = function (form) {
+        var self = this;
+        this.medikitExtensionService.chooseMedicalProfession(form.profession).subscribe(function (e) {
+            if (e.type === 'error') {
+                self.snackBar.open(self.translateService.instant('profession-not-updated'), self.translateService.instant('undo'), {
+                    duration: 2000,
+                });
+            }
+            else {
+                self.snackBar.open(self.translateService.instant('profession-updated'), self.translateService.instant('undo'), {
+                    duration: 2000,
+                });
+            }
+        });
     };
-    ListPrescriptionComponent = __decorate([
+    ExtensionComponent.prototype.onSubmitIdentityCertificate = function (form) {
+        var self = this;
+        this.medikitExtensionService.chooseIdentityCertificate(form.certificate, form.password).subscribe(function (e) {
+            if (e.type === 'error') {
+                self.snackBar.open(self.translateService.instant('identity-certificate-not-updated'), self.translateService.instant('undo'), {
+                    duration: 2000,
+                });
+            }
+            else {
+                self.snackBar.open(self.translateService.instant('identity-certificate-updated'), self.translateService.instant('undo'), {
+                    duration: 2000,
+                });
+            }
+        });
+    };
+    ExtensionComponent = __decorate([
         Component({
-            selector: 'list-prescription-component',
-            templateUrl: './list-prescription.component.html',
-            styleUrls: ['./list-prescription.component.scss']
+            selector: 'extension-component',
+            templateUrl: './extension.component.html',
+            styleUrls: ['./extension.component.scss']
         }),
-        __metadata("design:paramtypes", [Store, EhealthSessionService])
-    ], ListPrescriptionComponent);
-    return ListPrescriptionComponent;
+        __metadata("design:paramtypes", [MedikitExtensionService, MatSnackBar, TranslateService])
+    ], ExtensionComponent);
+    return ExtensionComponent;
 }());
-export { ListPrescriptionComponent };
-//# sourceMappingURL=list-prescription.component.js.map
+export { ExtensionComponent };
+//# sourceMappingURL=extension.component.js.map

@@ -12,15 +12,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 import { HomeModule } from './home/home.module';
+import { MaterialModule } from './infrastructure/material.module';
+import { AuthGuard } from './infrastructure/services/auth-guard.service';
+import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
+import { SharedModule } from './infrastructure/shared.module';
 import { MedicinalProductService } from './medicinalproduct/services/medicinalproduct-service';
 import { PatientService } from './patient/services/patient-service';
 import { ReferenceTableService } from './referencetable/services/reference-table-service';
-import { MaterialModule } from './shared/material.module';
-import { SharedModule } from './shared/shared.module';
-import { EhealthSessionService } from './services/ehealthsession.service';
 export function createTranslateLoader(http) {
     var url = process.env.BASE_URL + 'assets/i18n/';
     return new TranslateHttpLoader(http, url, '.json');
@@ -39,6 +41,7 @@ var AppModule = (function () {
                 FlexLayoutModule,
                 BrowserAnimationsModule,
                 HttpClientModule,
+                OAuthModule.forRoot(),
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
@@ -51,7 +54,7 @@ var AppModule = (function () {
                 AppComponent
             ],
             bootstrap: [AppComponent],
-            providers: [PatientService, MedicinalProductService, ReferenceTableService, EhealthSessionService]
+            providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AuthGuard]
         })
     ], AppModule);
     return AppModule;

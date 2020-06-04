@@ -5,8 +5,9 @@ export var ActionTypes;
     ActionTypes["ERROR_LOAD_PHARMA_PRESCRIPTION"] = "[PharmaPrescription] ERROR_LOAD_PHARMA_PRESCRIPTION";
 })(ActionTypes || (ActionTypes = {}));
 var LoadPharmaPrescription = (function () {
-    function LoadPharmaPrescription(prescriptionId) {
+    function LoadPharmaPrescription(prescriptionId, samlAssertion) {
         this.prescriptionId = prescriptionId;
+        this.samlAssertion = samlAssertion;
         this.type = ActionTypes.LOAD_PHARMA_PRESCRIPTION;
     }
     return LoadPharmaPrescription;

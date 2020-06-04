@@ -11,5 +11,17 @@
   "home": "Home",
   "patient": "Patient",
   "medication": "Medication",
-  "drug": "Drug"
+  "drug": "Drug",
+  "ehealth-session-active": "Session is active - ({{hour}} H)",
+  "drop-session": "Drop session",
+  "configure-extension": "Configure extension",
+  "create-session-with-certificate": "Create session with certificate",
+  "create-session-with-eid": "Create session with EID",
+  "ehealth-session-not-active": "Session is not active",
+  "enter-niss": "Enter NISS",
+  "no-prescription": "No prescription",
+  "search": "Search",
+  "download-extension": "Download extension",
+  "ehealth-session-created": "EHEALTH session is created",
+  "ehealth-session-not-created": "An error occured while trying to create the EHEALTH session"
 }

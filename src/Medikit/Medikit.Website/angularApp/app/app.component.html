@@ -1,9 +1,10 @@
 ﻿<ng-container>
-    <mat-toolbar class="header-toolbar">
+    <mat-toolbar class="header-toolbar" color="primary">
         <a class="no-style" [routerLink]="['/home']"></a>
         <button mat-icon-button (click)="sidenav.toggle()">
             <mat-icon>menu</mat-icon>
         </button>
+        <img src="{{logoUrl}}" width="40px" />
         <span class="spacer"></span>
         <button mat-button [matMenuTriggerFor]="languages">{{ "languages" | translate }}</button>
         <mat-menu #languages="matMenu">
@@ -12,6 +13,17 @@
             <button mat-menu-item (click)="chooseLanguage('en')" [class.active]="activeLanguage === 'en'">{{ "english" | translate }}</button>
         </mat-menu>
         <div *ngIf="isConnected">
+            <a mat-raised-button color="primary" href="https://ci.appveyor.com/api/buildjobs/6f9i19lnsexisang/artifacts/build%2Fresults%2FMedikit.Installer.msi" *ngIf="!isExtensionInstalled">{{ 'download-extension' | translate }}</a>
+            <button mat-button [matMenuTriggerFor]="extensionMenu" *ngIf="isExtensionInstalled">
+                <span *ngIf="isEhealthSessionActive">{{ 'ehealth-session-active' | translate:{hour:sessionValidityHour} }}</span>
+                <span *ngIf="!isEhealthSessionActive">{{ 'ehealth-session-not-active' | translate }}</span>
+            </button>
+            <mat-menu #extensionMenu="matMenu">
+                <button mat-menu-item (click)="createEHealthSessionWithCertificate()" *ngIf="!isEhealthSessionActive">{{ 'create-session-with-certificate' | translate }}</button>
+                <button mat-menu-item (click)="createEHealthSessionWithEID()" *ngIf="!isEhealthSessionActive">{{ 'create-session-with-eid' | translate }}</button>
+                <button mat-menu-item (click)="dropEhealthSession()" *ngIf="isEhealthSessionActive">{{ 'drop-session' | translate }}</button>
+                <button mat-menu-item [routerLink]="['/setting/extension']">{{ 'configure-extension' | translate }}</button>
+            </mat-menu>
             <button mat-button [matMenuTriggerFor]="welcomeMenu">
                 {{ "welcome" | translate:{name:name} }}
             </button>

@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
-import { select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
+import { select, Store } from '@ngrx/store';
 import { LoadPharmaPrescriptions } from './actions/pharma-prescription';
 import { PharmaPrescriptionsState } from './states/pharma-prescription-state';
 
@@ -12,64 +10,45 @@ import { PharmaPrescriptionsState } from './states/pharma-prescription-state';
     templateUrl: './list-prescription.component.html',
     styleUrls: ['./list-prescription.component.scss']
 })
-export class ListPrescriptionComponent implements OnInit {
+export class ListPrescriptionComponent implements OnInit, OnDestroy {
+    sessionExists: boolean = false;
+    subscribeSessionCreated: any;
+    subscribeSessionDropped: any;
     prescriptionIds: Array<string> = [];
-    isEhealthSessionActive: boolean;
-    isExtensionInstalled: boolean;
     searchForm : FormGroup = new FormGroup({
         niss : new FormControl()
     });
 
-    constructor(private store: Store<PharmaPrescriptionsState>, private translateService : TranslateService, private medikitExtensionService: MedikitExtensionService, private snackBar : MatSnackBar) { }
+    constructor(private store: Store<PharmaPrescriptionsState>,private medikitExtensionService: MedikitExtensionService) { }
 
     ngOnInit(): void {
-        this.isExtensionInstalled = this.medikitExtensionService.isExtensionInstalled();
-        const session: any = this.medikitExtensionService.getEhealthSession();
-        if (session) {
-            this.isEhealthSessionActive = true;
-        } else {
-            this.isEhealthSessionActive = false;
+        if (this.medikitExtensionService.getEhealthSession() !== null) {
+            this.sessionExists = true;
         }
 
+        this.subscribeSessionCreated = this.medikitExtensionService.sessionCreated.subscribe(() => {
+            this.sessionExists = true;
+        });
+        this.subscribeSessionDropped = this.medikitExtensionService.sessionDropped.subscribe(() => {
+            this.sessionExists = false;
+        });
         this.store.pipe(select('pharmaPrescriptionLst')).subscribe((st: PharmaPrescriptionsState) => {
             this.prescriptionIds = st.prescriptionIds;
         });
     }
 
-    authenticateEHEALTH(): void {
-        if (!this.medikitExtensionService.isExtensionInstalled()) {
-            return;
-        }
-
-        const self: any = this;
-        this.medikitExtensionService.getEhealthCertificateAuth().subscribe(function () {
-            self.isEhealthSessionActive = true;
-        });
-    }
-
-    disconnectEHEALTH(): void {
-        this.medikitExtensionService.disconnect();
-        this.isEhealthSessionActive = false;
-    }
-
     onSubmit(form: any) {
-        const undo = this.translateService.instant('undo');
-        if (!this.medikitExtensionService.isExtensionInstalled()) {
-            this.snackBar.open(this.translateService.instant('extension-not-installed'), undo, {
-                duration: 2000,
-            });
+        if (!this.sessionExists) {
             return;
         }
 
         var session: any = this.medikitExtensionService.getEhealthSession();
-        if (session == null) {
-            this.snackBar.open(this.translateService.instant('no-active-session'), undo, {
-                duration: 2000,
-            });
-            return;
-        }
-
         var loadPharmaPrescriptions = new LoadPharmaPrescriptions(form.niss, 0, session['assertion_token']);
         this.store.dispatch(loadPharmaPrescriptions);
+    }
+
+    ngOnDestroy(): void {
+        this.subscribeSessionCreated.unsubscribe();
+        this.subscribeSessionDropped.unsubscribe();
     }
 }

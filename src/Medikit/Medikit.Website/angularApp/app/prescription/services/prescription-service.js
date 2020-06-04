@@ -15,17 +15,21 @@ var PrescriptionService = (function () {
     function PrescriptionService(http) {
         this.http = http;
     }
-    PrescriptionService.prototype.getOpenedPrescriptions = function () {
+    PrescriptionService.prototype.getOpenedPrescriptions = function (patientNiss, page, samlAssertion) {
         var headers = new HttpHeaders();
-        var targetUrl = process.env.API_URL + "/prescriptions";
+        var request = JSON.stringify({ assertion_token: samlAssertion, page_number: page, patient_niss: patientNiss });
+        var targetUrl = process.env.API_URL + "/prescriptions/opened";
         headers = headers.set('Accept', 'application/json');
-        return this.http.get(targetUrl, { headers: headers });
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers });
     };
-    PrescriptionService.prototype.getPrescription = function (prescriptionId) {
+    PrescriptionService.prototype.getPrescription = function (prescriptionId, samlAssertion) {
+        var request = JSON.stringify({ assertion_token: samlAssertion });
         var headers = new HttpHeaders();
         var targetUrl = process.env.API_URL + "/prescriptions/" + prescriptionId;
         headers = headers.set('Accept', 'application/json');
-        return this.http.get(targetUrl, { headers: headers }).pipe(map(function (res) {
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers }).pipe(map(function (res) {
             return PharmaPrescription.fromJson(res);
         }));
     };

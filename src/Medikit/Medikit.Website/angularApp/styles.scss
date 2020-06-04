@@ -2,6 +2,7 @@
 
 @import 'styles/app.scss';
 @import 'styles/theme.scss';
+@import 'styles/medikit-theme.scss';
 @import 'styles/component.themes.scss';
 
 @include mat-core();
@@ -9,4 +10,9 @@
 .my-theme {  
   @include angular-material-theme($my-theme);
   @include component-themes($my-theme);
+}
+
+.medikit-theme {
+    @include angular-material-theme($my-medikit-theme);
+    @include component-themes($my-medikit-theme);
 }

@@ -1,9 +1,11 @@
 ﻿import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
+import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
+import { MatSnackBar } from '@angular/material';
 
 const medikitLanguageName: string = "medikitLanguage";
 
@@ -24,15 +26,25 @@ const medikitLanguageName: string = "medikitLanguage";
         ])
     ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+    logoUrl: string = process.env.REDIRECT_URL + "/assets/images/logo-no-text.svg";
+    sessionValidityHour: number = 0;
+    isExtensionInstalled: boolean = false;
+    isEhealthSessionActive: boolean = false;
     sessionCheckTimer: any;
+    extensionCheckTimer: any;
     isConnected: boolean = false;
     name: string;
     roles: any;
     expanded: boolean = false;
     activeLanguage: string = 'en';
 
-    constructor(private route: Router, private translate: TranslateService, private router: Router, private oauthService: OAuthService) {
+    constructor(private route: Router,
+        private translate: TranslateService,
+        private router: Router,
+        private oauthService: OAuthService,
+        private medikitExtensionService: MedikitExtensionService,
+        private snackBar: MatSnackBar) {
         this.activeLanguage = sessionStorage.getItem(medikitLanguageName);
         if (!this.activeLanguage) {
             this.activeLanguage = 'en';
@@ -93,8 +105,57 @@ export class AppComponent implements OnInit {
         this.isConnected = true;
     }
 
+    createEHealthSessionWithCertificate() {
+        this.medikitExtensionService.createEhealthSessionWithCertificate().subscribe(_ => {
+            if (_) {
+                this.refreshEHealthSession();
+                this.snackBar.open(this.translate.instant('ehealth-session-created'), this.translate.instant('undo'), {
+                    duration: 2000
+                });
+            } else {
+                this.snackBar.open(this.translate.instant('ehealth-session-not-created'), this.translate.instant('undo'), {
+                    duration: 2000
+                });
+            }
+        });
+    }
+
+    createEHealthSessionWithEID() {
+
+    }
+
+    dropEhealthSession() {
+        this.medikitExtensionService.disconnect();
+        this.isEhealthSessionActive = false;
+    }
+
+    refreshEHealthSession() {
+        const self = this;
+        self.medikitExtensionService.isExtensionInstalled().subscribe(_ => {
+            self.isExtensionInstalled = _;
+            if (self.isExtensionInstalled) {
+                var session = self.medikitExtensionService.getEhealthSession();
+                if (session === null) {
+                    self.isEhealthSessionActive = false;
+                } else {
+                    self.isEhealthSessionActive = true;
+                    var notOnOrAfter: Date =  new Date(session['not_onorafter']);
+                    var notBefore: Date = new Date(session['not_before']);
+                    var diff = Math.round(((notOnOrAfter.getTime() - notBefore.getTime()) / 36e5) * 100) / 100;
+                    self.sessionValidityHour = diff;
+                }
+            }
+        });
+    }
+
+    chooseLanguage(lng: string) {
+        this.translate.use(lng);
+        sessionStorage.setItem(medikitLanguageName, lng);
+        this.activeLanguage = lng;
+    }
 
     ngOnInit(): void {
+        const self = this;
         this.init();
         this.oauthService.events.subscribe((e: any) => {
             if (e.type === "logout") {
@@ -103,7 +164,6 @@ export class AppComponent implements OnInit {
                 this.init();
             }
         });
-
 
         this.router.events.subscribe((opt: any) => {
             var url = opt.urlAfterRedirects;
@@ -115,15 +175,20 @@ export class AppComponent implements OnInit {
                 this.expanded = true;
             }
         });
+
+        this.refreshEHealthSession();
+        this.extensionCheckTimer = setInterval(function () {
+            self.refreshEHealthSession();
+        }, 3000);
     }
 
-    chooseLanguage(lng: string) {
-        this.translate.use(lng);
-        sessionStorage.setItem(medikitLanguageName, lng);
-        this.activeLanguage = lng;
-    }
+    ngOnDestroy(): void {
+        if (this.extensionCheckTimer) {
+            clearInterval(this.extensionCheckTimer);
+        }
 
-    togglePrescriptions() {
-        this.expanded = !this.expanded;
+        if (this.sessionCheckTimer) {
+            clearInterval(this.sessionCheckTimer);
+        }
     }
 }

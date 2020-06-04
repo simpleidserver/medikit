@@ -1,7 +1,7 @@
 ﻿import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Injectable, EventEmitter } from "@angular/core";
+import { Observable, of } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 
 const ehealthSessionName: string = "ehealthSession";
 const extensionUrl = "http://localhost:5050";
@@ -10,6 +10,10 @@ const extensionUrl = "http://localhost:5050";
     providedIn: 'root'
 })
 export class MedikitExtensionService {
+    sessionCreated: EventEmitter<any> = new EventEmitter();
+    sessionDropped: EventEmitter<any> = new EventEmitter();
+
+
     constructor(private http: HttpClient) { }
 
     getEhealthSession() {
@@ -28,17 +32,26 @@ export class MedikitExtensionService {
         return session;
     }
 
-    getEhealthCertificateAuth(): Observable<any> {
+    createEhealthSessionWithCertificate(): Observable<boolean> {
+        var self = this;
         let headers = new HttpHeaders();
         var nonce = this.buildGuid();
         const request = JSON.stringify({ type: 'EHEALTH_AUTH', nonce: nonce });
         let targetUrl = extensionUrl + "/operations";
         headers = headers.set('Accept', 'application/json');
         headers = headers.set('Content-Type', 'application/json');
-        return this.http.post<any>(targetUrl, request, { headers: headers }).pipe(map((res: any) => {
-            sessionStorage.setItem(ehealthSessionName, JSON.stringify(res.content));
-            return res;
-        }));
+        return this.http.post<any>(targetUrl, request, { headers: headers }).pipe(
+            map((res: any) => {
+                if (res.type !== 'SAML_ASSERTION' || res.nonce !== nonce) {
+                    return false;
+                }
+
+                self.sessionCreated.emit(res.content);
+                sessionStorage.setItem(ehealthSessionName, JSON.stringify(res.content));
+                return res;
+            }),
+            catchError(() => of(false))
+        );
     }
 
     getIdentityCertificates(): Observable<any> {
@@ -81,11 +94,27 @@ export class MedikitExtensionService {
         return this.http.post<any>(targetUrl, request, { headers: headers });
     }
 
-    isExtensionInstalled(): boolean {
-        return true;
+    isExtensionInstalled(): Observable<boolean> {
+        let headers = new HttpHeaders();
+        var nonce = this.buildGuid();
+        const request = JSON.stringify({ type: 'PING', nonce: nonce });
+        let targetUrl = extensionUrl + "/operations";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post<boolean>(targetUrl, request, { headers: headers }).pipe(
+            map((res: any) => {
+                if (res.nonce !== nonce) {
+                    return false;
+                }
+
+                return true;
+            }),
+            catchError(() => of(false))
+        );
     }
 
     disconnect() {
+        this.sessionDropped.emit();
         sessionStorage.removeItem(ehealthSessionName);
     }
     

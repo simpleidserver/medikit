@@ -11,10 +11,16 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { LoadPharmaPrescription } from './actions/pharma-prescription';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSnackBar } from '@angular/material';
 var ViewPrescriptionComponent = (function () {
-    function ViewPrescriptionComponent(store, route) {
+    function ViewPrescriptionComponent(translateService, snackBar, store, route, medikitExtensionService) {
+        this.translateService = translateService;
+        this.snackBar = snackBar;
         this.store = store;
         this.route = route;
+        this.medikitExtensionService = medikitExtensionService;
     }
     ViewPrescriptionComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -27,8 +33,22 @@ var ViewPrescriptionComponent = (function () {
         this.refresh();
     };
     ViewPrescriptionComponent.prototype.refresh = function () {
+        var undo = this.translateService.instant('undo');
+        if (!this.medikitExtensionService.isExtensionInstalled()) {
+            this.snackBar.open(this.translateService.instant('extension-not-installed'), undo, {
+                duration: 2000,
+            });
+            return;
+        }
+        var session = this.medikitExtensionService.getEhealthSession();
+        if (session == null) {
+            this.snackBar.open(this.translateService.instant('no-active-session'), undo, {
+                duration: 2000,
+            });
+            return;
+        }
         var id = this.route.snapshot.params['id'];
-        var loadPharmaPrescriptions = new LoadPharmaPrescription(id);
+        var loadPharmaPrescriptions = new LoadPharmaPrescription(id, session['assertion_token']);
         this.store.dispatch(loadPharmaPrescriptions);
     };
     ViewPrescriptionComponent = __decorate([
@@ -36,7 +56,7 @@ var ViewPrescriptionComponent = (function () {
             selector: 'view-prescription-component',
             templateUrl: './view-prescription.component.html'
         }),
-        __metadata("design:paramtypes", [Store, ActivatedRoute])
+        __metadata("design:paramtypes", [TranslateService, MatSnackBar, Store, ActivatedRoute, MedikitExtensionService])
     ], ViewPrescriptionComponent);
     return ViewPrescriptionComponent;
 }());
