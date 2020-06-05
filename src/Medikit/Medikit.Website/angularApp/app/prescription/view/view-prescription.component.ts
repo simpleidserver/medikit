@@ -1,12 +1,12 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { PharmaPrescription } from '../models/pharma-prescription';
-import { LoadPharmaPrescription } from './actions/pharma-prescription';
-import { PharmaPrescriptionState } from './states/pharma-prescription-state';
-import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
-import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
+import { PharmaPrescription } from '@app/stores/pharmaprescription/models/pharma-prescription';
+import { LoadPharmaPrescription } from '@app/stores/pharmaprescription/prescription-actions';
+import * as fromAppState from '@app/stores/appstate';
+import { select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'view-prescription-component',
@@ -15,15 +15,15 @@ import { MatSnackBar } from '@angular/material';
 export class ViewPrescriptionComponent implements OnInit {
     prescription: PharmaPrescription;
 
-    constructor(private translateService: TranslateService, private snackBar: MatSnackBar, private store: Store<PharmaPrescriptionState>, private route: ActivatedRoute, private medikitExtensionService: MedikitExtensionService) { }
+    constructor(private translateService: TranslateService, private snackBar: MatSnackBar, private store: Store<fromAppState.AppState>, private route: ActivatedRoute, private medikitExtensionService: MedikitExtensionService) { }
 
     ngOnInit(): void {
-        this.store.pipe(select('pharmaPrescriptionView')).subscribe((st: PharmaPrescriptionState) => {
-            if (!st.prescription) {
+        this.store.pipe(select(fromAppState.selectPharmaPrescriptionResult)).subscribe((st: PharmaPrescription) => {
+            if (!st) {
                 return;
             }
 
-            this.prescription = st.prescription;
+            this.prescription = st;
         });
         this.refresh();
     }

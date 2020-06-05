@@ -1,9 +1,6 @@
 export var ActionTypes;
 (function (ActionTypes) {
     ActionTypes["LOAD_PHARMA_PRESCRIPTION"] = "[AddPharmaPrescription] LOAD_ADD_PRESCRIPTION";
-    ActionTypes["CHECK_NISS"] = "[AddPharmaPrescription] CHECK_NISS";
-    ActionTypes["NISS_CHECKED"] = "[AddPharmaPrescription] NISS_CHECKED";
-    ActionTypes["NISS_UNKNOWN"] = "[AddPharmaPrescription] NISS_UNNOWN";
     ActionTypes["NEXT_STEP"] = "[AddPharmaPrescription] NEXT_STEP";
     ActionTypes["PREVIOUS_STEP"] = "[AddPharmaPrescription] PREVIOUS_STEP";
     ActionTypes["ADD_DRUG_PRESCRIPTION"] = "[AddPharmaPrescription] ADD_DRUG_PRESCRIPTION";
@@ -16,30 +13,6 @@ var LoadPrescription = (function () {
     return LoadPrescription;
 }());
 export { LoadPrescription };
-var CheckNiss = (function () {
-    function CheckNiss(niss) {
-        this.niss = niss;
-        this.type = ActionTypes.CHECK_NISS;
-    }
-    return CheckNiss;
-}());
-export { CheckNiss };
-var NissChecked = (function () {
-    function NissChecked(patient) {
-        this.patient = patient;
-        this.type = ActionTypes.NISS_CHECKED;
-    }
-    return NissChecked;
-}());
-export { NissChecked };
-var NissUnknown = (function () {
-    function NissUnknown(niss) {
-        this.niss = niss;
-        this.type = ActionTypes.NISS_UNKNOWN;
-    }
-    return NissUnknown;
-}());
-export { NissUnknown };
 var NextStep = (function () {
     function NextStep() {
         this.type = ActionTypes.NEXT_STEP;

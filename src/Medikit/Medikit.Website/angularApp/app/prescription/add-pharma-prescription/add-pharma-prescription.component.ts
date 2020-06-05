@@ -2,21 +2,23 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatListOption, MatPaginator, MatSelectionList, MatSnackBar, MatStepper } from '@angular/material';
+import { Translation } from "@app/infrastructure/Translation";
 import { MedicinalPackage } from '@app/medicinalproduct/models/MedicinalPackage';
 import { MedicinalProduct } from '@app/medicinalproduct/models/MedicinalProduct';
 import { SearchMedicinalProduct } from '@app/medicinalproduct/models/SearchMedicinalProduct';
 import { MedicinalProductService } from '@app/medicinalproduct/services/medicinalproduct-service';
 import { ReferenceTableRecord } from '@app/referencetable/models/reference-table-record';
 import { ReferenceTableService } from '@app/referencetable/services/reference-table-service';
-import { Translation } from "@app/infrastructure/Translation";
+import * as fromPatientActions from '@app/stores/patient/patient-actions';
+import * as fromAppState from '@app/stores/appstate';
+import { PharmaDrugPrescription } from '@app/stores/pharmaprescription/models/pharma-drug-prescription';
+import { PharmaDuration } from '@app/stores/pharmaprescription/models/pharma-duration';
+import { PharmaPosologyFreeText, PharmaPosologyStructured, PharmaPosologyTakes } from '@app/stores/pharmaprescription/models/pharma-posology';
 import { ScannedActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { ActionTypes, AddDrugPrescription, CheckNiss, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep } from './actions/pharma-prescription';
-import { PharmaDrugPrescription } from '@app/prescription/models/pharma-drug-prescription';
-import { PharmaDuration } from '@app/prescription/models/pharma-duration';
-import { PharmaPosologyFreeText, PharmaPosologyStructured, PharmaPosologyTakes } from '@app/prescription/models/pharma-posology';
+import { AddDrugPrescription, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep } from './actions/pharma-prescription';
 import { AddPharmaPrescriptionFormState } from './states/pharma-prescription-state';
 
 @Component({
@@ -44,6 +46,7 @@ export class AddPharmaPrescriptionComponent implements OnInit {
     constructor(private formBuilder: FormBuilder,
         private medicinalProductService: MedicinalProductService,
         private store: Store<AddPharmaPrescriptionFormState>,
+        private appStore: Store<fromAppState.AppState>,
         private translateService: TranslateService,
         private actions$: ScannedActionsSubject,
         private snackBar: MatSnackBar,
@@ -110,7 +113,7 @@ export class AddPharmaPrescriptionComponent implements OnInit {
             instructionforreimbursement: new FormControl('')
         });
         this.actions$.pipe(
-            filter((action: any) => action.type == ActionTypes.NISS_UNKNOWN))
+            filter((action: any) => action.type == fromPatientActions.ActionTypes.ERROR_GET_PATIENT))
             .subscribe(() => {
                 this.snackBar.open(this.translateService.instant('niss-unknown'), this.translateService.instant('undo'), {
                     duration: 2000
@@ -144,7 +147,7 @@ export class AddPharmaPrescriptionComponent implements OnInit {
         evt.preventDefault();
         evt.stopPropagation();
         var niss = this.patientFormGroup.get('niss').value;
-        this.store.dispatch(new CheckNiss(niss));
+        this.appStore.dispatch(new fromPatientActions.GetPatient(niss));
     }
 
     nextStep() {

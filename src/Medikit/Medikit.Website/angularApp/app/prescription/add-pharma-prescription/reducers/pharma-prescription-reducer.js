@@ -9,8 +9,8 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import * as fromActions from '../actions/pharma-prescription';
 import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
+import * as fromActions from '../actions/pharma-prescription';
 var sessionStorageKey = 'pharma-prescription';
 var persist = function (state) {
     sessionStorage.setItem(sessionStorageKey, JSON.stringify(state));
@@ -35,19 +35,6 @@ export function PharmaPrescriptionFormReducer(state, action) {
             state.stepperIndex = loaded.stepperIndex;
             state.prescription = loaded.prescription;
             state.nextPatientFormBtnDisabled = loaded.nextPatientFormBtnDisabled;
-            return __assign({}, state);
-        case fromActions.ActionTypes.NISS_CHECKED:
-            state.prescription.Patient = action.patient;
-            state.nextPatientFormBtnDisabled = false;
-            persist(state);
-            return __assign({}, state);
-        case fromActions.ActionTypes.NISS_UNKNOWN:
-            state.nextPatientFormBtnDisabled = true;
-            state.prescription.Patient.niss = action.niss;
-            state.prescription.Patient.birthdate = null;
-            state.prescription.Patient.firstname = null;
-            state.prescription.Patient.lastname = null;
-            persist(state);
             return __assign({}, state);
         case fromActions.ActionTypes.NEXT_STEP:
             state.stepperIndex += 1;

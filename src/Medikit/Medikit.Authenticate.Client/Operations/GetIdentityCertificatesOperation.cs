@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Medikit.Authenticate.Client.Operations
 {
@@ -23,7 +24,7 @@ namespace Medikit.Authenticate.Client.Operations
 
         public override BrowserExtensionResponse Handle(BrowserExtensionRequest request)
         {
-            var certificateStorePath = _configuration[Constants.ConfigurationNames.CertificateStorePath];
+            var certificateStorePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Certificates");
             var regexTest = new Func<string, bool>(i => i.StartsWith("SSIN=", StringComparison.InvariantCultureIgnoreCase));
             var files = Directory.GetFiles(certificateStorePath).Select(_ => Path.GetFileName(_)).Where(regexTest).ToList();
             return BuildResponse(request, new IdentityCertificatesResponse(_configuration[Constants.ConfigurationNames.IdentityCertificateStore], files));

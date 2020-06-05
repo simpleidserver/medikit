@@ -9,65 +9,66 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
-import { select, Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
-import { LoadPharmaPrescriptions } from './actions/pharma-prescription';
+import * as fromAppState from '@app/stores/appstate';
+import * as fromPatientActions from '@app/stores/patient/patient-actions';
+import * as fromPrescriptionActions from '@app/stores/pharmaprescription/prescription-actions';
+import { select, Store } from '@ngrx/store';
 var ListPrescriptionComponent = (function () {
-    function ListPrescriptionComponent(store, translateService, medikitExtensionService, snackBar) {
+    function ListPrescriptionComponent(store, medikitExtensionService) {
         this.store = store;
-        this.translateService = translateService;
         this.medikitExtensionService = medikitExtensionService;
-        this.snackBar = snackBar;
-        this.prescriptionIds = [];
-        this.searchForm = new FormGroup({
+        this.filteredPatientsByNiss = [];
+        this.nissFormGroup = new FormGroup({
             niss: new FormControl()
         });
+        this.sessionExists = false;
+        this.prescriptionIds = [];
     }
     ListPrescriptionComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.isExtensionInstalled = this.medikitExtensionService.isExtensionInstalled();
-        var session = this.medikitExtensionService.getEhealthSession();
-        if (session) {
-            this.isEhealthSessionActive = true;
+        if (this.medikitExtensionService.getEhealthSession() !== null) {
+            this.sessionExists = true;
         }
-        else {
-            this.isEhealthSessionActive = false;
-        }
-        this.store.pipe(select('pharmaPrescriptionLst')).subscribe(function (st) {
-            _this.prescriptionIds = st.prescriptionIds;
+        this.subscribeSessionCreated = this.medikitExtensionService.sessionCreated.subscribe(function () {
+            _this.sessionExists = true;
         });
-    };
-    ListPrescriptionComponent.prototype.authenticateEHEALTH = function () {
-        if (!this.medikitExtensionService.isExtensionInstalled()) {
-            return;
-        }
+        this.subscribeSessionDropped = this.medikitExtensionService.sessionDropped.subscribe(function () {
+            _this.sessionExists = false;
+        });
+        this.store.pipe(select(fromAppState.selectPharmaPrescriptionListResult)).subscribe(function (st) {
+            if (!st) {
+                return;
+            }
+            _this.prescriptionIds = st;
+        });
+        this.store.pipe(select(fromAppState.selectPatientsResult)).subscribe(function (st) {
+            if (!st) {
+                return;
+            }
+            _this.filteredPatientsByNiss = st.content;
+        });
         var self = this;
-        this.medikitExtensionService.getEhealthCertificateAuth().subscribe(function () {
-            self.isEhealthSessionActive = true;
+        this.nissFormGroup.controls["niss"].valueChanges.subscribe(function (_) {
+            self.store.dispatch(new fromPatientActions.SearchPatients(null, null, _));
         });
     };
-    ListPrescriptionComponent.prototype.disconnectEHEALTH = function () {
-        this.medikitExtensionService.disconnect();
-        this.isEhealthSessionActive = false;
+    ListPrescriptionComponent.prototype.displayNiss = function (patient) {
+        return patient.niss;
     };
-    ListPrescriptionComponent.prototype.onSubmit = function (form) {
-        var undo = this.translateService.instant('undo');
-        if (!this.medikitExtensionService.isExtensionInstalled()) {
-            this.snackBar.open(this.translateService.instant('extension-not-installed'), undo, {
-                duration: 2000,
-            });
+    ListPrescriptionComponent.prototype.onSumitNissForm = function (form) {
+        this.onSubmit(form.niss);
+    };
+    ListPrescriptionComponent.prototype.ngOnDestroy = function () {
+        this.subscribeSessionCreated.unsubscribe();
+        this.subscribeSessionDropped.unsubscribe();
+    };
+    ListPrescriptionComponent.prototype.onSubmit = function (niss) {
+        if (!this.sessionExists) {
             return;
         }
         var session = this.medikitExtensionService.getEhealthSession();
-        if (session == null) {
-            this.snackBar.open(this.translateService.instant('no-active-session'), undo, {
-                duration: 2000,
-            });
-            return;
-        }
-        var loadPharmaPrescriptions = new LoadPharmaPrescriptions(form.niss, 0, session['assertion_token']);
+        var loadPharmaPrescriptions = new fromPrescriptionActions.LoadPharmaPrescriptions(niss, 0, session['assertion_token']);
         this.store.dispatch(loadPharmaPrescriptions);
     };
     ListPrescriptionComponent = __decorate([
@@ -76,7 +77,8 @@ var ListPrescriptionComponent = (function () {
             templateUrl: './list-prescription.component.html',
             styleUrls: ['./list-prescription.component.scss']
         }),
-        __metadata("design:paramtypes", [Store, TranslateService, MedikitExtensionService, MatSnackBar])
+        __metadata("design:paramtypes", [Store,
+            MedikitExtensionService])
     ], ListPrescriptionComponent);
     return ListPrescriptionComponent;
 }());

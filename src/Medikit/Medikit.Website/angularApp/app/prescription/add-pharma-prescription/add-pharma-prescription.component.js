@@ -17,15 +17,17 @@ import { ScannedActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { ActionTypes, AddDrugPrescription, CheckNiss, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep } from './actions/pharma-prescription';
+import { AddDrugPrescription, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep } from './actions/pharma-prescription';
+import * as fromPatientActions from '@app/stores/patient/patient-actions';
 import { PharmaDrugPrescription } from '@app/prescription/models/pharma-drug-prescription';
 import { PharmaDuration } from '@app/prescription/models/pharma-duration';
 import { PharmaPosologyFreeText, PharmaPosologyStructured, PharmaPosologyTakes } from '@app/prescription/models/pharma-posology';
 var AddPharmaPrescriptionComponent = (function () {
-    function AddPharmaPrescriptionComponent(formBuilder, medicinalProductService, store, translateService, actions$, snackBar, referenceTableService) {
+    function AddPharmaPrescriptionComponent(formBuilder, medicinalProductService, store, patientStore, translateService, actions$, snackBar, referenceTableService) {
         this.formBuilder = formBuilder;
         this.medicinalProductService = medicinalProductService;
         this.store = store;
+        this.patientStore = patientStore;
         this.translateService = translateService;
         this.actions$ = actions$;
         this.snackBar = snackBar;
@@ -94,7 +96,7 @@ var AddPharmaPrescriptionComponent = (function () {
             instructionforpatient: new FormControl(''),
             instructionforreimbursement: new FormControl('')
         });
-        this.actions$.pipe(filter(function (action) { return action.type == ActionTypes.NISS_UNKNOWN; }))
+        this.actions$.pipe(filter(function (action) { return action.type == fromPatientActions.ActionTypes.ERROR_GET_PATIENT; }))
             .subscribe(function () {
             _this.snackBar.open(_this.translateService.instant('niss-unknown'), _this.translateService.instant('undo'), {
                 duration: 2000
@@ -126,7 +128,7 @@ var AddPharmaPrescriptionComponent = (function () {
         evt.preventDefault();
         evt.stopPropagation();
         var niss = this.patientFormGroup.get('niss').value;
-        this.store.dispatch(new CheckNiss(niss));
+        this.patientStore.dispatch(new fromPatientActions.GetPatient(niss));
     };
     AddPharmaPrescriptionComponent.prototype.nextStep = function () {
         var request = new NextStep();
@@ -255,6 +257,7 @@ var AddPharmaPrescriptionComponent = (function () {
         }),
         __metadata("design:paramtypes", [FormBuilder,
             MedicinalProductService,
+            Store,
             Store,
             TranslateService,
             ScannedActionsSubject,

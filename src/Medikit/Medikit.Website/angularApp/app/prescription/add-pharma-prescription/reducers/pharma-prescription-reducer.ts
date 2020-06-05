@@ -1,5 +1,5 @@
-﻿import * as fromActions from '../actions/pharma-prescription';
-import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
+﻿import { PharmaPrescription } from '@app/stores/pharmaprescription/models/pharma-prescription';
+import * as fromActions from '../actions/pharma-prescription';
 import { AddPharmaPrescriptionFormState } from "../states/pharma-prescription-state";
 
 const sessionStorageKey: string = 'pharma-prescription';
@@ -31,19 +31,6 @@ export function PharmaPrescriptionFormReducer(state = initialState, action: from
             state.stepperIndex = loaded.stepperIndex;
             state.prescription = loaded.prescription;
             state.nextPatientFormBtnDisabled = loaded.nextPatientFormBtnDisabled;
-            return { ...state };
-        case fromActions.ActionTypes.NISS_CHECKED:
-            state.prescription.Patient = action.patient;
-            state.nextPatientFormBtnDisabled = false;
-            persist(state);
-            return { ...state };
-        case fromActions.ActionTypes.NISS_UNKNOWN:
-            state.nextPatientFormBtnDisabled = true;
-            state.prescription.Patient.niss = action.niss;
-            state.prescription.Patient.birthdate = null;
-            state.prescription.Patient.firstname = null;
-            state.prescription.Patient.lastname = null;
-            persist(state);
             return { ...state };
         case fromActions.ActionTypes.NEXT_STEP:
             state.stepperIndex += 1;

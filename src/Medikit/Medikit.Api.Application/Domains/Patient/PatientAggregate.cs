@@ -15,6 +15,7 @@ namespace Medikit.Api.Application.Domains
         public string NationalIdentityNumber { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
 
         public static PatientAggregate New(string prescriberId, string firstName, string lastName, string nationalIdentityNumber)
         {

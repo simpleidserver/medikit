@@ -14,14 +14,20 @@ import { Router } from '@angular/router';
 import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
+import { MatSnackBar } from '@angular/material';
 var medikitLanguageName = "medikitLanguage";
 var AppComponent = (function () {
-    function AppComponent(route, translate, router, oauthService, medikitExtensionService) {
+    function AppComponent(route, translate, router, oauthService, medikitExtensionService, snackBar) {
         this.route = route;
         this.translate = translate;
         this.router = router;
         this.oauthService = oauthService;
         this.medikitExtensionService = medikitExtensionService;
+        this.snackBar = snackBar;
+        this.logoUrl = process.env.REDIRECT_URL + "/assets/images/logo-no-text.svg";
+        this.sessionValidityHour = 0;
+        this.isExtensionInstalled = false;
+        this.isEhealthSessionActive = false;
         this.isConnected = false;
         this.expanded = false;
         this.activeLanguage = 'en';
@@ -78,8 +84,55 @@ var AppComponent = (function () {
         this.roles = claims.role;
         this.isConnected = true;
     };
+    AppComponent.prototype.createEHealthSessionWithCertificate = function () {
+        var _this = this;
+        this.medikitExtensionService.createEhealthSessionWithCertificate().subscribe(function (_) {
+            if (_) {
+                _this.refreshEHealthSession();
+                _this.snackBar.open(_this.translate.instant('ehealth-session-created'), _this.translate.instant('undo'), {
+                    duration: 2000
+                });
+            }
+            else {
+                _this.snackBar.open(_this.translate.instant('ehealth-session-not-created'), _this.translate.instant('undo'), {
+                    duration: 2000
+                });
+            }
+        });
+    };
+    AppComponent.prototype.createEHealthSessionWithEID = function () {
+    };
+    AppComponent.prototype.dropEhealthSession = function () {
+        this.medikitExtensionService.disconnect();
+        this.isEhealthSessionActive = false;
+    };
+    AppComponent.prototype.refreshEHealthSession = function () {
+        var self = this;
+        self.medikitExtensionService.isExtensionInstalled().subscribe(function (_) {
+            self.isExtensionInstalled = _;
+            if (self.isExtensionInstalled) {
+                var session = self.medikitExtensionService.getEhealthSession();
+                if (session === null) {
+                    self.isEhealthSessionActive = false;
+                }
+                else {
+                    self.isEhealthSessionActive = true;
+                    var notOnOrAfter = new Date(session['not_onorafter']);
+                    var notBefore = new Date();
+                    var diff = Math.round(((notOnOrAfter.getTime() - notBefore.getTime()) / 36e5) * 100) / 100;
+                    self.sessionValidityHour = diff;
+                }
+            }
+        });
+    };
+    AppComponent.prototype.chooseLanguage = function (lng) {
+        this.translate.use(lng);
+        sessionStorage.setItem(medikitLanguageName, lng);
+        this.activeLanguage = lng;
+    };
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
+        var self = this;
         this.init();
         this.oauthService.events.subscribe(function (e) {
             if (e.type === "logout") {
@@ -98,16 +151,18 @@ var AppComponent = (function () {
                 _this.expanded = true;
             }
         });
-        this.medikitExtensionService.
-        ;
+        this.refreshEHealthSession();
+        this.extensionCheckTimer = setInterval(function () {
+            self.refreshEHealthSession();
+        }, 3000);
     };
-    AppComponent.prototype.chooseLanguage = function (lng) {
-        this.translate.use(lng);
-        sessionStorage.setItem(medikitLanguageName, lng);
-        this.activeLanguage = lng;
-    };
-    AppComponent.prototype.togglePrescriptions = function () {
-        this.expanded = !this.expanded;
+    AppComponent.prototype.ngOnDestroy = function () {
+        if (this.extensionCheckTimer) {
+            clearInterval(this.extensionCheckTimer);
+        }
+        if (this.sessionCheckTimer) {
+            clearInterval(this.sessionCheckTimer);
+        }
     };
     AppComponent = __decorate([
         Component({
@@ -125,7 +180,12 @@ var AppComponent = (function () {
                 ])
             ]
         }),
-        __metadata("design:paramtypes", [Router, TranslateService, Router, OAuthService, MedikitExtensionService])
+        __metadata("design:paramtypes", [Router,
+            TranslateService,
+            Router,
+            OAuthService,
+            MedikitExtensionService,
+            MatSnackBar])
     ], AppComponent);
     return AppComponent;
 }());

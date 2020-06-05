@@ -23,5 +23,6 @@
   "search": "Chercher",
   "download-extension": "Télécharger extension",
   "ehealth-session-created": "La session EHEALTH est créée",
-  "ehealth-session-not-created": "Une erreur est survenue durant la création de la session EHEALTH"
+  "ehealth-session-not-created": "Une erreur est survenue durant la création de la session EHEALTH",
+  "add-prescription": "Créer une prescription"
 }

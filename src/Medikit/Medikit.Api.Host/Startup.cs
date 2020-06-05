@@ -11,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Medikit.Api.Host
 {
@@ -31,7 +32,7 @@ namespace Medikit.Api.Host
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()));
-            var certificatesPath = Path.Combine(_env.ContentRootPath, "Certificates");
+            var certificatesPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Certificates");
             services.AddMedikitApiApplication(eheathCallback: o =>
             {
                 o.OrgCertificateStore = Path.Combine(certificatesPath, "CBE=0543979265 20200417-143522.acc-p12");

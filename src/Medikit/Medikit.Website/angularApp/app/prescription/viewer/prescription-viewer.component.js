@@ -150,6 +150,7 @@ var PrescriptionViewerComponent = (function () {
         }
         return "";
     };
+    var _a, _b;
     __decorate([
         ViewChild('barcode'),
         __metadata("design:type", ElementRef)
@@ -161,8 +162,8 @@ var PrescriptionViewerComponent = (function () {
     ], PrescriptionViewerComponent.prototype, "nbPrescriptions", null);
     __decorate([
         Input(),
-        __metadata("design:type", PharmaPrescription),
-        __metadata("design:paramtypes", [PharmaPrescription])
+        __metadata("design:type", typeof (_a = typeof PharmaPrescription !== "undefined" && PharmaPrescription) === "function" ? _a : Object),
+        __metadata("design:paramtypes", [typeof (_b = typeof PharmaPrescription !== "undefined" && PharmaPrescription) === "function" ? _b : Object])
     ], PrescriptionViewerComponent.prototype, "pharmaPrescription", null);
     PrescriptionViewerComponent = __decorate([
         Component({

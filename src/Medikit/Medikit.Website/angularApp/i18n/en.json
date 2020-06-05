@@ -23,5 +23,6 @@
   "search": "Search",
   "download-extension": "Download extension",
   "ehealth-session-created": "EHEALTH session is created",
-  "ehealth-session-not-created": "An error occured while trying to create the EHEALTH session"
+  "ehealth-session-not-created": "An error occured while trying to create the EHEALTH session",
+  "add-prescription":  "Create prescription"
 }

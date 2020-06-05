@@ -68,6 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IPatientService, PatientService>();
             services.AddTransient<IGetPatientByNissQueryHandler, GetPatientByNissQueryHandler>();
             services.AddTransient<IAddPatientCommandHandler, AddPatientCommandHandler>();
+            services.AddTransient<ISearchPatientsQueryHandler, SearchPatientsQueryHandler>();
             return services;
         }
 

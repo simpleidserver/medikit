@@ -140,7 +140,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 } else {
                     self.isEhealthSessionActive = true;
                     var notOnOrAfter: Date =  new Date(session['not_onorafter']);
-                    var notBefore: Date = new Date(session['not_before']);
+                    var notBefore: Date = new Date();
                     var diff = Math.round(((notOnOrAfter.getTime() - notBefore.getTime()) / 36e5) * 100) / 100;
                     self.sessionValidityHour = diff;
                 }

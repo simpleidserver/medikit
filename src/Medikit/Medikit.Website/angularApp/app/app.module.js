@@ -10,6 +10,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -21,8 +24,11 @@ import { AuthGuard } from './infrastructure/services/auth-guard.service';
 import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
 import { SharedModule } from './infrastructure/shared.module';
 import { MedicinalProductService } from './medicinalproduct/services/medicinalproduct-service';
-import { PatientService } from './patient/services/patient-service';
 import { ReferenceTableService } from './referencetable/services/reference-table-service';
+import { appReducer } from './stores/appstate';
+import { PatientEffects } from './stores/patient/patient-effects';
+import { PatientService } from './stores/patient/services/patient-service';
+import { PharmaPrescriptionEffects } from './stores/pharmaprescription/prescription-effects';
 export function createTranslateLoader(http) {
     var url = process.env.BASE_URL + 'assets/i18n/';
     return new TranslateHttpLoader(http, url, '.json');
@@ -42,6 +48,11 @@ var AppModule = (function () {
                 BrowserAnimationsModule,
                 HttpClientModule,
                 OAuthModule.forRoot(),
+                EffectsModule.forRoot([PatientEffects, PharmaPrescriptionEffects]),
+                StoreModule.forRoot(appReducer),
+                StoreDevtoolsModule.instrument({
+                    maxAge: 10
+                }),
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,

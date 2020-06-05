@@ -1,4 +1,4 @@
-﻿import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
+﻿import { PharmaPrescription } from "@app/stores/pharmaprescription/models/pharma-prescription";
 
 export interface AddPharmaPrescriptionFormState {
     prescription: PharmaPrescription;

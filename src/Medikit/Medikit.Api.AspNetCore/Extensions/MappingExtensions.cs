@@ -4,6 +4,7 @@ using Medikit.Api.Application;
 using Medikit.Api.Application.Common;
 using Medikit.Api.Application.Domains;
 using Medikit.Api.Application.MedicinalProduct.Queries.Results;
+using Medikit.Api.Application.Patient.Queries.Results;
 using Medikit.Api.Application.Prescriptions.Results;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -153,12 +154,38 @@ namespace Medikit.Api.AspNetCore.Extensions
 
         #endregion
 
+        #region Patient 
+
+        public static JObject ToDto(this PatientResult patient)
+        {
+            return new JObject
+            {
+                { "birthdate", patient.Birthdate },
+                { "firstname", patient.Firstname },
+                { "lastname", patient.Lastname },
+                { "niss", patient.Niss }
+            };
+        }
+
+        #endregion
+
         public static JObject ToDto(this TranslationResult translation)
         {
             return new JObject
             {
                 { "language", translation.Language },
                 { "value", translation.Value }
+            };
+        }
+
+        public static JObject ToDto(this PagedResult<PatientResult> search)
+        {
+            return new JObject
+            {
+                { "count", search.Count },
+                { "start_index", search.StartIndex },
+                { "total_length", search.TotalLength },
+                { "content", new JArray(search.Content.Select(_ => _.ToDto())) }
             };
         }
     }

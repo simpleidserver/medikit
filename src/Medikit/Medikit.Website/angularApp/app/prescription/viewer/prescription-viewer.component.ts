@@ -1,9 +1,9 @@
 ﻿import { Component, Input, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
 import { TranslateService } from "@ngx-translate/core";
 import { Translation } from "@app/infrastructure/Translation";
-import { PharmaPosology, PharmaPosologyFreeText } from "../models/pharma-posology";
 import { formatDate } from "@angular/common";
+import { PharmaPrescription } from "@app/stores/pharmaprescription/models/pharma-prescription";
+import { PharmaPosology, PharmaPosologyFreeText } from "@app/stores/pharmaprescription/models/pharma-posology";
 var PDFObject = require('pdfobject');
 var jsPDF = require('jspdf');
 var JsBarCode = require('jsbarcode');

@@ -8,13 +8,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { map } from "rxjs/operators";
+import { Injectable, EventEmitter } from "@angular/core";
+import { of } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 var ehealthSessionName = "ehealthSession";
 var extensionUrl = "http://localhost:5050";
 var MedikitExtensionService = (function () {
     function MedikitExtensionService(http) {
         this.http = http;
+        this.sessionCreated = new EventEmitter();
+        this.sessionDropped = new EventEmitter();
     }
     MedikitExtensionService.prototype.getEhealthSession = function () {
         var json = sessionStorage.getItem(ehealthSessionName);
@@ -29,7 +32,8 @@ var MedikitExtensionService = (function () {
         }
         return session;
     };
-    MedikitExtensionService.prototype.getEhealthCertificateAuth = function () {
+    MedikitExtensionService.prototype.createEhealthSessionWithCertificate = function () {
+        var self = this;
         var headers = new HttpHeaders();
         var nonce = this.buildGuid();
         var request = JSON.stringify({ type: 'EHEALTH_AUTH', nonce: nonce });
@@ -37,9 +41,13 @@ var MedikitExtensionService = (function () {
         headers = headers.set('Accept', 'application/json');
         headers = headers.set('Content-Type', 'application/json');
         return this.http.post(targetUrl, request, { headers: headers }).pipe(map(function (res) {
+            if (res.type !== 'SAML_ASSERTION' || res.nonce !== nonce) {
+                return false;
+            }
+            self.sessionCreated.emit(res.content);
             sessionStorage.setItem(ehealthSessionName, JSON.stringify(res.content));
             return res;
-        }));
+        }), catchError(function () { return of(false); }));
     };
     MedikitExtensionService.prototype.getIdentityCertificates = function () {
         var headers = new HttpHeaders();
@@ -85,11 +93,14 @@ var MedikitExtensionService = (function () {
         headers = headers.set('Accept', 'application/json');
         headers = headers.set('Content-Type', 'application/json');
         return this.http.post(targetUrl, request, { headers: headers }).pipe(map(function (res) {
-            sessionStorage.setItem(ehealthSessionName, JSON.stringify(res.content));
+            if (res.nonce !== nonce) {
+                return false;
+            }
             return true;
-        }));
+        }), catchError(function () { return of(false); }));
     };
     MedikitExtensionService.prototype.disconnect = function () {
+        this.sessionDropped.emit();
         sessionStorage.removeItem(ehealthSessionName);
     };
     MedikitExtensionService.prototype.buildGuid = function () {

@@ -7,6 +7,7 @@
     <None Remove="angularApp\app\auth.config.ts" />
     <None Remove="angularApp\app\infrastructure\auth-guard.service.ts" />
     <None Remove="angularApp\app\prescription\view\view-prescription.component.ts" />
+    <None Remove="angularApp\app\stores\appstate.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -19,10 +20,14 @@
     <TypeScriptCompile Include="angularApp\app\infrastructure\services\auth-guard.service.ts" />
     <TypeScriptCompile Include="angularApp\app\prescription\view\view-prescription.component.ts" />
     <TypeScriptCompile Include="angularApp\app\infrastructure\services\medikitextension.service.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\appstate.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="angularApp\app\status\components\401\" />
     <Folder Include="angularApp\app\status\components\404\" />
     <Folder Include="angularApp\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="angularApp\app\stores\patient\patient-state.ts" />
   </ItemGroup>
 </Project>
