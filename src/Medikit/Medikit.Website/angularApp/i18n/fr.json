@@ -24,5 +24,11 @@
   "download-extension": "Télécharger extension",
   "ehealth-session-created": "La session EHEALTH est créée",
   "ehealth-session-not-created": "Une erreur est survenue durant la création de la session EHEALTH",
-  "add-prescription": "Créer une prescription"
+  "add-prescription": "Créer une prescription",
+  "firstname": "Prénom",
+  "lastname": "Nom",
+  "enter-firstname": "Saisir le prénom",
+  "enter-lastname": "Saisir le nom",
+  "niss": "NISS",
+  "display-prescriptions": "Afficher les prescriptions"
 }

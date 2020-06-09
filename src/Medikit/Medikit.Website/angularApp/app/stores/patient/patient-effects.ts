@@ -2,7 +2,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ActionTypes, SearchPatients, GetPatient } from './patient-actions';
+import { ActionTypes, SearchPatients, GetPatient, SearchPatientsByNiss } from './patient-actions';
 import { PatientService } from './services/patient-service';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class PatientEffects {
         .pipe(
             ofType(ActionTypes.SEARCH_PATIENTS),
             mergeMap((evt: SearchPatients) => {
-                return this.patientService.search(evt.firstName, evt.lastName, evt.niss)
+                return this.patientService.search(evt.firstname, evt.lastname, null, evt.startIndex, evt.count)
                     .pipe(
                         map(patients => { return { type: ActionTypes.PATIENTS_LOADED, patients: patients }; }),
                         catchError(() => of({ type: ActionTypes.ERROR_SEARCH_PATIENTS }))
@@ -25,6 +25,20 @@ export class PatientEffects {
             }
             )
     );
+
+    @Effect()
+    searchPatientsByNiss$ = this.actions$
+        .pipe(
+            ofType(ActionTypes.SEARCH_PATIENTS_BY_NISS),
+            mergeMap((evt: SearchPatientsByNiss) => {
+                return this.patientService.search(null, null, evt.niss, 0, 0)
+                    .pipe(
+                        map(patients => { return { type: ActionTypes.PATIENTS_LOADED_BY_NISS, patients: patients }; }),
+                        catchError(() => of({ type: ActionTypes.ERROR_SEARCH_PATIENTS_BY_NISS }))
+                    );
+            }
+            )
+        );
 
     @Effect()
     getPatient$ = this.actions$

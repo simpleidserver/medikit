@@ -6,18 +6,31 @@ import * as fromPharmaPrescriptionStates from './pharmaprescription/prescription
 
 export interface AppState {
     patients: fromPatientStates.ListPatientState,
+    patientsByNiss: fromPatientStates.ListPatientState,
     patient: fromPatientStates.PatientState,
     pharmaPrescriptions: fromPharmaPrescriptionStates.PharmaPrescriptionListState,
     pharmaPrescription: fromPharmaPrescriptionStates.PharmaPrescriptionState
 }
 
 export const selectPatients = (state: AppState) => state.patients;
+export const selectPatientsByNiss = (state: AppState) => state.patientsByNiss;
 export const selectPatient = (state: AppState) => state.patient;
 export const selectPharmaPrescriptions = (state: AppState) => state.pharmaPrescriptions;
 export const selectPharmaPrescription = (state: AppState) => state.pharmaPrescription;
 
 export const selectPatientsResult = createSelector(
     selectPatients,
+    (state: fromPatientStates.ListPatientState) => {
+        if (!state || state.content == null) {
+            return null;
+        }
+
+        return state.content;
+    }
+);
+
+export const selectPatientsByNissResult = createSelector(
+    selectPatientsByNiss,
     (state: fromPatientStates.ListPatientState) => {
         if (!state || state.content == null) {
             return null;
@@ -62,6 +75,7 @@ export const selectPharmaPrescriptionResult = createSelector(
 
 export const appReducer = {
     patients: fromPatientReducers.ListPatientsReducer,
+    patientsByNiss: fromPatientReducers.ListPatientsByNissReducer,
     patient: fromPatientReducers.GetPatientReducer,
     pharmaPrescriptions: fromPharmaPrescriptionReducers.ListPharmaPrescriptionReducer,
     pharmaPrescription: fromPharmaPrescriptionReducers.ViewPharmaPrescriptionReducer

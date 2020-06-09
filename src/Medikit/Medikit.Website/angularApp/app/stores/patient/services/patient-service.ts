@@ -25,22 +25,28 @@ export class PatientService {
         );
     }
 
-    search(firstName: string, lastName: string, niss: string) : Observable<SearchPatientResult> {
+    search(firstName: string, lastName: string, niss: string, startIndex : number, count : number) : Observable<SearchPatientResult> {
         let headers = new HttpHeaders();
         let targetUrl = process.env.API_URL + "/patients/.search";
-        var separator = "?";
+        if (startIndex <= 0) {
+            startIndex = 0;
+        }
+
+        if (count <= 0) {
+            count = 5;
+        }
+
+        targetUrl += "?start_index=" + startIndex + "&count=" + count;
         if (firstName) {
-            targetUrl += separator + "firstname=" + firstName;
-            separator = "&";
+            targetUrl += "&firstname=" + firstName;
         }
 
         if (lastName) {
-            targetUrl += separator + "lastname=" + lastName;
-            separator = "&";
+            targetUrl += "&lastname=" + lastName;
         }
 
         if (niss) {
-            targetUrl += separator + "niss=" + niss;
+            targetUrl += "&niss=" + niss;
         }
 
         headers = headers.set('Accept', 'application/json');

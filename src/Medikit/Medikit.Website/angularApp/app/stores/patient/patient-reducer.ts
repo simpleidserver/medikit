@@ -5,6 +5,10 @@ export const initialListState: ListPatientState = {
     content : null
 };
 
+export const initialListByNissState: ListPatientState = {
+    content : null
+};
+
 export const initialGetState: PatientState = {
     content : null
 };
@@ -12,6 +16,16 @@ export const initialGetState: PatientState = {
 export function ListPatientsReducer(state = initialListState, action: fromActions.ActionsUnion) {
     switch (action.type) {
         case fromActions.ActionTypes.PATIENTS_LOADED:
+            state.content = action.patients;
+            return { ...state };
+        default:
+            return state;
+    }
+}
+
+export function ListPatientsByNissReducer(state = initialListByNissState, action: fromActions.ActionsUnion) {
+    switch (action.type) {
+        case fromActions.ActionTypes.PATIENTS_LOADED_BY_NISS:
             state.content = action.patients;
             return { ...state };
         default:
