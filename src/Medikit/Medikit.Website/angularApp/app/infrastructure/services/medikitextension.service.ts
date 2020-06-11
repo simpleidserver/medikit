@@ -54,6 +54,28 @@ export class MedikitExtensionService {
         );
     }
 
+    createEhealthSessionWithEID(pin: string): Observable<boolean> {
+        var self = this;
+        let headers = new HttpHeaders();
+        var nonce = this.buildGuid();
+        const request = JSON.stringify({ type: 'EID_AUTH', nonce: nonce, content: { pin : pin} });
+        let targetUrl = extensionUrl + "/operations";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post<any>(targetUrl, request, { headers: headers }).pipe(
+            map((res: any) => {
+                if (res.type !== 'SAML_ASSERTION' || res.nonce !== nonce) {
+                    return false;
+                }
+
+                self.sessionCreated.emit(res.content);
+                sessionStorage.setItem(ehealthSessionName, JSON.stringify(res.content));
+                return res;
+            }),
+            catchError(() => of(false))
+        );
+    }
+
     getIdentityCertificates(): Observable<any> {
         let headers = new HttpHeaders();
         var nonce = this.buildGuid();

@@ -16,7 +16,7 @@ namespace Medikit.EHealth.Extensions
 
         public static string ExtractSSIN(this X509Certificate2 cert)
         {
-            var regex = new Regex("SSIN=[0-9]{11}");
+            var regex = new Regex("(SERIALNUMBER=[0-9]{11})|(SSIN=[0-9]{11})");
             var matches = regex.Matches(cert.Subject);
             if(matches.Count == 0)
             {

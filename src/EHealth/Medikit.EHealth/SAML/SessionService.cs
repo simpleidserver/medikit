@@ -5,6 +5,7 @@ using Medikit.EHealth.KeyStore;
 using Medikit.EHealth.SAML.DTOs;
 using Medikit.EHealth.SOAP;
 using Medikit.EHealth.SOAP.DTOs;
+using Medikit.EID;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -45,16 +46,63 @@ namespace Medikit.EHealth.SAML
         {
             var request = BuildFallbackSAMLRequest();
             var httpResult = await _soapClient.Send(request, new Uri(_options.StsUrl), "urn:be:fgov:ehealth:sts:protocol:v1:RequestSecureToken");
-            httpResult.EnsureSuccessStatusCode();
             var xml = await httpResult.Content.ReadAsStringAsync();
+            httpResult.EnsureSuccessStatusCode();
             _cachedSession = SOAPEnvelope<SAMLResponseBody>.Deserialize(xml);
             return _cachedSession;
+        }
+
+        public async Task<SOAPEnvelope<SAMLResponseBody>> BuildEIDSession(string pin)
+        {
+            var request = BuildEIDSamlRequest(pin);
+            var httpResult = await _soapClient.Send(request, new Uri(_options.StsUrl), "urn:be:fgov:ehealth:sts:protocol:v1:RequestSecureToken");
+            var xml = await httpResult.Content.ReadAsStringAsync();
+            httpResult.EnsureSuccessStatusCode();
+            _cachedSession = SOAPEnvelope<SAMLResponseBody>.Deserialize(xml);
+            return _cachedSession;
+        }
+
+        private SOAPEnvelope<SAMLRequestBody> BuildEIDSamlRequest(string pin)
+        {
+            SOAPEnvelope<SAMLRequestBody> samlEnv = null;
+            var orgAuthCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            using (var discovery = new BeIDCardDiscovery())
+            {
+                var readers = discovery.GetReaders();
+                using (var connection = discovery.Connect(readers.First()))
+                {
+                    var certificate = connection.GetAuthCertificate();
+                    var idAuthCertificate = new X509Certificate2(connection.GetAuthCertificate().Export(X509ContentType.Cert));
+                    samlEnv = BuildRequest(idAuthCertificate, orgAuthCertificate, (_ =>
+                    {
+                        byte[] hashPayload = null;
+                        using (var sha = new SHA1CryptoServiceProvider())
+                        {
+                            hashPayload = sha.ComputeHash(_);
+                        }
+
+                        return connection.SignWithAuthenticationCertificate(hashPayload, BeIDDigest.Sha1, pin);
+                    }));
+                }
+            }
+
+            return samlEnv;
         }
 
         private SOAPEnvelope<SAMLRequestBody> BuildFallbackSAMLRequest()
         {
             var idAuthCertificate = _keyStoreManager.GetIdAuthCertificate();
             var orgAuthCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            return BuildRequest(idAuthCertificate, orgAuthCertificate, (_ =>
+            {
+                var privateKey = (RSA)idAuthCertificate.PrivateKey;
+                var signaturePayload = privateKey.SignData(_, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
+                return signaturePayload;
+            }));
+        }
+
+        private SOAPEnvelope<SAMLRequestBody> BuildRequest(X509Certificate2 idAuthCertificate, X509Certificate2 orgAuthCertificate, Func<byte[], byte[]> signCallback)
+        {
             var samlAttributes = new List<SAMLAttribute>
             {
                 new SAMLAttribute
@@ -157,7 +205,7 @@ namespace Medikit.EHealth.SAML
                 new XmlDsigExcC14NTransform()
             });
             var payload = signedInfo.ComputeSignature();
-            var privateKey = orgAuthCertificate.GetRSAPrivateKey();
+            var privateKey = (RSA)orgAuthCertificate.PrivateKey;
             var signaturePayload = privateKey.SignData(payload, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
             var signatureStr = Convert.ToBase64String(signaturePayload);
             samlRequest.Signature = new SOAPSignature
@@ -176,7 +224,7 @@ namespace Medikit.EHealth.SAML
                 .AddTimestamp(issueInstant)
                 .AddBinarySecurityToken(idAuthCertificate)
                 .AddReferenceToBinarySecurityToken()
-                .SignWithCertificate(idAuthCertificate)
+                .SignWithCertificate(signCallback)
                 .Build();
         }
 

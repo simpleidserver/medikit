@@ -10,5 +10,6 @@ namespace Medikit.EHealth.SAML
     {
         SOAPEnvelope<SAMLResponseBody> GetSession();
         Task<SOAPEnvelope<SAMLResponseBody>> BuildFallbackSession();
+        Task<SOAPEnvelope<SAMLResponseBody>> BuildEIDSession(string pin);
     }
 }

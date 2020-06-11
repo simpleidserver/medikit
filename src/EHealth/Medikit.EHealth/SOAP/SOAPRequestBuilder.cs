@@ -114,6 +114,16 @@ namespace Medikit.EHealth.SOAP
 
         public SOAPRequestBuilder<T> SignWithCertificate(X509Certificate2 certificate)
         {
+            return SignWithCertificate(_ =>
+            {
+                var privateKey = (RSA)certificate.PrivateKey;
+                var signaturePayload = privateKey.SignData(_, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
+                return signaturePayload;
+            });
+        }
+
+        public SOAPRequestBuilder<T> SignWithCertificate(Func<byte[], byte[]> callback)
+        {
             EnsureSignatureHeaderExists();
             var ids = new List<string>
             {
@@ -138,8 +148,7 @@ namespace Medikit.EHealth.SOAP
                 new XmlDsigExcC14NTransform()
             });
             var payload = signedInfo.ComputeSignature();
-            var privateKey = (RSA)certificate.PrivateKey;
-            var signaturePayload = privateKey.SignData(payload, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
+            var signaturePayload = callback(payload);
             var sigId = $"sig-{Guid.NewGuid().ToString()}";
             _envelope.Header.Security.Signature.SignatureValue = Convert.ToBase64String(signaturePayload);
             _envelope.Header.Security.Signature.Id = sigId;

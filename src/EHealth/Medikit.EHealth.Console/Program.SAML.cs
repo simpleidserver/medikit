@@ -17,36 +17,11 @@ namespace Medikit.EHealth.Console
             return result;
         }
 
-        /*
-        private static async Task<SOAPEnvelope<SAMLResponseBody>> BuildSTSEidRequest()
+        private static async Task<SOAPEnvelope<SAMLResponseBody>> BuildSTSIdentityRequestEID()
         {
-            SOAPEnvelope<SAMLRequestBody> samlEnv = null;
-            using (var discovery = new BeIDCardDiscovery())
-            {
-                var readers = discovery.GetReaders();
-                using (var connection = discovery.Connect(readers.First()))
-                {
-                    var certificate = connection.GetAuthCertificate();
-                    var authCertificate = new X509Certificate2(connection.GetAuthCertificate().Export(X509ContentType.Cert));
-                    samlEnv = new STSRequestBuilder(authCertificate)
-                        .BuildPerson((payload) =>
-                        {
-                            byte[] hashPayload = null;
-                            using (var sha = new SHA1CryptoServiceProvider())
-                            {
-                                hashPayload = sha.ComputeHash(payload);
-                            }
-
-                            return connection.SignWithAuthenticationCertificate(hashPayload, BeIDDigest.Sha1, "5945");
-                        });
-                }
-            }
-
-
-            var stsClient = (ISTSClient)_serviceProvider.GetService(typeof(ISTSClient));
-            return await stsClient.RequestSAMLToken(samlEnv, new Uri(STS_URL));
-            return null;
+            var sessionService = (ISessionService)_serviceProvider.GetService(typeof(ISessionService));
+            var result = await sessionService.BuildEIDSession(string.Empty);
+            return result;
         }
-        */
     }
 }

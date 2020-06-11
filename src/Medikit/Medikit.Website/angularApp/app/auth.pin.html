@@ -1,0 +1,19 @@
+﻿<h1 mat-dialog-title>{{ 'authenticate-with-eid' | translate }}</h1>
+<form [formGroup]="authenticateFormGroup" (submit)="authenticate()">
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ "pin" | translate }}</mat-label>
+            <input matInput placeholder="{{ 'enter-pin' | translate }}" type="password" formControlName="pin">
+            <mat-error *ngIf="authenticateFormGroup.get('pin').hasError('required')">
+                {{ "pin-required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="authenticateFormGroup.get('pin').hasError('pattern')">
+                {{ "pin-invalid" | translate }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button>{{ 'authenticate' | translate }}</button>
+        <button mat-button (click)="close()" cdkFocusInitial>{{ 'cancel' | translate }}</button>
+    </div>
+</form>

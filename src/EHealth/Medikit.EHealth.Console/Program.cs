@@ -21,13 +21,17 @@ namespace Medikit.EHealth.Console
                 o.OrgCertificateStorePassword = "AJH9ka/fh%.?75WF";
             });
             _serviceProvider = serviceCollection.BuildServiceProvider();
+            BuildSTSIdentityRequestEID().ContinueWith((s) =>
+            {
+                string sss = "";
+            });
+            /*
             BuildSTSIdentityRequest().ContinueWith((s) =>
             {
-                AddPrescription(s.Result.Body.Response.Assertion);
+                // AddPrescription(s.Result.Body.Response.Assertion);
                 // GetPrescription();
                 // GetOpenedPrescriptions();
             });
-            /*
             GetKGSS().ContinueWith((s) =>
             {
 

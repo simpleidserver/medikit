@@ -5,9 +5,37 @@ import { Router } from '@angular/router';
 import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 const medikitLanguageName: string = "medikitLanguage";
+
+@Component({
+    selector: 'auth-pin',
+    templateUrl: './auth.pin.html'
+})
+export class AuthPinDialog {
+    authenticateFormGroup: FormGroup = new FormGroup({
+        pin: new FormControl('', [
+            Validators.required,
+            Validators.pattern('^[0-9]{4}$')    
+        ])
+    });
+    constructor(public dialogRef: MatDialogRef<AuthPinDialog>) { }
+
+    close(): void {
+        this.dialogRef.close();
+    }
+
+    authenticate() {
+        if (this.authenticateFormGroup.invalid) {
+            return;
+        }
+
+        var pin = this.authenticateFormGroup.controls['pin'].value;
+        this.dialogRef.close({ pin : pin});
+    }
+}
 
 @Component({
     selector: 'app-component',
@@ -44,7 +72,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private router: Router,
         private oauthService: OAuthService,
         private medikitExtensionService: MedikitExtensionService,
-        private snackBar: MatSnackBar) {
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog) {
         this.activeLanguage = sessionStorage.getItem(medikitLanguageName);
         if (!this.activeLanguage) {
             this.activeLanguage = 'en';
@@ -121,7 +150,28 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     createEHealthSessionWithEID() {
+        const self = this;
+        const dialogRef = this.dialog.open(AuthPinDialog, {
+            width: '400px'
+        });
+        dialogRef.afterClosed().subscribe(_ => {
+            if (!_) {
+                return;
+            }
 
+            self.medikitExtensionService.createEhealthSessionWithEID(_.pin).subscribe(_ => {
+                if (_) {
+                    self.refreshEHealthSession();
+                    self.snackBar.open(this.translate.instant('ehealth-session-created'), this.translate.instant('undo'), {
+                        duration: 2000
+                    });
+                } else {
+                    self.snackBar.open(this.translate.instant('ehealth-session-not-created'), this.translate.instant('undo'), {
+                        duration: 2000
+                    });
+                }
+            });
+        });
     }
 
     dropEhealthSession() {

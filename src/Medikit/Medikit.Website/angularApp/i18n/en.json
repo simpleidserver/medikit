@@ -76,5 +76,11 @@
   "electronic-prescription-date": "Date : {{date}}",
   "electronic-prescription-end-execution-date": "End execution date : {{date}}",
   "nb-prescriptions": "Number of prescriptions",
-  "update": "Update"
+  "update": "Update",
+  "enter-pin": "Enter PIN",
+  "authenticate-with-eid": "Authenticate with BEID",
+  "pin": "PIN",
+  "cancel": "Cancel",
+  "pin-required": "PIN is required",
+  "pin-invalid": "PIN is invalid"
 }

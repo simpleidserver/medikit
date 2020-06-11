@@ -76,5 +76,11 @@
   "electronic-prescription-date": "Date : {{date}}",
   "electronic-prescription-end-execution-date": "Date de fin pour l'exécution : {{date}}",
   "nb-prescriptions": "Nombre de prescriptions",
-  "update": "Mettre à jour"
+  "update": "Mettre à jour",
+  "enter-pin": "Saisir le PIN",
+  "authenticate-with-eid": "Authentifer avec carte d'identité",
+  "pin": "PIN",
+  "cancel": "Annuler",
+  "pin-required": "Numéro PIN est requis",
+  "pin-invalid": "PIN est invalide"
 }

@@ -2,12 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Medikit.Authenticate.Client.Requests;
 using Medikit.Authenticate.Client.Responses;
-using Medikit.EHealth.Extensions;
 using Medikit.EHealth.SAML;
 using Medikit.EHealth.SAML.DTOs;
 using Medikit.EHealth.SOAP.DTOs;
 using System;
-using System.Diagnostics;
 
 namespace Medikit.Authenticate.Client.Operations
 {
