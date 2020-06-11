@@ -13,10 +13,10 @@
             <div fxFlex="30%">
                 <mat-card>
                     <mat-card-content>
-                        <form>
+                        <form [formGroup]="updateNbPrescriptionsForm" (submit)="updateNbPrescriptions($event, updateNbPrescriptionsForm.value)">
                             <mat-form-field appearance="outline">
                                 <mat-label>{{ "nb-prescriptions" | translate }}</mat-label>
-                                <input matInput type="number">
+                                <input matInput type="number" formControlName="nbPrescriptions">
                             </mat-form-field>
                             <button mat-raised-button color="primary">{{ "update" | translate }}</button>
                         </form>
@@ -26,7 +26,7 @@
             <div fxFlex="70%">
                 <mat-card>
                     <mat-card-content>
-                        <prescription-viewer [(pharmaPrescription)]="prescription"></prescription-viewer>
+                        <prescription-viewer [(pharmaPrescription)]="prescription" [nbPrescriptions]="nbPrescriptions"></prescription-viewer>
                     </mat-card-content>
                 </mat-card>
             </div>

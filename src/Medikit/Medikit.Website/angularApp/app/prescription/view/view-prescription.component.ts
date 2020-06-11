@@ -7,12 +7,18 @@ import { LoadPharmaPrescription } from '@app/stores/pharmaprescription/prescript
 import * as fromAppState from '@app/stores/appstate';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
     selector: 'view-prescription-component',
     templateUrl: './view-prescription.component.html'
 })
 export class ViewPrescriptionComponent implements OnInit {
+    isLoading: boolean = false;
+    nbPrescriptions: number = 1;
+    updateNbPrescriptionsForm: FormGroup = new FormGroup({
+        nbPrescriptions: new FormControl(1)
+    });
     prescription: PharmaPrescription;
 
     constructor(private translateService: TranslateService, private snackBar: MatSnackBar, private store: Store<fromAppState.AppState>, private route: ActivatedRoute, private medikitExtensionService: MedikitExtensionService) { }
@@ -23,7 +29,10 @@ export class ViewPrescriptionComponent implements OnInit {
                 return;
             }
 
-            this.prescription = st;
+            if (this.isLoading) {
+                this.prescription = st;
+                this.isLoading = false;
+            }
         });
         this.refresh();
     }
@@ -46,7 +55,13 @@ export class ViewPrescriptionComponent implements OnInit {
         }
 
         var id = this.route.snapshot.params['id'];
+        this.isLoading = true;
         var loadPharmaPrescriptions = new LoadPharmaPrescription(id, session['assertion_token']);
         this.store.dispatch(loadPharmaPrescriptions);
+    }
+
+    updateNbPrescriptions(evt: any, form: any) {
+        evt.preventDefault();
+        this.nbPrescriptions = form.nbPrescriptions;
     }
 }

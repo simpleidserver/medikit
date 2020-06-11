@@ -65,5 +65,16 @@
   "error-add-prescription": "An error occured while trying to add the prescription",
   "prescription-added": "The prescription has been added",
   "loading": "Loading ...",
-  "start-date": "Start date of the prescription"
+  "start-date": "Start date of the prescription",
+  "electronic-prescription-proof": "ELECTRONIC PRESCRIPTION PROOF",
+  "electronic-prescription-instruction": "[electronic-prescription-instruction][EN]",
+  "prescriber": "Prescriber",
+  "inami-number": "Nr INAMI",
+  "beneficiary": "Beneficiary",
+  "electronic-prescription-content": "Content of the electronical prescription",
+  "electronic-prescription-warning": "[electronic-prescription-warning][EN]",
+  "electronic-prescription-date": "Date : {{date}}",
+  "electronic-prescription-end-execution-date": "End execution date : {{date}}",
+  "nb-prescriptions": "Number of prescriptions",
+  "update": "Update"
 }

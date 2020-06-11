@@ -1,3 +1,12 @@
 {
-
+  "electronic-prescription-proof": "BEWIJS VAN ELEKTRONISCH VOORSCHRIFT",
+  "electronic-prescription-instruction": "Gelieve dit document voor te leggen aan uw apotheker om de barcode te scannen en de voorgeschreven geneesmiddelen af te leveren",
+  "prescriber": "Voorschrijver",
+  "inami-number": "RIZIV nr.",
+  "beneficiary": "Rechthebbende",
+  "niss": "INSZ",
+  "electronic-prescription-content": "Inhoud van het elektronisch voorschrift",
+  "electronic-prescription-warning": "Opgelet: met mannuele toevoegingen op dit document zal geen rekening gehouden worden",
+  "electronic-prescription-date": "Datetum : {{date}}",
+  "electronic-prescription-end-execution-date": "Einddatum van de uitvoerbaarheid : {{date}}"
 }

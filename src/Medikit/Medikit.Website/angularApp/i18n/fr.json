@@ -65,5 +65,16 @@
   "error-add-prescription": "Une erreur est survenue durant la création de la prescription",
   "prescription-added": "La prescription a été ajoutée",
   "loading": "Chargement ...",
-  "start-date": "Date de début de la prescription"
+  "start-date": "Date de début de la prescription",
+  "electronic-prescription-proof": "PREUVE DE PRESCRIPTION ELECTRONIQUE",
+  "electronic-prescription-instruction": "Veuillez présenter ce document à votre pharmacien pour scanner le code-barres et vous délivrer les médicaments prescrits",
+  "prescriber": "Prescripteur",
+  "inami-number": "Nr INAMI",
+  "beneficiary": "Bénéficiaire",
+  "electronic-prescription-content": "Contenu de la prescription électronique",
+  "electronic-prescription-warning": "Aucun ajout manuscrit à ce document ne sera pris en compte",
+  "electronic-prescription-date": "Date : {{date}}",
+  "electronic-prescription-end-execution-date": "Date de fin pour l'exécution : {{date}}",
+  "nb-prescriptions": "Nombre de prescriptions",
+  "update": "Mettre à jour"
 }
