@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace Medikit.EHealth.Extensions
@@ -16,13 +17,19 @@ namespace Medikit.EHealth.Extensions
         public static T Deserialize<T>(this string xml)
         {
             var serializer = new XmlSerializer(typeof(T));
-            T samlEnv;
-            using (var reader = new StringReader(xml))
+            var byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+            if (xml.StartsWith(byteOrderMarkUtf8))
             {
-                samlEnv = (T)serializer.Deserialize(reader);
+                xml = xml.Remove(0, byteOrderMarkUtf8.Length);
             }
 
-            return samlEnv;
+            T result;
+            using (var reader = new StringReader(xml))
+            {
+                result = (T)serializer.Deserialize(reader);
+            }
+
+            return result;
         }
     }
 }

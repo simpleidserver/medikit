@@ -9,35 +9,35 @@ namespace Medikit.Api.AspNetCore.Extensions
 {
     public static class QueryCollectionExtensions
     {
-        public static IEnumerable<KeyValuePair<string, string>> ToEnumerable(this IQueryCollection query)
+        public static IEnumerable<KeyValuePair<string, object>> ToEnumerable(this IQueryCollection query)
         {
-            var result = new List<KeyValuePair<string, string>>();
+            var result = new List<KeyValuePair<string, object>>();
             foreach (var record in query)
             {
-                result.Add(new KeyValuePair<string, string>(record.Key, record.Value));
+                result.Add(new KeyValuePair<string, object>(record.Key, record.Value));
             }
 
             return result;
         }
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out string[] values)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out string[] values)
         {
             values = null;
             if (queryCollection.ContainsKey(name))
             {
-                var result = queryCollection.Get(name).ToArray().Where(s => !string.IsNullOrWhiteSpace(s)).Distinct();
+                var result = queryCollection.Get(name).ToArray().Where(s => s != null).Distinct();
                 if (!result.Any())
                 {
                     return false;
                 }
 
-                values = result.ToArray();
+                values = result.Select(_ => _.ToString()).ToArray();
                 return true;
             }
 
             return false;
         }
 
-        public static bool TryGet<T>(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out T enumeration) where T : struct
+        public static bool TryGet<T>(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out T enumeration) where T : struct
         {
             string val;
             enumeration = default(T);
@@ -56,7 +56,7 @@ namespace Medikit.Api.AspNetCore.Extensions
             return false;
         }
 
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out int[] values)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out int[] values)
         {
             values = null;
             string[] tmp;
@@ -88,13 +88,13 @@ namespace Medikit.Api.AspNetCore.Extensions
             return true;
         }
 
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out DateTime value)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out DateTime value)
         {
             value = default(DateTime);
             if (queryCollection.ContainsKey(name))
             {
                 DateTime result;
-                if (DateTime.TryParse(queryCollection.Get(name).ToArray().First(), out result))
+                if (DateTime.TryParse(queryCollection.Get(name).ToArray().First().ToString(), out result))
                 {
                     value = result;
                     return true;
@@ -106,13 +106,13 @@ namespace Medikit.Api.AspNetCore.Extensions
             return false;
         }
 
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out bool value)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out bool value)
         {
             value = false;
             if (queryCollection.ContainsKey(name))
             {
                 bool result;
-                if (bool.TryParse(queryCollection.Get(name).ToArray().First(), out result))
+                if (bool.TryParse(queryCollection.Get(name).ToArray().First().ToString(), out result))
                 {
                     value = result;
                     return true;
@@ -124,19 +124,19 @@ namespace Medikit.Api.AspNetCore.Extensions
             return false;
         }
 
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out string value)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out string value)
         {
             value = null;
             if (queryCollection.ContainsKey(name))
             {
-                value = queryCollection.Get(name).ToArray().First();
+                value = queryCollection.Get(name).ToArray().First().ToString();
                 return true;
             }
 
             return false;
         }
 
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out IEnumerable<string> values)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out IEnumerable<object> values)
         {
             values = null;
             if (queryCollection.ContainsKey(name))
@@ -148,18 +148,18 @@ namespace Medikit.Api.AspNetCore.Extensions
             return false;
         }
 
-        public static bool TryGet(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name, out int startIndex)
+        public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out int startIndex)
         {
             startIndex = 0;
             if (queryCollection.ContainsKey(name))
             {
-                return int.TryParse(queryCollection.Get(name).First(), out startIndex);
+                return int.TryParse(queryCollection.Get(name).First().ToString(), out startIndex);
             }
 
             return false;
         }
 
-        public static bool ContainsKey(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name)
+        public static bool ContainsKey(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name)
         {
             if (queryCollection.Any(q => q.Key == name))
             {
@@ -169,7 +169,7 @@ namespace Medikit.Api.AspNetCore.Extensions
             return false;
         }
 
-        public static IEnumerable<string> Get(this IEnumerable<KeyValuePair<string, string>> queryCollection, string name)
+        public static IEnumerable<object> Get(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name)
         {
             if (!queryCollection.ContainsKey(name))
             {

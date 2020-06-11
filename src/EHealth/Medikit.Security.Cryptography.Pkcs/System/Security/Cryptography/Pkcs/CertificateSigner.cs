@@ -19,7 +19,7 @@ namespace Medikit.Security.Cryptography.Pkcs
 
         public bool Sign(ReadOnlySpan<byte> dataHash, HashAlgorithmName hashAlgorithmName, X509Certificate2 certificate, AsymmetricAlgorithm key, bool silent, out Oid oid, out ReadOnlyMemory<byte> signatureValue)
         {
-            var privateKey = _certificate.GetRSAPrivateKey();
+            var privateKey = (RSA)_certificate.PrivateKey;
             oid = new Oid(Oids.RsaPkcs1Sha256);
             signatureValue = privateKey.SignHash(dataHash.ToArray(), hashAlgorithmName, RSASignaturePadding.Pss);
             return true;

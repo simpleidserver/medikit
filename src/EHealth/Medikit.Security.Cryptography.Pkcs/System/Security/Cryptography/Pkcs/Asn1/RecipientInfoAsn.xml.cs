@@ -65,7 +65,7 @@ namespace Medikit.Security.Cryptography.Pkcs.Asn1
                 if (wroteValue)
                     throw new CryptographicException();
 
-                KrecipientInfo.Value.Encode(writer, new Asn1Tag(TagClass.ContextSpecific, 1));
+                KrecipientInfo.Value.Encode(writer, new Asn1Tag(TagClass.ContextSpecific, 2));
                 wroteValue = true;
             }
 
@@ -88,20 +88,17 @@ namespace Medikit.Security.Cryptography.Pkcs.Asn1
         {
             decoded = default;
             Asn1Tag tag = reader.PeekTag();
-
             if (tag.HasSameClassAndValue(Asn1Tag.Sequence))
             {
                 KeyTransRecipientInfoAsn tmpKtri;
                 KeyTransRecipientInfoAsn.Decode(ref reader, rebind, out tmpKtri);
                 decoded.Ktri = tmpKtri;
-
             }
             else if (tag.HasSameClassAndValue(new Asn1Tag(TagClass.ContextSpecific, 1)))
             {
                 KeyAgreeRecipientInfoAsn tmpKari;
                 KeyAgreeRecipientInfoAsn.Decode(ref reader, new Asn1Tag(TagClass.ContextSpecific, 1), rebind, out tmpKari);
                 decoded.Kari = tmpKari;
-
             }
             else if (tag.HasSameClassAndValue(new Asn1Tag(TagClass.ContextSpecific, 2)))
             {

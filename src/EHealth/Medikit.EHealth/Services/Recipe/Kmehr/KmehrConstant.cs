@@ -19,6 +19,7 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
             public const string CD_HEADING_VERSION = "1.2";
             public const string CD_LIFECYCLE_VERSION = "1.9";
             public const string CD_UNIT_VERSION = "1.7";
+            public const string CD_TRANSACTION_MEDICATION_VERSION = "1.11";
         }
 
         public static class ReferenceNames
@@ -42,6 +43,11 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
         public static class TransactionNames
         {
             public const string PHARMACEUTICAL_PRESCRIPTION = "pharmaceuticalprescription";
+        }
+
+        public static class TransactionItemNames
+        {
+            public const string MEDICATION = "medication";
         }
     }
 }

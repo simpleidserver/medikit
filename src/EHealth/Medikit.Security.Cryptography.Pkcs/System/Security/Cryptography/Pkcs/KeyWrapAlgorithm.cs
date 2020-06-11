@@ -1,10 +1,8 @@
-﻿// Copyright (c) SimpleIdServer. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using System;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Medikit.EHealth.Pkcs
+namespace Medikit.Security.Cryptography.Pkcs
 {
     public class KeyWrapAlgorithm
     {
@@ -62,7 +60,7 @@ namespace Medikit.EHealth.Pkcs
             Block[] R = new Block[C.Length - 1];
             for (int i = 1; i < C.Length; i++)
                 R[i - 1] = C[i];
-            long n = R.Length;            
+            long n = R.Length;
             for (long j = 5; j >= 0; j--)
             {
                 for (long i = n - 1; i >= 0; i--)

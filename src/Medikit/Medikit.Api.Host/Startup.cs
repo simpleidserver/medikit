@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -52,6 +53,10 @@ namespace Medikit.Api.Host
                         Version = 0,
                         PrescriberId = "admin"
                     }
+                })
+                .AddLanguages(new List<string>
+                {
+                    "nl", "en", "fr"
                 });
             services.Configure<ForwardedHeadersOptions>(options =>
             {

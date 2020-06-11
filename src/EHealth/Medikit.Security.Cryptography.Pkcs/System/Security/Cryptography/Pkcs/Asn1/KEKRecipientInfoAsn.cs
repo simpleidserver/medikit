@@ -43,11 +43,11 @@ namespace Medikit.Security.Cryptography.Pkcs.Asn1
 
             KEKIdentifierAsn.Decode(ref sequenceReader, Asn1Tag.Sequence, rebind, out kekIdentifier);
             AlgorithmIdentifierAsn.Decode(ref sequenceReader, Asn1Tag.Sequence, rebind, out algIdentifier);
-            var encrytpedKey = sequenceReader.ReadOctetString();
+            var encryptedKey = sequenceReader.ReadOctetString();
 
             decoded.KEKId = kekIdentifier;
             decoded.KeyEncryptionAlg = algIdentifier;
-            decoded.EncryptedKey = encrytpedKey;
+            decoded.EncryptedKey = encryptedKey;
         }
     }
 }

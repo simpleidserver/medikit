@@ -17,6 +17,18 @@ namespace Medikit.EHealth
             { ETKTypes.SSIN, "SSIN" }
         };
 
+        public static class AttributeStatementNames
+        {
+            public const string CertificateHolderPersonSSIN = "urn:be:fgov:ehealth:1.0:certificateholder:person:ssin";
+            public const string PersonSSIN = "urn:be:fgov:person:ssin";
+        }
+
+        public static class AttributeStatementNamespaces
+        {
+            public const string Identification = "urn:be:fgov:identification-namespace";
+            public const string Certified = "urn:be:fgov:certified-namespace:ehealth";
+        }
+
         public static class Namespaces
         {
             public const string WSSE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";

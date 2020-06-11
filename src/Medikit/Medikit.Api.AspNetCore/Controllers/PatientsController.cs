@@ -57,7 +57,7 @@ namespace Medikit.Api.AspNetCore.Controllers
             };
         }
 
-        private static SearchPatientsQuery BuildSearchRequest(IEnumerable<KeyValuePair<string, string>> parameters)
+        private static SearchPatientsQuery BuildSearchRequest(IEnumerable<KeyValuePair<string, object>> parameters)
         {
             string niss, firstname, lastname;
             var result = new SearchPatientsQuery();

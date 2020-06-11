@@ -4,8 +4,16 @@ using Medikit.Api.Application.Domains;
 using Medikit.Api.Application.Exceptions;
 using Medikit.Api.Application.Persistence;
 using Medikit.Api.Application.Resources;
+using Medikit.EHealth;
+using Medikit.EHealth.Enums;
+using Medikit.EHealth.Extensions;
+using Medikit.EHealth.KeyStore;
+using Medikit.EHealth.SAML.DTOs;
+using Medikit.EHealth.Services.Recipe;
 using Medikit.EHealth.Services.Recipe.Kmehr;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,54 +22,87 @@ namespace Medikit.Api.Application.Prescriptions.Commands.Handlers
 {
     public class AddPharmaceuticalPrescriptionCommandHandler : IAddPharmaceuticalPrescriptionCommandHandler
     {
-        private const string SAM_VERSION = "640";
+        private Dictionary<string, string> MAPPING_CLAIM_TO_HCPARTY = new Dictionary<string, string>
+        {
+            { MedicalProfessions.Doctor.Code, "persphysician" }
+        };
         private const string DEFAULT_LANGUAGE = "fr";
-        private readonly MedikitServerOptions _options;
+        private readonly EHealthOptions _options;
         private readonly IPatientQueryRepository _patientQueryRepository;
+        private readonly IKeyStoreManager _keyStoreManager;
+        private readonly IRecipeService _recipeService;
 
-        public AddPharmaceuticalPrescriptionCommandHandler(IOptions<MedikitServerOptions> options, IPatientQueryRepository patientQueryRepository)
+        public AddPharmaceuticalPrescriptionCommandHandler(IOptions<EHealthOptions> options, IPatientQueryRepository patientQueryRepository, IKeyStoreManager keyStoreManager, IRecipeService recipeService)
         {
             _options = options.Value;
             _patientQueryRepository = patientQueryRepository;
+            _keyStoreManager = keyStoreManager;
+            _recipeService = recipeService;
         }
 
-        public async Task Handle(AddPharmaceuticalPrescriptionCommand command, CancellationToken token)
+        public async Task<string> Handle(AddPharmaceuticalPrescriptionCommand command, CancellationToken token)
         {
-            var person = await _patientQueryRepository.GetByNiss(command.Prescription.PatientNiss, token);
+            SAMLAssertion assertion;
+            var person = await _patientQueryRepository.GetByNiss(command.PatientNiss, token);
             if (person == null)
             {
-                throw new UnknownPatientException(command.Prescription.PatientNiss, string.Format(Global.UnknownPatient, command.Prescription.PatientNiss));
+                throw new UnknownPatientException(command.PatientNiss, string.Format(Global.UnknownPatient, command.PatientNiss));
             }
 
-            new KmehrMessageBuilder()
-                .AddSender((lst) =>
+            try
+            {
+                assertion = SAMLAssertion.Deserialize(command.AssertionToken);
+            }
+            catch
+            {
+                throw new BadAssertionTokenException(Global.BadAssertionToken);
+            }
+
+            var createDateTime = DateTime.UtcNow;
+            if (command.CreateDateTime != null)
+            {
+                createDateTime = command.CreateDateTime.Value;
+            }
+
+            var niss = assertion.AttributeStatement.Attribute.First(_ => _.AttributeNamespace == EHealth.Constants.AttributeStatementNamespaces.Identification).AttributeValue;
+            var profession = assertion.AttributeStatement.Attribute.First(_ => _.AttributeNamespace == EHealth.Constants.AttributeStatementNamespaces.Certified).AttributeName;
+            var cbe = _keyStoreManager.GetOrgAuthCertificate().ExtractCBE();
+            var msgType = new KmehrMessageBuilder()
+                .AddSender((_) =>
                 {
-                    lst.AddHealthCareParty((s) =>
+                    _.AddHealthCareParty((_) =>
                     {
-                        s.AddOrganization("app", "app");
+                        _.AddOrganization(cbe, "application", _options.ProductName);
+                    });
+                    _.AddHealthCareParty((_) =>
+                    {
+                        _.AddPerson(niss, MAPPING_CLAIM_TO_HCPARTY[profession], string.Empty, string.Empty);
                     });
                 })
-                .AddRecipient((lst) =>
+                .AddRecipient((_) =>
                 {
-                    lst.AddHealthCareParty((s) =>
+                    _.AddHealthCareParty((s) =>
                     {
-                        s.AddOrganization("app", "app");
+                        s.AddOrganization("RECIPE", "orgpublichealth", "Recip-e");
                     });
                 })
-                .AddFolder("1", (p) =>
+                .AddFolder("1", (_) =>
                 {
-                    p.New(person.NationalIdentityNumber, person.Lastname, new string[] { person.Firstname });
-                }, (t) =>
+                    _.New(person.NationalIdentityNumber, person.Lastname, new string[] { person.Firstname });
+                }, (_) =>
                 {
-                    t.AddTransaction((tr) =>
+                    _.AddTransaction((tr) =>
                     {
-                        for(var i = 0; i < command.Prescription.Medications.Count(); i++)
+                        tr.NewPharmaceuticalPrescriptionTransaction("1", createDateTime, true, true, command.ExpirationDateTime)
+                            .AddAuthor(niss, MAPPING_CLAIM_TO_HCPARTY[profession], string.Empty, string.Empty)
+                            .AddTransactionHeading((h) =>
                         {
-                            var pharmaPrescription = command.Prescription.Medications.ElementAt(i);
-                            tr.NewPharmaceuticalPrescriptionTransaction(i.ToString())
-                                .AddTransactionItem((ti) =>
+                            h.NewPrescriptionHeading("1");
+                            foreach (var pharmaPrescription in command.Medications)
+                            {
+                                h.AddMedicationTransactionItem((ti) =>
                                 {
-                                    // TODO : EXTERNALIZE THE LANGUAGE.
+                                    ti.SetMedicinalProduct(pharmaPrescription.PackageCode, string.Empty);
                                     if (pharmaPrescription.Posology.Type.Id == PosologyTypes.FreeText.Id)
                                     {
                                         var freeText = pharmaPrescription.Posology as PharmaceuticalPrescriptionFreeTextPosology;
@@ -70,6 +111,11 @@ namespace Medikit.Api.Application.Prescriptions.Commands.Handlers
                                     else
                                     {
                                         // TODO : MANAGE STRUCTURED POSOLOGY.
+                                    }
+
+                                    if (pharmaPrescription.BeginMoment != null)
+                                    {
+                                        ti.SetBeginMoment(pharmaPrescription.BeginMoment.Value);
                                     }
 
                                     if (!string.IsNullOrWhiteSpace(pharmaPrescription.InstructionForPatient))
@@ -81,15 +127,14 @@ namespace Medikit.Api.Application.Prescriptions.Commands.Handlers
                                     {
                                         ti.SetInstructionForReimbursement(pharmaPrescription.InstructionForReimbursement, DEFAULT_LANGUAGE);
                                     }
-
-
-
-                                    ti.SetMedicinalProduct(SAM_VERSION, pharmaPrescription.PackageCode, string.Empty);
                                 });
-                        }
+                            }
+                        });
                     });
-                });
-
+                })
+                .Build(createDateTime);
+            var result = await _recipeService.CreatePrescription(Enum.GetName(typeof(PrescriptionTypes), command.PrescriptionType), command.PatientNiss, command.ExpirationDateTime.Value, msgType, assertion);
+            return result.RID;
         }
     }
 }

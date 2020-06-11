@@ -123,7 +123,7 @@ namespace Internal.Cryptography.Pal.AnyOS
                             {
                                 KeyIdentifier = Convert.FromBase64String(recipient.SymmetricKeyId)
                             },
-                            EncryptedKey = recipient.SymmetricAlgorithm.Key,
+                            EncryptedKey = KeyWrapAlgorithm.WrapKey(recipient.SymmetricAlgorithm.Key, cek),
                             KeyEncryptionAlg = new AlgorithmIdentifierAsn
                             {
                                 Algorithm = new Oid(Oids.Aes128Cbc)

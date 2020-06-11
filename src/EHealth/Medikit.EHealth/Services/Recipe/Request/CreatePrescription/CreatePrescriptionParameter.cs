@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Medikit.EHealth.Services.Recipe.Request
@@ -28,17 +29,22 @@ namespace Medikit.EHealth.Services.Recipe.Request
         [XmlElement(ElementName = "patientId")]
         public string PatientId { get; set; }
 
-        public byte[] Serialize()
+        public XElement Serialize()
         {
-            var serializer = new XmlSerializer(typeof(CreatePrescriptionParameter));
-            using (var ms = new MemoryStream())
-            {
-                using (var writer = XmlWriter.Create(ms))
-                {
-                    serializer.Serialize(writer, this);
-                    return ms.ToArray();
-                }
-            }
+            var result = new XElement(Constants.XMLNamespaces.PRESCRIBER + "createPrescriptionParam",
+                new XAttribute(XNamespace.Xmlns + "ns2", Constants.Namespaces.PRESCRIBER),
+                new XAttribute(XNamespace.Xmlns + "ns3", Constants.Namespaces.PATIENT),
+                new XAttribute(XNamespace.Xmlns + "ns4", Constants.Namespaces.EXECUTOR),
+                new XElement("prescription", Prescription),
+                new XElement("prescriptionType", PrescriptionType),
+                new XElement("feedbackRequested", FeedbackRequested),
+                new XElement("keyId", KeyId),
+                new XElement("symmKey", SymmKey),
+                new XElement("prescriberLabel", PrescriberLabel),
+                new XElement("expirationDate", ExpirationDate),
+                new XElement("vision", Vision),
+                new XElement("patientId", PatientId));
+            return result;
         }
     }
 }

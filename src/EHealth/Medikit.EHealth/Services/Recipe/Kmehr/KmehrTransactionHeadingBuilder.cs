@@ -15,9 +15,29 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
             return _obj;
         }
 
-        public KmehrTransactionHeadingBuilder AddTransactionItem(Action<KmehrTransactionItemBuilder> callback)
+        public KmehrTransactionHeadingBuilder AddMedicationTransactionItem(Action<KmehrTransactionItemBuilder> callback)
         {
-            var itemType = new itemType();
+            var itemType = new itemType
+            {
+                id = new IDKMEHR[1]
+                {
+                    new IDKMEHR
+                    {
+                        S = IDKMEHRschemes.IDKMEHR,
+                        SV = KmehrConstant.ReferenceVersion.ID_KMEHR_VERSION,
+                        Value = "1"
+                    }
+                },
+                cd = new CDITEM[1]
+                {
+                    new CDITEM
+                    {
+                        S = CDITEMschemes.CDITEM,
+                        SV = KmehrConstant.ReferenceVersion.CD_TRANSACTION_MEDICATION_VERSION,
+                        Value = KmehrConstant.TransactionItemNames.MEDICATION
+                    }
+                }
+            };
             var builder = new KmehrTransactionItemBuilder(itemType);
             callback(builder);
             var objs = new List<object>();

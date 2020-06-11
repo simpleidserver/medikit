@@ -14,8 +14,7 @@ export class PharmaDrugPrescription {
     Duration: PharmaDuration;
     InstructionForPatient: string;
     InstructionForReimbursement: string;
-    Date: Date;
-    EndExecutionDate: Date;
+    BeginMoment: Date;
 
     public static fromJson(json: any) {
         var result = new PharmaDrugPrescription();

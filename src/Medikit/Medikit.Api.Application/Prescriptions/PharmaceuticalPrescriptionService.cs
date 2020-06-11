@@ -1,5 +1,7 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+using Medikit.Api.Application.Metadata;
+using Medikit.Api.Application.Prescriptions.Commands;
 using Medikit.Api.Application.Prescriptions.Commands.Handlers;
 using Medikit.Api.Application.Prescriptions.Queries;
 using Medikit.Api.Application.Prescriptions.Queries.Handlers;
@@ -15,12 +17,22 @@ namespace Medikit.Api.Application.Prescriptions
         private readonly IAddPharmaceuticalPrescriptionCommandHandler _addPharmaceuticalPrescriptionCommandHandler;
         private readonly IGetOpenedPharmaceuticalPrescriptionQueryHandler _getOpenedPharmaceuticalPrescriptionQueryHandler;
         private readonly IGetPharmaceuticalPrescriptionQueryHandler _getPharmaceuticalPrescriptionQueryHandler;
+        private readonly IGetPrescriptionMetadataQueryHandler _getPrescriptionMetadataQueryHandler;
 
-        public PharmaceuticalPrescriptionService(IAddPharmaceuticalPrescriptionCommandHandler addPharmaceuticalPrescriptionCommandHandler, IGetOpenedPharmaceuticalPrescriptionQueryHandler getOpenedPharmaceuticalPrescriptionQueryHandler, IGetPharmaceuticalPrescriptionQueryHandler getPharmaceuticalPrescriptionQueryHandler)
+        public PharmaceuticalPrescriptionService(IAddPharmaceuticalPrescriptionCommandHandler addPharmaceuticalPrescriptionCommandHandler, 
+            IGetOpenedPharmaceuticalPrescriptionQueryHandler getOpenedPharmaceuticalPrescriptionQueryHandler, 
+            IGetPharmaceuticalPrescriptionQueryHandler getPharmaceuticalPrescriptionQueryHandler,
+            IGetPrescriptionMetadataQueryHandler getPrescriptionMetadataQueryHandler)
         {
             _addPharmaceuticalPrescriptionCommandHandler = addPharmaceuticalPrescriptionCommandHandler;
             _getOpenedPharmaceuticalPrescriptionQueryHandler = getOpenedPharmaceuticalPrescriptionQueryHandler;
             _getPharmaceuticalPrescriptionQueryHandler = getPharmaceuticalPrescriptionQueryHandler;
+            _getPrescriptionMetadataQueryHandler = getPrescriptionMetadataQueryHandler;
+        }
+
+        public Task<string> AddPrescription(AddPharmaceuticalPrescriptionCommand query, CancellationToken token)
+        {
+            return _addPharmaceuticalPrescriptionCommandHandler.Handle(query, token);
         }
 
         public Task<ICollection<string>> GetOpenedPrescriptions(GetOpenedPharmaceuticalPrescriptionQuery query, CancellationToken token)
@@ -31,6 +43,11 @@ namespace Medikit.Api.Application.Prescriptions
         public Task<GetPharmaceuticalPrescriptionResult> GetPrescription(GetPharmaceuticalPrescriptionQuery query, CancellationToken token)
         {
             return _getPharmaceuticalPrescriptionQueryHandler.Handle(query, token);
+        }
+
+        public Task<MetadataResult> GetMetadata(CancellationToken token)
+        {
+            return _getPrescriptionMetadataQueryHandler.Handle(token);
         }
     }
 }

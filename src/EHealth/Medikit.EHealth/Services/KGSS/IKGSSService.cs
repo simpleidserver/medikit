@@ -3,12 +3,14 @@
 using Medikit.EHealth.SAML.DTOs;
 using Medikit.EHealth.Services.KGSS.Response;
 using Medikit.EHealth.Services.KGSS.Response.GetKey;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Medikit.EHealth.Services.KGSS
 {
     public interface IKGSSService
     {
+        Task<KGSSGetNewKeyResponseContent> GetKGSS(List<CredentialType> credentials);
         Task<KGSSGetKeyResponseContent> GetKeyFromKGSS(string keyId, SAMLAssertion assertion);
         Task<KGSSGetNewKeyResponseContent> GetOrgKGSS();
     }

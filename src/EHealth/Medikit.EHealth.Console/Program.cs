@@ -1,8 +1,10 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+using Medikit.EHealth.Services.Recipe.Kmehr.Xsd;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using Medikit.EHealth.Extensions;
 
 namespace Medikit.EHealth.Console
 {
@@ -23,7 +25,8 @@ namespace Medikit.EHealth.Console
             _serviceProvider = serviceCollection.BuildServiceProvider();
             BuildSTSIdentityRequest().ContinueWith((s) =>
             {
-                GetPrescription();
+                AddPrescription(s.Result.Body.Response.Assertion);
+                // GetPrescription();
                 // GetOpenedPrescriptions();
             });
             /*

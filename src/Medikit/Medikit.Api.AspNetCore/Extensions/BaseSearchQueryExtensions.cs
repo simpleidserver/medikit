@@ -7,7 +7,7 @@ namespace Medikit.Api.AspNetCore.Extensions
 {
     public static class BaseSearchQueryExtensions
     {
-        public static void ExtractSearchParameters(this BaseSearchQuery query, IEnumerable<KeyValuePair<string, string>> parameters)
+        public static void ExtractSearchParameters(this BaseSearchQuery query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             int startIndex, count;
             string orderBy;

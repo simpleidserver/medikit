@@ -10,6 +10,7 @@ using Medikit.Api.Application.Infrastructure.EvtStore;
 using Medikit.Api.Application.Infrastructure.EvtStore.InMemory;
 using Medikit.Api.Application.MedicinalProduct;
 using Medikit.Api.Application.MedicinalProduct.Queries.Handlers;
+using Medikit.Api.Application.Metadata;
 using Medikit.Api.Application.Patient;
 using Medikit.Api.Application.Patient.Commands.Handlers;
 using Medikit.Api.Application.Patient.Queries.Handlers;
@@ -32,6 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
+
         public static MedikitServerBuilder AddMedikitApiApplication(this IServiceCollection services, 
             Action<MedikitServerOptions> medikitCallack = null,
             Action<EHealthOptions> eheathCallback = null)
@@ -49,7 +51,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 // .AddInMemoryServices()
                 .AddEHealthServices(eheathCallback)
                 .AddMessageHandlers()
-                .AddPersistence();
+                .AddPersistence()
+                .AddMetadata();
             return new MedikitServerBuilder(services);
         }
 
@@ -85,7 +88,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IGetPharmaceuticalPrescriptionQueryHandler, GetPharmaceuticalPrescriptionQueryHandler>();
             services.AddTransient<IGetOpenedPharmaceuticalPrescriptionQueryHandler, GetOpenedPharmaceuticalPrescriptionQueryHandler>();
             services.AddTransient<IAddPharmaceuticalPrescriptionCommandHandler, AddPharmaceuticalPrescriptionCommandHandler>();
-            services.AddTransient<IPharmaceuticalPrescriptionService, PharmaceuticalPrescriptionService>();
+            services.AddTransient<IGetPrescriptionMetadataQueryHandler, GetPrescriptionMetadataQueryHandler>();
             return services;
         }
 
@@ -101,9 +104,13 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var referenceTables = new ConcurrentBag<ReferenceTable>();
             var patients = new ConcurrentBag<PatientAggregate>();
+            var languages = new ConcurrentBag<Language>();
+            var translations = new ConcurrentBag<Translation>();
             services.AddSingleton<IReferenceTableQueryRepository>(new InMemoryReferenceTableQueryRepository(referenceTables));
             services.AddSingleton<IPatientCommandRepository>(new InMemoryPatientCommandRepository(patients));
             services.AddSingleton<IPatientQueryRepository>(new InMemoryPatientQueryRepository(patients));
+            services.AddSingleton<ILanguageQueryRepository>(new InMemoryLanguageQueryRepository(languages));
+            services.AddSingleton<ITranslationQueryRepository>(new InMemoryTranslationQueryRepository(translations));
             return services;
         }
 
@@ -119,6 +126,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IAmpService, EHealthAmpService>();
             services.AddTransient<IPrescriptionService, EHealthPrescriptionService>();
             services.AddEHealth(callback);
+            return services;
+        }
+
+        private static IServiceCollection AddMetadata(this IServiceCollection services)
+        {
+            services.AddTransient<IMetadataResultBuilder, MetadataResultBuilder>();
+            services.AddTransient<ITranslationService, TranslationService>();
             return services;
         }
 

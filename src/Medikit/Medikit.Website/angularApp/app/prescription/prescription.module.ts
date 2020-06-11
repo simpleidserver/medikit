@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MaterialModule } from '@app/infrastructure/material.module';
 import { TranslateEnumPipe } from '@app/infrastructure/pipes/translateenum.pipe';
@@ -26,8 +26,7 @@ import { PrescriptionViewerComponent } from './viewer/prescription-viewer.compon
         PrescriptionViewerComponent,
         TranslateEnumPipe
     ],
-
-    providers: [ ]
+    providers: [ DatePipe ]
 })
 
 export class PrescriptionModule { }

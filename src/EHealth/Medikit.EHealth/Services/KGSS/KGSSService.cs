@@ -76,14 +76,20 @@ namespace Medikit.EHealth.Services.KGSS
             return KGSSGetKeyResponseContent.Deserialize(unsealedPayload);
         }
         
-        public async Task<KGSSGetNewKeyResponseContent> GetOrgKGSS()
+        public Task<KGSSGetNewKeyResponseContent> GetOrgKGSS()
+        {
+            var orgAuthCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            return GetKGSS(BuildOrgAllowedReaders(orgAuthCertificate));
+        }
+
+        public async Task<KGSSGetNewKeyResponseContent> GetKGSS(List<CredentialType> credentials)
         {
             var orgAuthCertificate = _keyStoreManager.GetOrgAuthCertificate();
             var orgEtk = await _etkService.GetOrgETK();
-            var kgssEtk = await _etkService.GetKgssETK(); 
+            var kgssEtk = await _etkService.GetKgssETK();
             var getNewRequestContent = new KGSSGetNewKeyRequestContent
             {
-                AllowedReaders = BuildOrgAllowedReaders(orgAuthCertificate),
+                AllowedReaders = credentials,
                 ETK = orgEtk.ETK
             };
             var contentInfoPayload = Encoding.UTF8.GetBytes(getNewRequestContent.Serialize().ToString());

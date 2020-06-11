@@ -18,7 +18,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -116,6 +115,99 @@ namespace Medikit.EHealth.Services.Recipe
             };
         }        
 
+        public async Task<CreatePrescriptionResult> CreatePrescription(string prescriptionType, string patientId, DateTime expirationDateTime, kmehrmessageType msgType, SAMLAssertion assertion)
+        {
+            var orgCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            var recipeETK = await _etkService.GetRecipeETK();
+            var kgssResponse = await _kgssService.GetKGSS(new System.Collections.Generic.List<CredentialType>
+            {
+                new CredentialType
+                {
+                    Namespace = Constants.AttributeStatementNamespaces.Identification,
+                    Name = Constants.AttributeStatementNames.PersonSSIN,
+                    Value = assertion.AttributeStatement.Attribute.First(_ => _.AttributeNamespace == EHealth.Constants.AttributeStatementNamespaces.Identification).AttributeValue
+                },
+                new CredentialType
+                {
+                    Namespace = Constants.AttributeStatementNamespaces.Certified,
+                    Name = assertion.AttributeStatement.Attribute.First(_ => _.AttributeNamespace == EHealth.Constants.AttributeStatementNamespaces.Certified).AttributeName
+                }
+            });
+            var prescriptionPayload = msgType.SerializeToByte(false, true);
+            var compressedPayload = Compress(prescriptionPayload);
+            byte[] encryptedPayload;
+            using (var aes = Aes.Create())
+            {
+                aes.Padding = PaddingMode.PKCS7;
+                aes.Mode = CipherMode.CBC;
+                aes.KeySize = 128;
+                aes.Key = Convert.FromBase64String(kgssResponse.NewKey);
+                encryptedPayload = TripleWrapper.Seal(compressedPayload, orgCertificate, kgssResponse.NewKeyIdentifier, aes);
+            }
+
+            var symKey = new TripleDESCryptoServiceProvider
+            {
+                Padding = PaddingMode.None,
+                Mode = CipherMode.ECB
+            };
+            var prescriptionParameter = new CreatePrescriptionParameter
+            {
+                Prescription = Convert.ToBase64String(encryptedPayload),
+                PrescriptionType = prescriptionType,
+                FeedbackRequested = false,
+                KeyId = kgssResponse.NewKeyIdentifier,
+                SymmKey = Convert.ToBase64String(symKey.Key),
+                PatientId = patientId,
+                ExpirationDate = expirationDateTime.ToString("yyyy-MM-dd"),
+                Vision = ""
+            };
+            var serializedPrescriptionParameter = Encoding.UTF8.GetBytes(prescriptionParameter.Serialize().SerializeToString(false, true));
+            byte[] sealedContent = TripleWrapper.Seal(serializedPrescriptionParameter, orgCertificate, recipeETK.Certificate);
+            var issueInstant = DateTime.UtcNow;
+            var createPrescriptionRequest = new CreatePrescriptionRequest
+            {
+                IssueInstant = issueInstant,
+                Id = $"id{Guid.NewGuid().ToString()}",
+                ProgramId = "Medikit",
+                AdministrativeInformation = new CreatePrescriptionAdministrativeInformationType
+                {
+                    KeyIdentifier = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(kgssResponse.NewKeyIdentifier)),
+                    PrescriptionVersion = "kmehr_1.29",
+                    ReferenceSourceVersion = "samv2:ABCDE999999999999",
+                    PrescriptionType = prescriptionType
+                },
+                SecuredCreatePrescriptionRequest = new SecuredContentType
+                {
+                    SecuredContent = Convert.ToBase64String(sealedContent)
+                }
+            };
+            var soapRequest = SOAPRequestBuilder<CreatePrescriptionRequestBody>.New(new CreatePrescriptionRequestBody
+            {
+                Id = $"id-{Guid.NewGuid().ToString()}",
+                Request = createPrescriptionRequest
+            })
+                .AddTimestamp(issueInstant, issueInstant.AddHours(1))
+                .AddSAMLAssertion(assertion)
+                .AddReferenceToSAMLAssertion()
+                .SignWithCertificate(orgCertificate)
+                .Build();
+            var result = await _soapClient.Send(soapRequest, new Uri(_options.PrescriberUrl), "urn:be:fgov:ehealth:recipe:protocol:v4:createPrescription");
+            var xml = await result.Content.ReadAsStringAsync();
+            result.EnsureSuccessStatusCode();
+            var response = SOAPEnvelope<CreatePrescriptionResponseBody>.Deserialize(xml);
+            var securedContent = response.Body.CreatePrescriptionResponse.SecuredGetPrescriptionResponse.SecuredContent;
+            byte[] decrypted;
+            using (var decryptor = symKey.CreateDecryptor())
+            {
+                var payload = Convert.FromBase64String(securedContent);
+                decrypted = decryptor.TransformFinalBlock(payload, 0, payload.Length);
+            }
+
+            xml = Encoding.UTF8.GetString(decrypted);
+            xml = xml.ClearBadFormat();
+            return CreatePrescriptionResult.Deserialize(xml);
+        }
+
         public Task<ListOpenRidsResult> GetOpenedPrescriptions(string patientId, Page page)
         {
             var assertion = _sessionService.GetSession().Body.Response.Assertion;
@@ -179,13 +271,12 @@ namespace Medikit.EHealth.Services.Recipe
 
         private static byte[] Compress(byte[] input)
         {
-            using (var memoryStream = new MemoryStream())
+            using (var compressedStream = new MemoryStream())
+            using (var zipStream = new GZipStream(compressedStream, CompressionMode.Compress))
             {
-                using (var stream = new GZipStream(memoryStream, CompressionLevel.Optimal))
-                {
-                    stream.Write(input);
-                    return memoryStream.ToArray();
-                }
+                zipStream.Write(input, 0, input.Length);
+                zipStream.Close();
+                return compressedStream.ToArray();
             }
         }
 

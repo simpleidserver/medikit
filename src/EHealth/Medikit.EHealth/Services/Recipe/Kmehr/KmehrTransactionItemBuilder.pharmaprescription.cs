@@ -1,6 +1,7 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Medikit.EHealth.Services.Recipe.Kmehr.Xsd;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,6 +9,60 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
 {
     public partial class KmehrTransactionItemBuilder
     {
+        public KmehrTransactionItemBuilder AddAuthor(string id, string type, string firstname, string lastname)
+        {
+            List<hcpartyType> authors;
+            if (_obj.author == null)
+            {
+                authors = new List<hcpartyType>();
+            }
+            else
+            {
+                authors = _obj.author.ToList();
+            }
+
+            var hcParty = new hcpartyType
+            {
+                cd = new CDHCPARTY[1]
+                {
+                    new CDHCPARTY
+                    {
+                        SV = KmehrConstant.ReferenceVersion.CD_HCPARTY_VERSION,
+                        S = CDHCPARTYschemes.CDHCPARTY,
+                        Value = type
+                    }
+                },
+                id = new IDHCPARTY[1]
+                {
+                    new IDHCPARTY
+                    {
+                        SV = KmehrConstant.ReferenceVersion.ID_KMEHR_VERSION,
+                        S = IDHCPARTYschemes.IDHCPARTY,
+                        Value = id
+                    }
+                }
+            };
+            var choices = new List<ItemsChoiceType>();
+            var items = new List<string>();
+            if (!string.IsNullOrWhiteSpace(firstname))
+            {
+                choices.Add(ItemsChoiceType.firstname);
+                items.Add(firstname);
+            }
+
+            if (!string.IsNullOrWhiteSpace(lastname))
+            {
+                choices.Add(ItemsChoiceType.familyname);
+                items.Add(lastname);
+            }
+
+            hcParty.ItemsElementName = choices.ToArray();
+            hcParty.Items = items.ToArray();
+            authors.Add(hcParty);
+            _obj.author = authors.ToArray();
+            return this;
+        }
+
         public KmehrTransactionItemBuilder SetPosologyFreeText(string text, string language)
         {
             _obj.posology = new itemTypePosology
@@ -36,6 +91,22 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
             return this;
         }
 
+        public KmehrTransactionItemBuilder SetBeginMoment(DateTime beginMoment)
+        {
+            _obj.beginmoment = new momentType
+            {
+                Items = new object[1]
+                {
+                    beginMoment
+                },
+                ItemsElementName = new ItemsChoiceType1[1]
+                {
+                    ItemsChoiceType1.date
+                }
+            };
+            return this;
+        }
+
         public KmehrTransactionItemBuilder SetInstructionForReimbursement(string instruction, string language)
         {
             _obj.instructionforreimbursement = new textType
@@ -46,7 +117,7 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
             return this;
         }
 
-        public KmehrTransactionItemBuilder SetMedicinalProduct(string version, string cnk, string name)
+        public KmehrTransactionItemBuilder SetMedicinalProduct(string cnk, string name)
         {
             var content = new contentType
             {
@@ -54,11 +125,11 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
                 {
                     new medicinalProductType
                     {
-                        deliveredcd = new CDDRUGCNK[1]
+                        intendedcd = new CDDRUGCNK[1]
                         {
                             new CDDRUGCNK
                             {
-                                SV = version,
+                                SV = "LOCALDB",
                                 S = CDDRUGCNKschemes.CDDRUGCNK,
                                 Value = cnk
                             }

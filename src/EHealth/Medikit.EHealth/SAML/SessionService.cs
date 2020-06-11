@@ -59,20 +59,20 @@ namespace Medikit.EHealth.SAML
             {
                 new SAMLAttribute
                 {
-                    AttributeName = "urn:be:fgov:ehealth:1.0:certificateholder:person:ssin",
-                    AttributeNamespace = "urn:be:fgov:identification-namespace",
+                    AttributeName = Constants.AttributeStatementNames.CertificateHolderPersonSSIN,
+                    AttributeNamespace = Constants.AttributeStatementNamespaces.Identification,
                     AttributeValue = idAuthCertificate.ExtractSSIN()
                 },
                 new SAMLAttribute
                 {
-                    AttributeName = "urn:be:fgov:person:ssin",
-                    AttributeNamespace = "urn:be:fgov:identification-namespace",
+                    AttributeName = Constants.AttributeStatementNames.PersonSSIN,
+                    AttributeNamespace = Constants.AttributeStatementNamespaces.Identification,
                     AttributeValue = idAuthCertificate.ExtractSSIN()
                 },
                 new SAMLAttribute
                 {
                     AttributeName = _options.IdentityProfession.Code,
-                    AttributeNamespace = "urn:be:fgov:certified-namespace:ehealth"
+                    AttributeNamespace = Constants.AttributeStatementNamespaces.Certified
                 }
             };
             var issueInstant = DateTime.UtcNow;

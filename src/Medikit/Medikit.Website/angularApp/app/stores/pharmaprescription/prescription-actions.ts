@@ -7,7 +7,10 @@ export enum ActionTypes {
     ERROR_LOAD_PHARMA_PRESCRIPTIONS = "[PharmaPrescription] ERROR_LOAD_PHARMA_PRESCRIPTIONS",
     LOAD_PHARMA_PRESCRIPTION = "[PharmaPrescription] LOAD_PHARMA_PRESCRIPTION",
     PHARMA_PRESCRIPTION_LOADED = "[PharmaPrescription] PHARMA_PRESCRIPTION_LOADED",
-    ERROR_LOAD_PHARMA_PRESCRIPTION = "[PharmaPrescription] ERROR_LOAD_PHARMA_PRESCRIPTION"
+    ERROR_LOAD_PHARMA_PRESCRIPTION = "[PharmaPrescription] ERROR_LOAD_PHARMA_PRESCRIPTION",
+    ADD_PHARMA_PRESCRIPTION = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION",
+    ADD_PHARMA_PRESCRIPTION_SUCCESS = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION_SUCCESS",
+    ADD_PHARMA_PRESCRIPTION_ERROR = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION_ERROR"
 }
 
 export class LoadPharmaPrescriptions implements Action {
@@ -30,4 +33,9 @@ export class PharmaPrescriptionLoaded implements Action {
     constructor(public prescription: PharmaPrescription) { }
 }
 
-export type ActionsUnion = LoadPharmaPrescriptions | PharmaPrescriptionsLoaded | LoadPharmaPrescription | PharmaPrescriptionLoaded;
+export class AddPharmaPrescription implements Action {
+    readonly type = ActionTypes.ADD_PHARMA_PRESCRIPTION;
+    constructor(public prescription: PharmaPrescription, public samlAssertion: string) { }
+}
+
+export type ActionsUnion = LoadPharmaPrescriptions | PharmaPrescriptionsLoaded | LoadPharmaPrescription | PharmaPrescriptionLoaded | AddPharmaPrescription;

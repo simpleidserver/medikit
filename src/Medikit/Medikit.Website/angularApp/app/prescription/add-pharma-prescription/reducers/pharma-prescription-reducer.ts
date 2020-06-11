@@ -32,6 +32,9 @@ export function PharmaPrescriptionFormReducer(state = initialState, action: from
             state.prescription = loaded.prescription;
             state.nextPatientFormBtnDisabled = loaded.nextPatientFormBtnDisabled;
             return { ...state };
+        case fromActions.ActionTypes.SELECT_PATIENT:
+            state.prescription.Patient = action.patient;
+            return { ...state };
         case fromActions.ActionTypes.NEXT_STEP:
             state.stepperIndex += 1;
             persist(state);

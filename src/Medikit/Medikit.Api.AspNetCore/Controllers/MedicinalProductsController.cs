@@ -39,7 +39,7 @@ namespace Medikit.Api.AspNetCore.Controllers
             }
         }
 
-        private static SearchMedicinalProduct BuildRequest(IEnumerable<KeyValuePair<string, string>> query)
+        private static SearchMedicinalProduct BuildRequest(IEnumerable<KeyValuePair<string, object>> query)
         {
             var result = new SearchMedicinalProduct();
             int startIndex;

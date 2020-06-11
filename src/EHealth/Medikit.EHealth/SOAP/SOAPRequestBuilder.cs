@@ -138,7 +138,7 @@ namespace Medikit.EHealth.SOAP
                 new XmlDsigExcC14NTransform()
             });
             var payload = signedInfo.ComputeSignature();
-            var privateKey = certificate.GetRSAPrivateKey();
+            var privateKey = (RSA)certificate.PrivateKey;
             var signaturePayload = privateKey.SignData(payload, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
             var sigId = $"sig-{Guid.NewGuid().ToString()}";
             _envelope.Header.Security.Signature.SignatureValue = Convert.ToBase64String(signaturePayload);

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Medikit.Api.Acceptance.Tests
 {
@@ -27,6 +28,10 @@ namespace Medikit.Api.Acceptance.Tests
                         Version = 0,
                         PrescriberId = "admin"
                     }
+                })
+                .AddLanguages(new List<string>
+                {
+                    "nl", "en", "fr"
                 });
             services.AddMvc(opts => opts.EnableEndpointRouting = false).AddNewtonsoftJson();
         }

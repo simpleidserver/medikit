@@ -14,7 +14,7 @@ export class MedicinalProductService {
         let headers = new HttpHeaders();
         let targetUrl = process.env.API_URL + "/medicinalproducts/.search?search_text=" + searchText + "&start_index=" + startIndex + "&count=" + count;
         targetUrl += "&is_commercialised=" + isCommercialised;
-        if (!deliveryEnvironment) {
+        if (deliveryEnvironment) {
             targetUrl += "&delivery_environment=" + deliveryEnvironment;
         }
 

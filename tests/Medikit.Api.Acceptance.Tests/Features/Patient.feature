@@ -6,7 +6,6 @@ Scenario: Get patient by NISS
 	Then HTTP status code equals to '200'
 	Then JSON 'firstname'='thierry'
 
-
 Scenario: Search patients
 	When execute HTTP GET request 'http://localhost/patients/.search?firstname=thierry&niss=071089&lastname=habart'
 	And extract JSON from body

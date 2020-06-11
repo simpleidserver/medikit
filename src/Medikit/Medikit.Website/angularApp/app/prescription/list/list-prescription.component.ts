@@ -60,7 +60,7 @@ export class ListPrescriptionComponent implements OnInit, OnDestroy {
             }
 
             this.filteredPatientsByNiss = st.content;
-        });
+        })
         this.store.pipe(select(fromAppState.selectPatientsResult)).subscribe((st: SearchPatientResult) => {
             if (!st) {
                 return;

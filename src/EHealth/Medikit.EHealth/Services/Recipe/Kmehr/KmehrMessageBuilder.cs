@@ -72,11 +72,10 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
             return this;
         }
 
-        public kmehrmessageType Build()
+        public kmehrmessageType Build(DateTime currentDateTime)
         {
             var internalIdentifier = Guid.NewGuid().ToString();
             var firstPartyIdentifier = _senders.First().id.First().Value;
-            var currentDateTime = DateTime.UtcNow;
             var items = new List<object>();
             items.AddRange(_folders);
             var message = new kmehrmessageType
@@ -111,9 +110,9 @@ namespace Medikit.EHealth.Services.Recipe.Kmehr
             return message;
         }
 
-        public string BuildAndSerialize()
+        public string BuildAndSerialize(DateTime currentDateTime)
         {
-            var message = Build();
+            var message = Build(currentDateTime);
             var serializer = new XmlSerializer(typeof(kmehrmessageType));
             XmlWriterSettings settings = new XmlWriterSettings();
             byte[] result = null;

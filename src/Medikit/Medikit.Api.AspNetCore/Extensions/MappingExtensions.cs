@@ -4,6 +4,7 @@ using Medikit.Api.Application;
 using Medikit.Api.Application.Common;
 using Medikit.Api.Application.Domains;
 using Medikit.Api.Application.MedicinalProduct.Queries.Results;
+using Medikit.Api.Application.Metadata;
 using Medikit.Api.Application.Patient.Queries.Results;
 using Medikit.Api.Application.Prescriptions.Results;
 using Newtonsoft.Json.Linq;
@@ -187,6 +188,46 @@ namespace Medikit.Api.AspNetCore.Extensions
                 { "total_length", search.TotalLength },
                 { "content", new JArray(search.Content.Select(_ => _.ToDto())) }
             };
+        }
+
+        public static JObject ToDto(this MetadataResult metadata)
+        {
+            var result = new JObject();
+            foreach(var kvp in metadata.Content)
+            {
+                result.Add(kvp.Key, kvp.Value.ToDto());
+            }
+
+            return result;
+        }
+
+        public static JObject ToDto(this MetadataRecord record)
+        {
+            var result = new JObject();
+            var translations = new JArray();
+            var children = new JArray();
+            foreach(var translation in record.Translations)
+            {
+                translations.Add(new JObject
+                {
+                    { translation.Language, translation.Value }
+                });
+            }
+
+            if (record.Children != null)
+            {
+                foreach(var child in record.Children)
+                {
+                    children.Add(new JObject
+                    {
+                        { child.Key, child.Value.ToDto() }
+                    });
+                }
+            }
+
+            result.Add("translations", translations);
+            result.Add("children", children);
+            return result;
         }
     }
 }

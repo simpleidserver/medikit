@@ -34,6 +34,23 @@ namespace Medikit.Api.Application
             return this;
         }
 
+        public MedikitServerBuilder AddLanguages(ICollection<string> lst)
+        {
+            var languages = new ConcurrentBag<Language>();
+            foreach(var record in lst)
+            {
+                languages.Add(new Language
+                {
+                    Code = record,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow
+                });
+            }
+
+            _services.AddSingleton<ILanguageQueryRepository>(new InMemoryLanguageQueryRepository(languages));
+            return this;
+        }
+
         public MedikitServerBuilder AddPatients(ConcurrentBag<PatientAggregate> patients)
         {
             _services.AddSingleton<IPatientCommandRepository>(new InMemoryPatientCommandRepository(patients));

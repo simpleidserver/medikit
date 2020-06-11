@@ -18,7 +18,7 @@ namespace Medikit.EHealth.Services.Recipe.Request
         [XmlElement(ElementName = "SecuredCreatePrescriptionRequest", Namespace = "http://www.w3.org/XML/1998/namespace")]
         public SecuredContentType SecuredCreatePrescriptionRequest { get; set; }
         [XmlElement(ElementName = "AdministrativeInformation")]
-        public ListOpenPrescriptionParameter AdministrativeInformation { get; set; }
+        public CreatePrescriptionAdministrativeInformationType AdministrativeInformation { get; set; }
 
         public XElement Serialize()
         {
