@@ -5,6 +5,9 @@
             <Component Id="cmpF82FCA80BBAF44D285C97F10993DEEE6" Guid="*">
                 <File Id="fil840B80AC19861C7F9F04FBDCFAE331CE" KeyPath="yes" Source="$(var.Medikit.Installer)\appsettings.json" />
             </Component>
+            <Component Id="cmpCF9B3A227754E55B2A4622BDADF51333" Guid="*">
+                <File Id="fil244CDAED28510644E512EA1DBCB9390F" KeyPath="yes" Source="$(var.Medikit.Installer)\BouncyCastle.Crypto.dll" />
+            </Component>
             <Component Id="cmp91710BBC26289F9B4656241FE8A97166" Guid="*">
                 <File Id="fil56A6452FF21E11E7D230D690E4155030" KeyPath="yes" Source="$(var.Medikit.Installer)\Medikit.Authenticate.Client.deps.json" />
             </Component>
@@ -175,6 +178,7 @@
     <Fragment>
         <ComponentGroup Id="Medikit.Installer.Binaries">
             <ComponentRef Id="cmpF82FCA80BBAF44D285C97F10993DEEE6" />
+            <ComponentRef Id="cmpCF9B3A227754E55B2A4622BDADF51333" />
             <ComponentRef Id="cmp91710BBC26289F9B4656241FE8A97166" />
             <ComponentRef Id="cmp7F45CC870ADB8D50B9C9992DAAA22E21" />
             

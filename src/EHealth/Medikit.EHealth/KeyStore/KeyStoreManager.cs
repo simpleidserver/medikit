@@ -1,6 +1,11 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Pkcs;
+using System;
+using System.IO;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
@@ -30,7 +35,7 @@ namespace Medikit.EHealth.KeyStore
         {
             return GetCertificate(_options.IdentityCertificateStore, new Regex("[0-9]{13}"), _options.IdentityCertificateStorePassword);
         }
-        
+
         public X509Certificate2 GetOrgETKCertificate()
         {
             return GetCertificate(_options.OrgCertificateStore, new Regex("[0-9]{13}"), _options.OrgCertificateStorePassword);
@@ -38,17 +43,50 @@ namespace Medikit.EHealth.KeyStore
 
         private static X509Certificate2 GetCertificate(string path, Regex regex, string password)
         {
-            var col = new X509Certificate2Collection();
-            col.Import(path, password, X509KeyStorageFlags.Exportable);
-            foreach(var cert in col)
+            var store = new Pkcs12Store(new MemoryStream(File.ReadAllBytes(path)), password.ToCharArray());
+            string al = null;
+            foreach (string alias in store.Aliases)
             {
-                if(regex.IsMatch(cert.FriendlyName))
+                if (regex.IsMatch(alias))
                 {
-                    return cert;
+                    al = alias;
+                    break;
                 }
             }
 
-            return null;
+            var cert = store.GetCertificate(al);
+            var key = (RsaPrivateCrtKeyParameters)store.GetKey(al).Key;
+            var rsa = RSA.Create();
+            rsa.ImportParameters(ToRSAParameters(key));
+            var certificate = new X509Certificate2(cert.Certificate.GetEncoded(), password, X509KeyStorageFlags.PersistKeySet);
+            certificate = certificate.CopyWithPrivateKey(rsa);
+            return certificate;
+        }
+
+        private static RSAParameters ToRSAParameters(RsaPrivateCrtKeyParameters privKey)
+        {
+            RSAParameters rp = new RSAParameters();
+            rp.Modulus = privKey.Modulus.ToByteArrayUnsigned();
+            rp.Exponent = privKey.PublicExponent.ToByteArrayUnsigned();
+            rp.P = privKey.P.ToByteArrayUnsigned();
+            rp.Q = privKey.Q.ToByteArrayUnsigned();
+            rp.D = ConvertRSAParametersField(privKey.Exponent, rp.Modulus.Length);
+            rp.DP = ConvertRSAParametersField(privKey.DP, rp.P.Length);
+            rp.DQ = ConvertRSAParametersField(privKey.DQ, rp.Q.Length);
+            rp.InverseQ = ConvertRSAParametersField(privKey.QInv, rp.Q.Length);
+            return rp;
+        }
+
+        private static byte[] ConvertRSAParametersField(Org.BouncyCastle.Math.BigInteger n, int size)
+        {
+            byte[] bs = n.ToByteArrayUnsigned();
+            if (bs.Length == size)
+                return bs;
+            if (bs.Length > size)
+                throw new ArgumentException("Specified size too small", "size");
+            byte[] padded = new byte[size];
+            Array.Copy(bs, 0, padded, size - bs.Length, bs.Length);
+            return padded;
         }
     }
 }

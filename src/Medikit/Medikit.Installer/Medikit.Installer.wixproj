@@ -6,6 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>c226945d-43c5-47c0-8674-3583fa68497b</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
+    <Company>SimpleIdServer</Company>
     <OutputName>Medikit.Installer</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
