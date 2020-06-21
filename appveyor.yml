@@ -19,3 +19,5 @@ artifacts:
   name: Services
 - path: build\results\*.msi
   name: Installer
+- path: build\results\*.exe
+  name: Exe

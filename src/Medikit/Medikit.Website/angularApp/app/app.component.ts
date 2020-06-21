@@ -38,6 +38,23 @@ export class AuthPinDialog {
 }
 
 @Component({
+    selector: 'install-extension-help',
+    templateUrl: './install-extension-help.html',
+    styleUrls: [
+        './install-extension-help.scss'
+    ],
+})
+export class InstallExtensionHelpDialog {
+    windowsUrl: string = process.env.REDIRECT_URL + "/assets/images/windows-os.svg";
+    chromeUrl: string = process.env.REDIRECT_URL + "/assets/images/chrome.svg";
+    constructor(public dialogRef: MatDialogRef<InstallExtensionHelpDialog>) { }
+
+    close(): void {
+        this.dialogRef.close();
+    }
+}
+
+@Component({
     selector: 'app-component',
     templateUrl: './app.component.html',
     styleUrls: [
@@ -82,6 +99,12 @@ export class AppComponent implements OnInit, OnDestroy {
         translate.setDefaultLang(this.activeLanguage);
         translate.use(this.activeLanguage);
         this.configureOAuth();
+    }
+
+    openHelpDialog() {
+        this.dialog.open(InstallExtensionHelpDialog, {
+            width: '600px'
+        });        
     }
 
     configureOAuth() {

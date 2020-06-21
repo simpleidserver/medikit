@@ -1,0 +1,51 @@
+﻿<h1 mat-dialog-title>{{ 'install-extension' | translate }}</h1>
+<div mat-dialog-content>
+    <div>
+        <mat-vertical-stepper [linear]="true">
+            <mat-step>
+                <ng-template matStepLabel>{{ 'install-extension' | translate }}</ng-template>
+                <div class="icons-container">
+                    <span>{{ 'supported-os' | translate }}</span>
+                    <img src="{{ windowsUrl }}" width="40" />
+                </div>
+                <div class="icons-container">
+                    <span>{{ 'supported-browser' | translate }}</span>
+                    <img src="{{ chromeUrl }}" width="40" />
+                </div>
+                <ol>
+                    <li>
+                        {{ 'download-extension' | translate }} <a mat-raised-button color="primary" href="https://github.com/simpleidserver/medikit/releases/latest/download/Medikit.Bundle.exe">{{ 'download' | translate }}</a>
+                    </li>
+                    <li>
+                        <p [innerHtml]="'check-extension-installed' | translate"></p>
+                    </li>
+                    <li>
+                        {{ 'restart-browser' | translate }}
+                    </li>
+                </ol>
+                <div>
+                    <button mat-raised-button color="primary" matStepperNext>{{ 'next' | translate }}</button>
+                </div>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>{{ 'create-ehealth-session' | translate }}</ng-template>
+                {{ 'two-methods-ehealth-session' | translate }}
+                <ul>
+                    <li>{{ 'use-eid-card' | translate }}</li>
+                    <li [innerHtml]="'use-ehealth-certificate' | translate"></li>
+                </ul>
+
+                <p [innerHtml]="'install-ehealth-certificate' | translate"></p>
+                <div>
+                    <button mat-button matStepperPrevious>{{ 'previous' | translate }}</button>
+                    <button mat-raised-button color="primary" (click)="close()">{{ 'ok' | translate }}</button>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </div>
+    <div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="close()" cdkFocusInitial>{{ 'cancel' | translate }}</button>
+</div>

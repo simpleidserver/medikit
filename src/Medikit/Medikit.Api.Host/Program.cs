@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Medikit.Api.Host
 {
     public class Program
     {
         public static void Main(string[] args)
-        
         {
             CreateWebHostBuilder(args).Build().Run();
         }

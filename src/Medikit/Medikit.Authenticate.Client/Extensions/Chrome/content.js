@@ -65,8 +65,8 @@ function MedikitExtension() { \n\
             }; \n\
         }); \n\
     } \n\
-    this.getEIDAuth = function() { \n\
-        var msg = {type: "EID_AUTH" }; \n\
+    this.getEIDAuth = function(pin) { \n\
+        var msg = {type: "EID_AUTH", content: { pin: pin  }}; \n\
         return messagePromise(msg); \n\
     }; \n\
     this.getEHEALTHCertificateAuth = function() { \n\

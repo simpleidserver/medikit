@@ -25,7 +25,9 @@ task publish {
 	exec { dotnet publish $source_dir\Medikit\Medikit.Api.Host\Medikit.Api.Host.csproj -c $config -o $result_dir\services\Medikit.Api.Host }
 	exec { dotnet publish $source_dir\Medikit\Medikit.Website\Medikit.Website.csproj -c $config -o $result_dir\services\Medikit.Website }
 	exec { msbuild $source_dir\Medikit\Medikit.Installer\Medikit.Installer.wixproj /p:Configuration=Release }
+	exec { msbuild $source_dir\Medikit\Medikit.Bundle\Medikit.Bundle.wixproj /p:Configuration=Release }
 	Copy-Item "$source_dir\Medikit\Medikit.Installer\bin\Release\Medikit.Installer.msi" -Destination "$result_dir"
+	Copy-Item "$source_dir\Medikit\Medikit.Bundle\bin\Release\Medikit.Bundle.exe" -Destination "$result_dir"
 }
 
 task clean {

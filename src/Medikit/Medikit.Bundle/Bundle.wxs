@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+	<Bundle Name="Medikit.Bundle" Version="1.0.0.0" Manufacturer="Medikit" UpgradeCode="faf2c8a2-b039-413a-9273-6b071630fba6" Compressed="no">
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+      <bal:WixStandardBootstrapperApplication
+        LicenseFile="licenseAgreement.rtf"
+        ShowFilesInUse="yes"
+        ShowVersion="yes" />
+    </BootstrapperApplicationRef>
+    
+    <Variable Name="DOTNETHOME_X86" Type="string" Value="[ProgramFilesFolder]dotnet" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOME_X64" Type="string" Value="[ProgramFiles64Folder]dotnet" bal:Overridable="yes" />
+    <Variable Name="DOTNETHOMESIMILARITYCHECKOVERRIDE" Type="string" Value="" bal:Overridable="yes" />
+    
+		<Chain>
+      <ExePackage Id="DotnetCore"
+                  Permanent="yes"
+                  Name="dotnet-sdk-3.1.200-win-x64.exe" 
+                  DownloadUrl="https://download.visualstudio.microsoft.com/download/pr/43660ad4-b4a5-449f-8275-a1a3fd51a8f7/a51eff00a30b77eae4e960242f10ed39/dotnet-sdk-3.1.200-win-x64.exe"
+                  Compressed="no"
+                  Vital="yes"
+                  DetectCondition="WixBundleInstalled OR ((NOT (DOTNETHOME_X64 ~= DOTNETHOME_X86)) OR DOTNETHOMESIMILARITYCHECKOVERRIDE)"
+                  InstallCommand="dotnet-sdk-3.1.200-win-x64.exe">
+        <RemotePayload Description=".NET Core 3.1 SDK (v3.1.200)"
+           ProductName=".NET Core 3.1 SDK (v3.1.200)"
+           Version="3.1.200.0"
+           Size="126067288"
+           Hash="63B43D60916AF51076206F50E6CE1343F2291E23" />
+      </ExePackage>
+      <MsiPackage Id="Setup" SourceFile="$(var.Medikit.Installer.TargetPath)" Permanent="no" Compressed="yes" />
+		</Chain>
+	</Bundle>
+</Wix>

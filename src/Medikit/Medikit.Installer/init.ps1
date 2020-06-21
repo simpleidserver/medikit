@@ -1,7 +1,6 @@
 param(
 	[Parameter(Mandatory=$true)][string]$inputDir,
-	[Parameter(Mandatory=$true)][string]$outputFile,
-	[Parameter(Mandatory=$true)][string]$filterBinariesXslt
+	[Parameter(Mandatory=$true)][string]$outputFile
 )
 
 function Publish
@@ -21,7 +20,7 @@ function RunLightForBundle
 	$wixRoot = $env:WIX
 	$exe = $wixRoot + "bin\heat.exe"
 
-	$heatOutput = & $exe dir "$inputDir\bin\release\netcoreapp3.1\publish" -var var.Medikit.Installer -dr INSTALLFOLDER -cg Medikit.Installer.Binaries -ag -scom -sreg -sfrag -srd -out $outputFile -t $filterBinariesXslt
+	$heatOutput = & $exe dir "$inputDir\bin\release\netcoreapp3.1\publish" -var var.Medikit.Installer -dr INSTALLFOLDER -cg Medikit.Installer.Binaries -ag -scom -sreg -sfrag -srd -out $outputFile
 
 	Write-Host "Heat output: $heatOutput"
 }

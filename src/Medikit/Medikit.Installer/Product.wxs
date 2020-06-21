@@ -25,13 +25,25 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <ComponentGroupRef Id="Medikit.Installer.Binaries"/>
-      <Component Id="WindowsService">
-        <File Name="Medikit.Authenticate.Client.exe" Source="$(var.Medikit.Installer)\Medikit.Authenticate.Client.exe" Vital="yes" KeyPath="yes" />
-        <ServiceInstall Type="ownProcess" Vital="yes" Name="Medikit Service" DisplayName="Medikit Service" Start="auto" ErrorControl="ignore" Interactive="no">
-          <ServiceConfig DelayedAutoStart="yes" OnInstall="yes" OnReinstall="no" />
-        </ServiceInstall>
-        <ServiceControl Id="StartService" Start="install" Remove="uninstall" Name="Medikit Service" Wait="no" />
+      <ComponentGroupRef Id="Medikit.Installer.Binaries" />
+      <Component Id="RegisterChromeNativeHost" Guid="9df9e364-1efb-45d2-a09d-d6f10659b837">
+        <RemoveFile Id="PurgeDll" Name="*.dll" On="uninstall" />
+        <RemoveFile Id="PurgePdb" Name="*.pdb" On="uninstall" />
+        <RemoveFile Id="PurgeJson" Name="*.json" On="uninstall" />
+        <RemoveFile Id="PurgeExe" Name="*.exe" On="uninstall" />
+        <RemoveFile Id="PurgeConfig" Name="*.config" On="uninstall" />
+        <RegistryKey Root="HKCU"
+                     Key="Software\Google\Chrome\NativeMessagingHosts\medikit.authenticate"
+                     ForceDeleteOnUninstall="yes"
+                     ForceCreateOnInstall="yes">
+          <RegistryValue Type="string" Value="[INSTALLFOLDER]medikit.authenticate.manifest.json" KeyPath="yes"/>
+        </RegistryKey>
+        <RegistryKey Root="HKCU"
+                     Key="Software\Google\Chrome\Extensions\npapnecpdopfnbbjhagecpfndanllmhi"
+                     ForceDeleteOnUninstall="yes"
+                     ForceCreateOnInstall="yes">
+          <RegistryValue Type="string" Value="https://clients2.google.com/service/update2/crx" Name="update_url" />
+        </RegistryKey>
       </Component>
 		</ComponentGroup>
 	</Fragment>

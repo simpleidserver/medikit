@@ -13,7 +13,7 @@
             <button mat-menu-item (click)="chooseLanguage('en')" [class.active]="activeLanguage === 'en'">{{ "english" | translate }}</button>
         </mat-menu>
         <div *ngIf="isConnected">
-            <a mat-raised-button color="primary" href="https://ci.appveyor.com/api/buildjobs/6f9i19lnsexisang/artifacts/build%2Fresults%2FMedikit.Installer.msi" *ngIf="!isExtensionInstalled">{{ 'download-extension' | translate }}</a>
+            <a mat-raised-button color="primary" (click)="openHelpDialog()" *ngIf="!isExtensionInstalled">{{ 'install-extension' | translate }}</a>
             <button mat-button [matMenuTriggerFor]="extensionMenu" *ngIf="isExtensionInstalled">
                 <span *ngIf="isEhealthSessionActive">{{ 'ehealth-session-active' | translate:{hour:sessionValidityHour} }}</span>
                 <span *ngIf="!isEhealthSessionActive">{{ 'ehealth-session-not-active' | translate }}</span>

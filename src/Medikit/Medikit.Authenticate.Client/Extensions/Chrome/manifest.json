@@ -1,11 +1,14 @@
 {
     "name": "Medikit extension",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "minimum_chrome_version": "40.0",
     "manifest_version": 2,
-    "description": "Authenticate with your EID or certificate against EHEALTH",
-    "icons": {
-    },
+    "description": "The Medikit extension allows any applications to create EHEALTH session.",
+    "icons":  {
+		"192": "images/icons-192.png",
+		"48": "images/icons-48.png",
+		"16": "images/icons-16.png"
+	},
     "content_scripts": [{
         "matches": [
 			"https://medikit.be/*", 

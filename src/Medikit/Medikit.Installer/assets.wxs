@@ -14,7 +14,9 @@
             <Component Id="cmp7F45CC870ADB8D50B9C9992DAAA22E21" Guid="*">
                 <File Id="fil1A78E3CAB9CEB91BD1FB9F45270CA125" KeyPath="yes" Source="$(var.Medikit.Installer)\Medikit.Authenticate.Client.dll" />
             </Component>
-            
+            <Component Id="cmp9255157F6A9623A8F22818A13B6BFD53" Guid="*">
+                <File Id="filA6DCAC152DF68A8E19E817CFA4B8D6FF" KeyPath="yes" Source="$(var.Medikit.Installer)\Medikit.Authenticate.Client.exe" />
+            </Component>
             <Component Id="cmpB225A20EC24C30434C6BB73C107CC3D2" Guid="*">
                 <File Id="filB21D450B9F9BDEBCDB93F4564FF61877" KeyPath="yes" Source="$(var.Medikit.Installer)\Medikit.Authenticate.Client.pdb" />
             </Component>
@@ -102,6 +104,9 @@
             <Component Id="cmpFD16E629F3B1C17887ACD3B97583CB13" Guid="*">
                 <File Id="filEFB595E81CA62CF58EF39208C76F7F06" KeyPath="yes" Source="$(var.Medikit.Installer)\Microsoft.Extensions.Hosting.WindowsServices.dll" />
             </Component>
+            <Component Id="cmpC656E9D9806FE126507981A789C77410" Guid="*">
+                <File Id="fil0BFEDC0364DF675C2291A58519F94A92" KeyPath="yes" Source="$(var.Medikit.Installer)\Microsoft.Extensions.Http.dll" />
+            </Component>
             <Component Id="cmp8C674FD6A69988A60A77A4CEE0F53781" Guid="*">
                 <File Id="fil72342637E9F74EE945317D4603CEBA2F" KeyPath="yes" Source="$(var.Medikit.Installer)\Microsoft.Extensions.Logging.Abstractions.dll" />
             </Component>
@@ -132,6 +137,9 @@
             <Component Id="cmp946145B53A7DCDFA822B0EFD2314FAB6" Guid="*">
                 <File Id="fil773F29942324AAB2A7E1977E1AC63609" KeyPath="yes" Source="$(var.Medikit.Installer)\Microsoft.Extensions.Primitives.dll" />
             </Component>
+            <Component Id="cmp16861E24C897764CA922EC062BA74EC9" Guid="*">
+                <File Id="filD8E300ACBEFE74B5C24D4D06DCE96AAC" KeyPath="yes" Source="$(var.Medikit.Installer)\Microsoft.Win32.SystemEvents.dll" />
+            </Component>
             <Component Id="cmpE679161C4F75F1B7C7AE4047591EBF60" Guid="*">
                 <File Id="filA733CFEDBBAEF5FB0253E58062369BFE" KeyPath="yes" Source="$(var.Medikit.Installer)\Newtonsoft.Json.Bson.dll" />
             </Component>
@@ -144,8 +152,23 @@
             <Component Id="cmp64D6C257C4FBD84AB597016DA6EC30BC" Guid="*">
                 <File Id="fil6BA08CF2C56AC0A34B5633A9B3B4FAC1" KeyPath="yes" Source="$(var.Medikit.Installer)\PcscDotNet.pdb" />
             </Component>
+            <Component Id="cmp08EBD8C605FF27A4F0FCEC5A1317087B" Guid="*">
+                <File Id="fil01C46D7B4C6F372B6DD0D0DC961DAE47" KeyPath="yes" Source="$(var.Medikit.Installer)\System.Drawing.Common.dll" />
+            </Component>
+            <Component Id="cmp39CE60B301084AE368282EBF261464F0" Guid="*">
+                <File Id="fil4665CC7D527931E3A52770E88AF61542" KeyPath="yes" Source="$(var.Medikit.Installer)\System.Security.Cryptography.Pkcs.dll" />
+            </Component>
+            <Component Id="cmp95A37E8A028C851830744CDF1819488E" Guid="*">
+                <File Id="fil28658B4F32ED5005033968B539DB3BB3" KeyPath="yes" Source="$(var.Medikit.Installer)\System.Security.Cryptography.Xml.dll" />
+            </Component>
+            <Component Id="cmp5CC6136D6E2A90DE115411181360DDDC" Guid="*">
+                <File Id="fil207371132F5873BD864FD57447824213" KeyPath="yes" Source="$(var.Medikit.Installer)\System.Security.Permissions.dll" />
+            </Component>
             <Component Id="cmp3C5190B580EDFB87D0BC5E835BB950DE" Guid="*">
                 <File Id="fil0B6369FF78F990F18A525D5F0CC6D1AB" KeyPath="yes" Source="$(var.Medikit.Installer)\System.ServiceProcess.ServiceController.dll" />
+            </Component>
+            <Component Id="cmp7A71D580195DAAACCB57D588C484657A" Guid="*">
+                <File Id="fil00EFB213307938756EDF494BE5BB3249" KeyPath="yes" Source="$(var.Medikit.Installer)\System.Windows.Extensions.dll" />
             </Component>
             <Component Id="cmpB139B49DF4DF8F44C525B449EA8187F7" Guid="*">
                 <File Id="filE7A3E65CC622C2E3B9B57707B12C9645" KeyPath="yes" Source="$(var.Medikit.Installer)\web.config" />
@@ -163,8 +186,31 @@
                 </Directory>
             </Directory>
             <Directory Id="dir58E8247E2885C01898CAD009F9EFD8BA" Name="runtimes">
+                <Directory Id="dirDD6F90495A1A6169171F36CE85E975B6" Name="unix">
+                    <Directory Id="dirF5C312D00ABBDC163194A7BEF01BFACF" Name="lib">
+                        <Directory Id="dir294AEFEFF4E8C5A86E7E1147588E123E" Name="netcoreapp3.0">
+                            <Component Id="cmpF4AD5C5B3BFAF3AFE5BC8AA957546247" Guid="*">
+                                <File Id="fil1797D6F7F2B351E1E42ACA50FC09D80D" KeyPath="yes" Source="$(var.Medikit.Installer)\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                </Directory>
                 <Directory Id="dir9BE9104649A116CC7BCCF4D9CCD3331B" Name="win">
                     <Directory Id="dirD19B0610952D1EE2D417EB5361695989" Name="lib">
+                        <Directory Id="dir9CFC3E32F9CD3F5D85C1CE5068697BC1" Name="netcoreapp3.0">
+                            <Component Id="cmp946EB16BD114CBF5B87B4E5FF94153E3" Guid="*">
+                                <File Id="filA5B8427E19E08327B11E12487D2638B7" KeyPath="yes" Source="$(var.Medikit.Installer)\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll" />
+                            </Component>
+                            <Component Id="cmp2AAA2FAA1C898CAB5E25F29DCD76CA1F" Guid="*">
+                                <File Id="fil0E8F659D0BD2A39DD4E825B30BA45270" KeyPath="yes" Source="$(var.Medikit.Installer)\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll" />
+                            </Component>
+                            <Component Id="cmp6FEF0EEF1C7FE3B422F48222C126E8BF" Guid="*">
+                                <File Id="filCDDB7F32B29B93DA023A00B762AD8EB0" KeyPath="yes" Source="$(var.Medikit.Installer)\runtimes\win\lib\netcoreapp3.0\System.Security.Cryptography.Pkcs.dll" />
+                            </Component>
+                            <Component Id="cmp0A29139D20900DC546D11B3E11B02886" Guid="*">
+                                <File Id="filDABD2B348FB4B084209F1810361A26C7" KeyPath="yes" Source="$(var.Medikit.Installer)\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll" />
+                            </Component>
+                        </Directory>
                         <Directory Id="dir9B4F20F396822EEA06946FAEF0EA799A" Name="netstandard2.0">
                             <Component Id="cmp40FBCECCD67CE1E0530D4D98172F59EF" Guid="*">
                                 <File Id="filAF9D76B389C79302EDBD0A5A1F333EDF" KeyPath="yes" Source="$(var.Medikit.Installer)\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll" />
@@ -181,7 +227,7 @@
             <ComponentRef Id="cmpCF9B3A227754E55B2A4622BDADF51333" />
             <ComponentRef Id="cmp91710BBC26289F9B4656241FE8A97166" />
             <ComponentRef Id="cmp7F45CC870ADB8D50B9C9992DAAA22E21" />
-            
+            <ComponentRef Id="cmp9255157F6A9623A8F22818A13B6BFD53" />
             <ComponentRef Id="cmpB225A20EC24C30434C6BB73C107CC3D2" />
             <ComponentRef Id="cmpE749DAEB0A34F35D9044FEF89EA701A8" />
             <ComponentRef Id="cmp1EC7F7638B7C6C73A6387139D4FF49C4" />
@@ -211,6 +257,7 @@
             <ComponentRef Id="cmpB96239F931804879A085E057C6E72657" />
             <ComponentRef Id="cmp1ED5B5DCD1725E69F71E98865BCEAAB9" />
             <ComponentRef Id="cmpFD16E629F3B1C17887ACD3B97583CB13" />
+            <ComponentRef Id="cmpC656E9D9806FE126507981A789C77410" />
             <ComponentRef Id="cmp8C674FD6A69988A60A77A4CEE0F53781" />
             <ComponentRef Id="cmp9B211F39744547E733F9040027FF1A3B" />
             <ComponentRef Id="cmp60BA3AB6448C5A0208FEDA4F886EDDE8" />
@@ -221,14 +268,25 @@
             <ComponentRef Id="cmpF5D2F2D913749765205DC918BD981CD0" />
             <ComponentRef Id="cmp3279C150AE8DF554FD7EEE2085672A2B" />
             <ComponentRef Id="cmp946145B53A7DCDFA822B0EFD2314FAB6" />
+            <ComponentRef Id="cmp16861E24C897764CA922EC062BA74EC9" />
             <ComponentRef Id="cmpE679161C4F75F1B7C7AE4047591EBF60" />
             <ComponentRef Id="cmpBC4FC00A26E7D32479D42D3411317FC5" />
             <ComponentRef Id="cmp7D4F798F72D76FC20C3817C0F183F216" />
             <ComponentRef Id="cmp64D6C257C4FBD84AB597016DA6EC30BC" />
+            <ComponentRef Id="cmp08EBD8C605FF27A4F0FCEC5A1317087B" />
+            <ComponentRef Id="cmp39CE60B301084AE368282EBF261464F0" />
+            <ComponentRef Id="cmp95A37E8A028C851830744CDF1819488E" />
+            <ComponentRef Id="cmp5CC6136D6E2A90DE115411181360DDDC" />
             <ComponentRef Id="cmp3C5190B580EDFB87D0BC5E835BB950DE" />
+            <ComponentRef Id="cmp7A71D580195DAAACCB57D588C484657A" />
             <ComponentRef Id="cmpB139B49DF4DF8F44C525B449EA8187F7" />
             <ComponentRef Id="cmp1B9E8989F93425E3840D3CEDBCE0EC70" />
             <ComponentRef Id="cmp52AE72C0B9E64E12C1EA75EE3F1962E6" />
+            <ComponentRef Id="cmpF4AD5C5B3BFAF3AFE5BC8AA957546247" />
+            <ComponentRef Id="cmp946EB16BD114CBF5B87B4E5FF94153E3" />
+            <ComponentRef Id="cmp2AAA2FAA1C898CAB5E25F29DCD76CA1F" />
+            <ComponentRef Id="cmp6FEF0EEF1C7FE3B422F48222C126E8BF" />
+            <ComponentRef Id="cmp0A29139D20900DC546D11B3E11B02886" />
             <ComponentRef Id="cmp40FBCECCD67CE1E0530D4D98172F59EF" />
         </ComponentGroup>
     </Fragment>

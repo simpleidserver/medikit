@@ -82,5 +82,20 @@
   "pin": "PIN",
   "cancel": "Annuler",
   "pin-required": "Numéro PIN est requis",
-  "pin-invalid": "PIN est invalide"
+  "pin-invalid": "PIN est invalide",
+  "install-extension": "Installer et configurer l'extension Medikit",
+  "supported-os": "OS supportés",
+  "supported-browser": "Navigateurs supportés",
+  "download-extension": "Téléchargez et installez l'extension Medikit",
+  "download": "Télécharger",
+  "check-extension-installed": "Vérifiez si l'extension Medikit est installée, veuillez cliquer <a href='https://chrome.google.com/webstore/detail/medikit-extension/npapnecpdopfnbbjhagecpfndanllmhi?hl=fr' target='_blank'>ici</a>",
+  "restart-browser": "Relancez le navigateur, le bouton 'Session n'est pas active' doit être affiché.",
+  "create-ehealth-session": "Créez une session EHEALTH",
+  "two-methods-ehealth-session": "Il existe deux méthodes pour créer une session EHEALTH valide pendant 24 heures :",
+  "use-eid-card": "Utilisez votre carte d'identité électronique Belge",
+  "use-ehealth-certificate": "Utilisez les certificats qui vous ont été fournis par EHEALTH, pour plus d'informations veuillez-vous référer à ce <a href='https://www.ehealth.fgov.be/fr/esante/professionnels-de-la-sante/gestion-des-certificats-ehealth' target='_blank'>tutoriel</a>",
+  "install-ehealth-certificate": "Si vous choisissez la seconde méthode alors le certificat EHEALTH doit être copié dans le sous-répertoire Certificates.<br /> Le chemin complet est : <i>c:\\Program Files (x86)\\Medikit.Installer\\Certificates\\</i>",
+  "next": "Suivant",
+  "previous": "Précédent",
+  "ok": "OK"
 }

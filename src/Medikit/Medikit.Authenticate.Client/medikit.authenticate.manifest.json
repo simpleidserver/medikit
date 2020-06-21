@@ -1,9 +1,9 @@
 {
   "name": "medikit.authenticate",
   "description": "Authenticate against EHEALTH",
-  "path": "C:\\Projects\\medikit\\src\\Medikit\\Medikit.Authenticate.Client\\bin\\Debug\\netcoreapp3.1\\Medikit.Authenticate.Client.exe",
+  "path": "Medikit.Authenticate.Client.exe",
   "type": "stdio",
   "allowed_origins": [
-    "chrome-extension://jaolfgijgnmkkgldbbignheccpmjghma/"
+    "chrome-extension://npapnecpdopfnbbjhagecpfndanllmhi/"
   ]
 }
