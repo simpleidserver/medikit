@@ -89,6 +89,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IGetOpenedPharmaceuticalPrescriptionQueryHandler, GetOpenedPharmaceuticalPrescriptionQueryHandler>();
             services.AddTransient<IAddPharmaceuticalPrescriptionCommandHandler, AddPharmaceuticalPrescriptionCommandHandler>();
             services.AddTransient<IGetPrescriptionMetadataQueryHandler, GetPrescriptionMetadataQueryHandler>();
+            services.AddTransient<IRevokePrescriptionCommandHandler, RevokePrescriptionCommandHandler>();
             return services;
         }
 

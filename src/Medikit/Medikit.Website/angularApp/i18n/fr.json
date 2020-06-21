@@ -97,5 +97,11 @@
   "install-ehealth-certificate": "Si vous choisissez la seconde méthode alors le certificat EHEALTH doit être copié dans le sous-répertoire Certificates.<br /> Le chemin complet est : <i>c:\\Program Files (x86)\\Medikit.Installer\\Certificates\\</i>",
   "next": "Suivant",
   "previous": "Précédent",
-  "ok": "OK"
+  "ok": "OK",
+  "reason": "Raison",
+  "reject-prescription": "Rejeter la prescription",
+  "reject": "Rejeter",
+  "reason-required": "La raison est requise",
+  "prescription-revoked": "La prescription est révoquée",
+  "prescription-not-revoked": "La prescription ne peut pas être révoquée"
 }

@@ -1,0 +1,16 @@
+﻿<h1 mat-dialog-title>{{ 'reject-prescription' | translate }}</h1>
+<form [formGroup]="removeFormGroup" (submit)="remove()">
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ "reason" | translate }}</mat-label>
+            <textarea matInput formControlName="reason"></textarea>
+            <mat-error *ngIf="removeFormGroup.get('reason').hasError('required')">
+                {{ "reason-required" | translate }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button>{{ 'reject' | translate }}</button>
+        <button mat-button (click)="close()" cdkFocusInitial>{{ 'cancel' | translate }}</button>
+    </div>
+</form>

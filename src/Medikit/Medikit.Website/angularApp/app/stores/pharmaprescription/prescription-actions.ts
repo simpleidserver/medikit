@@ -10,7 +10,10 @@ export enum ActionTypes {
     ERROR_LOAD_PHARMA_PRESCRIPTION = "[PharmaPrescription] ERROR_LOAD_PHARMA_PRESCRIPTION",
     ADD_PHARMA_PRESCRIPTION = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION",
     ADD_PHARMA_PRESCRIPTION_SUCCESS = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION_SUCCESS",
-    ADD_PHARMA_PRESCRIPTION_ERROR = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION_ERROR"
+    ADD_PHARMA_PRESCRIPTION_ERROR = "[PharmaPrescription] ADD_PHARMA_PRESCRIPTION_ERROR",
+    REVOKE_PHARMA_PRESCRIPTION = "[PharmaPrescription] REVOKE_PHARMA_PRESCRIPTION",
+    REVOKE_PHARMA_PRESCRIPTION_SUCCESS = "[PharmaPrescription] REVOKE_PHARMA_PRESCRIPTION_SUCCESS",
+    REVOKE_PHARMA_PRESCRIPTION_ERROR = "[PharmaPrescription] REVOKE_PHARMA_PRESCRIPTION_ERROR"
 }
 
 export class LoadPharmaPrescriptions implements Action {
@@ -38,4 +41,14 @@ export class AddPharmaPrescription implements Action {
     constructor(public prescription: PharmaPrescription, public samlAssertion: string) { }
 }
 
-export type ActionsUnion = LoadPharmaPrescriptions | PharmaPrescriptionsLoaded | LoadPharmaPrescription | PharmaPrescriptionLoaded | AddPharmaPrescription;
+export class RevokePharmaPrescription implements Action {
+    readonly type = ActionTypes.REVOKE_PHARMA_PRESCRIPTION;
+    constructor(public rid: string, public reason: string, public samlAssertion: string) { }
+}
+
+export class PharmaPrescriptionRevoked implements Action {
+    readonly type = ActionTypes.REVOKE_PHARMA_PRESCRIPTION_SUCCESS;
+    constructor(public rid: string) { }
+}
+
+export type ActionsUnion = LoadPharmaPrescriptions | PharmaPrescriptionsLoaded | LoadPharmaPrescription | PharmaPrescriptionLoaded | AddPharmaPrescription | RevokePharmaPrescription | PharmaPrescriptionRevoked;

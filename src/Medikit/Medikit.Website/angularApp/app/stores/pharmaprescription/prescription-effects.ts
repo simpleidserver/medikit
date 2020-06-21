@@ -2,7 +2,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ActionTypes, LoadPharmaPrescription, LoadPharmaPrescriptions, AddPharmaPrescription } from './prescription-actions';
+import { ActionTypes, LoadPharmaPrescription, LoadPharmaPrescriptions, AddPharmaPrescription, RevokePharmaPrescription } from './prescription-actions';
 import { PharmaPrescriptionService } from './services/prescription-service';
 
 @Injectable()
@@ -49,6 +49,20 @@ export class PharmaPrescriptionEffects {
                     .pipe(
                         map(prescriptionId => { return { type: ActionTypes.ADD_PHARMA_PRESCRIPTION_SUCCESS, prescriptionId: prescriptionId }; }),
                         catchError(() => of({ type: ActionTypes.ADD_PHARMA_PRESCRIPTION_ERROR }))
+                    );
+            }
+            )
+        );
+
+    @Effect()
+    revokePrescription$ = this.actions$
+        .pipe(
+            ofType(ActionTypes.REVOKE_PHARMA_PRESCRIPTION),
+            mergeMap((evt: RevokePharmaPrescription) => {
+                return this.prescriptionService.revokePrescription(evt.rid, evt.reason, evt.samlAssertion)
+                    .pipe(
+                        map(() => { return { type: ActionTypes.REVOKE_PHARMA_PRESCRIPTION_SUCCESS, rid: evt.rid }; }),
+                        catchError(() => of({ type: ActionTypes.REVOKE_PHARMA_PRESCRIPTION_ERROR }))
                     );
             }
             )

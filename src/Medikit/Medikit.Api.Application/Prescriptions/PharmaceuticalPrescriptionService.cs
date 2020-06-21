@@ -18,16 +18,19 @@ namespace Medikit.Api.Application.Prescriptions
         private readonly IGetOpenedPharmaceuticalPrescriptionQueryHandler _getOpenedPharmaceuticalPrescriptionQueryHandler;
         private readonly IGetPharmaceuticalPrescriptionQueryHandler _getPharmaceuticalPrescriptionQueryHandler;
         private readonly IGetPrescriptionMetadataQueryHandler _getPrescriptionMetadataQueryHandler;
+        private readonly IRevokePrescriptionCommandHandler _revokePrescriptionCommandHandler;
 
         public PharmaceuticalPrescriptionService(IAddPharmaceuticalPrescriptionCommandHandler addPharmaceuticalPrescriptionCommandHandler, 
             IGetOpenedPharmaceuticalPrescriptionQueryHandler getOpenedPharmaceuticalPrescriptionQueryHandler, 
             IGetPharmaceuticalPrescriptionQueryHandler getPharmaceuticalPrescriptionQueryHandler,
-            IGetPrescriptionMetadataQueryHandler getPrescriptionMetadataQueryHandler)
+            IGetPrescriptionMetadataQueryHandler getPrescriptionMetadataQueryHandler,
+            IRevokePrescriptionCommandHandler revokePrescriptionCommandHandler)
         {
             _addPharmaceuticalPrescriptionCommandHandler = addPharmaceuticalPrescriptionCommandHandler;
             _getOpenedPharmaceuticalPrescriptionQueryHandler = getOpenedPharmaceuticalPrescriptionQueryHandler;
             _getPharmaceuticalPrescriptionQueryHandler = getPharmaceuticalPrescriptionQueryHandler;
             _getPrescriptionMetadataQueryHandler = getPrescriptionMetadataQueryHandler;
+            _revokePrescriptionCommandHandler = revokePrescriptionCommandHandler;
         }
 
         public Task<string> AddPrescription(AddPharmaceuticalPrescriptionCommand query, CancellationToken token)
@@ -48,6 +51,11 @@ namespace Medikit.Api.Application.Prescriptions
         public Task<MetadataResult> GetMetadata(CancellationToken token)
         {
             return _getPrescriptionMetadataQueryHandler.Handle(token);
+        }
+
+        public Task RevokePrescription(RevokePrescriptionCommand command, CancellationToken token)
+        {
+            return _revokePrescriptionCommandHandler.Handle(command, token);
         }
     }
 }

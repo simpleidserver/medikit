@@ -6,7 +6,7 @@ import { SharedModule } from '@app/infrastructure/shared.module';
 import { StoreModule } from '@ngrx/store';
 import { AddPharmaPrescriptionComponent } from './add-pharma-prescription/add-pharma-prescription.component';
 import * as reducersAddPharmaPrescription from './add-pharma-prescription/reducers/pharma-prescription-reducer';
-import { ListPrescriptionComponent } from './list/list-prescription.component';
+import { ListPrescriptionComponent, RemovePrescriptionDialog } from './list/list-prescription.component';
 import { PrescriptionRoutes } from './prescription.routes';
 import { ViewPrescriptionComponent } from './view/view-prescription.component';
 import { PrescriptionViewerComponent } from './viewer/prescription-viewer.component';
@@ -24,8 +24,10 @@ import { PrescriptionViewerComponent } from './viewer/prescription-viewer.compon
         AddPharmaPrescriptionComponent,
         ViewPrescriptionComponent,
         PrescriptionViewerComponent,
+        RemovePrescriptionDialog,
         TranslateEnumPipe
     ],
+    entryComponents: [ RemovePrescriptionDialog ],
     providers: [ DatePipe ]
 })
 

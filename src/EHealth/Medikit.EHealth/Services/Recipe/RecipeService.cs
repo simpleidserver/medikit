@@ -269,6 +269,67 @@ namespace Medikit.EHealth.Services.Recipe
             return res;
         }
 
+        public Task<RevokePrescriptionResult> RevokePrescription(string rid, string reason)
+        {
+            var assertion = _sessionService.GetSession().Body.Response.Assertion;
+            return RevokePrescription(rid, reason, assertion);
+        }
+
+        public async Task<RevokePrescriptionResult> RevokePrescription(string rid, string reason, SAMLAssertion assertion)
+        {
+            var orgCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            var issueInstant = DateTime.UtcNow;
+            var recipeETK = await _etkService.GetRecipeETK();
+            var symKey = new TripleDESCryptoServiceProvider();
+            symKey.Padding = PaddingMode.None;
+            symKey.Mode = CipherMode.ECB;
+            var revokePrescriptionParameter = new RevokePrescriptionParameter
+            {
+                Reason = reason,
+                Rid = rid,
+                SymmKey = Convert.ToBase64String(symKey.Key)
+            };
+            var serializedPrescriptionParameter = Encoding.UTF8.GetBytes(revokePrescriptionParameter.Serialize().SerializeToString(false, true));
+            byte[] sealedContent = TripleWrapper.Seal(serializedPrescriptionParameter, orgCertificate, recipeETK.Certificate);
+            var revokePrescriptionRequest = new RevokePrescriptionRequest
+            {
+                Id = $"id{Guid.NewGuid().ToString()}",
+                IssueInstant = issueInstant,
+                ProgramId = _options.ProductName,
+                SecuredRevokePrescriptionRequest = new SecuredContentType
+                {
+                    SecuredContent = Convert.ToBase64String(sealedContent)
+                }
+            };
+
+            var soapRequest = SOAPRequestBuilder<RevokePrescriptionRequestBody>.New(new RevokePrescriptionRequestBody
+            {
+                Id = $"id-{Guid.NewGuid().ToString()}",
+                Request = revokePrescriptionRequest
+            })
+                .AddTimestamp(issueInstant, issueInstant.AddHours(1))
+                .AddSAMLAssertion(assertion)
+                .AddReferenceToSAMLAssertion()
+                .SignWithCertificate(orgCertificate)
+                .Build();
+            var result = await _soapClient.Send(soapRequest, new Uri(_options.PrescriberUrl), "urn:be:fgov:ehealth:recipe:protocol:v4:revokePrescription");
+            var xml = await result.Content.ReadAsStringAsync();
+            result.EnsureSuccessStatusCode();
+            var response = SOAPEnvelope<RevokePrescriptionResponseBody>.Deserialize(xml);
+            var securedContent = response.Body.RevokePrescriptionResponse.SecuredRevokePrescriptionResponse.SecuredContent;
+            byte[] decrypted;
+            using (var decryptor = symKey.CreateDecryptor())
+            {
+                var payload = Convert.FromBase64String(securedContent);
+                decrypted = decryptor.TransformFinalBlock(payload, 0, payload.Length);
+            }
+
+            xml = Encoding.UTF8.GetString(decrypted);
+            xml = xml.ClearBadFormat();
+            var res = RevokePrescriptionResult.Deserialize(xml);
+            return res;
+        }
+
         private static byte[] Compress(byte[] input)
         {
             using (var compressedStream = new MemoryStream())

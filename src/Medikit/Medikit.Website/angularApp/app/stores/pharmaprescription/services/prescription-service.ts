@@ -37,6 +37,15 @@ export class PharmaPrescriptionService {
         }));
     }
 
+    revokePrescription(rid: string, reason: string, samlAssertion: string): Observable<any> {
+        const request = JSON.stringify({ assertion_token: samlAssertion, reason: reason });
+        let headers = new HttpHeaders();
+        let targetUrl = process.env.API_URL + "/prescriptions/" + rid + "/revoke";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers });
+    }
+
     addPrescription(prescription: PharmaPrescription, samlAssertion: string): Observable<string> {
         var json : any = {
             assertion_token: samlAssertion,

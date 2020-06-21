@@ -57,10 +57,36 @@ namespace Medikit.Api.AspNetCore.Controllers
                 var result = await _pharmaceuticalPrescriptionService.GetPrescription(query, CancellationToken.None);
                 return new OkObjectResult(result.ToDto());
             }
-            catch(UnknownPrescriptionException)
+            catch (UnknownPrescriptionException)
             {
                 return new NotFoundResult();
             }
+        }
+
+        [HttpPost("{rid}/revoke")]
+        public async Task<IActionResult> RevokePrescription(string rid, [FromBody] JObject jObj)
+        {
+            await _pharmaceuticalPrescriptionService.RevokePrescription(BuildRevokePrescriptionCommand(rid, jObj), CancellationToken.None);
+            return new NoContentResult();
+        }
+
+        private static RevokePrescriptionCommand BuildRevokePrescriptionCommand(string rid, JObject jObj)
+        {
+            var result = new RevokePrescriptionCommand { Rid = rid };
+            string assertionToken;
+            string reason;
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet("assertion_token", out assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet("reason", out reason))
+            {
+                result.Reason = reason;
+            }
+
+            return result;
         }
 
         private static GetOpenedPharmaceuticalPrescriptionQuery BuildGetOpenedPrescriptionsParameter(JObject jObj)

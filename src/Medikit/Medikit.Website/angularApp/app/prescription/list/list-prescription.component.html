@@ -72,7 +72,10 @@
                             <mat-list-item *ngFor="let prescriptionId of prescriptionIds">
                                 <span>{{ prescriptionId }}</span>
                                 <div class="spacer"></div>
-                                <a [routerLink]="['/prescription', prescriptionId]">
+                                <button mat-icon-button (click)="deletePrescription(prescriptionId)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                                <a mat-icon-button [routerLink]="['/prescription', prescriptionId]">
                                     <mat-icon>visibility</mat-icon>
                                 </a>
                             </mat-list-item>

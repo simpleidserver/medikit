@@ -16,5 +16,6 @@ namespace Medikit.Api.Application.Prescriptions
         Task<GetPharmaceuticalPrescriptionResult> GetPrescription(GetPharmaceuticalPrescriptionQuery query, CancellationToken token);
         Task<string> AddPrescription(AddPharmaceuticalPrescriptionCommand query, CancellationToken token);
         Task<MetadataResult> GetMetadata(CancellationToken token);
+        Task RevokePrescription(RevokePrescriptionCommand command, CancellationToken token);
     }
 }

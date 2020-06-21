@@ -3,7 +3,6 @@
 using Medikit.EHealth.SAML.DTOs;
 using Medikit.EHealth.Services.Recipe;
 using Medikit.EHealth.Services.Recipe.Request;
-using Microsoft.Win32.SafeHandles;
 using System;
 using System.Threading.Tasks;
 
@@ -27,6 +26,12 @@ namespace Medikit.EHealth.Console
         {
             var recipeService = (IRecipeService)_serviceProvider.GetService(typeof(IRecipeService));
             await recipeService.CreatePrescription("P0", "76020727360", DateTime.Parse("2020-06-25"), null, assertion);
+        }
+
+        public static async Task RejectPrescription()
+        {
+            var recipeService = (IRecipeService)_serviceProvider.GetService(typeof(IRecipeService));
+            await recipeService.RevokePrescription("BEP011D2G1BZ", "bad");
         }
     }
 }

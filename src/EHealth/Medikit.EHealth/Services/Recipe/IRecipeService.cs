@@ -16,5 +16,7 @@ namespace Medikit.EHealth.Services.Recipe
         Task<GetPrescriptionResult> GetPrescription(string rid, SAMLAssertion assertion);
         Task<ListOpenRidsResult> GetOpenedPrescriptions(string patientId, Page page);
         Task<ListOpenRidsResult> GetOpenedPrescriptions(string patientId, Page page, SAMLAssertion assertion);
+        Task<RevokePrescriptionResult> RevokePrescription(string rid, string reason);
+        Task<RevokePrescriptionResult> RevokePrescription(string rid, string reason, SAMLAssertion assertion);
     }
 }

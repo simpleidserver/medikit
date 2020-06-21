@@ -8,5 +8,8 @@
   "electronic-prescription-content": "Inhoud van het elektronisch voorschrift",
   "electronic-prescription-warning": "Opgelet: met mannuele toevoegingen op dit document zal geen rekening gehouden worden",
   "electronic-prescription-date": "Datetum : {{date}}",
-  "electronic-prescription-end-execution-date": "Einddatum van de uitvoerbaarheid : {{date}}"
+  "electronic-prescription-end-execution-date": "Einddatum van de uitvoerbaarheid : {{date}}",
+  "reject-prescription": "Rejeter la prescription",
+  "reject": "Rejeter",
+  "reason-required": "Raison est requise"
 }
