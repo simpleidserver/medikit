@@ -15,19 +15,4 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="angularApp\app\auth.config.ts" />
-    <TypeScriptCompile Include="angularApp\app\infrastructure\services\auth-guard.service.ts" />
-    <TypeScriptCompile Include="angularApp\app\prescription\view\view-prescription.component.ts" />
-    <TypeScriptCompile Include="angularApp\app\infrastructure\services\medikitextension.service.ts" />
-    <TypeScriptCompile Include="angularApp\app\stores\appstate.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="angularApp\app\status\components\401\" />
-    <Folder Include="angularApp\app\status\components\404\" />
-    <Folder Include="angularApp\images\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="angularApp\app\stores\patient\patient-state.ts" />
-  </ItemGroup>
 </Project>

@@ -36,7 +36,8 @@ namespace Medikit.Authenticate.Client
                     new EhealthCertificateAuthenticateOperation(_serviceProvider),
                     new EidAuthenticateOperation(_serviceProvider),
                     new GetIdentityCertificatesOperation(_configuration),
-                    new GetMedicalProfessionsOperation(_configuration)
+                    new GetMedicalProfessionsOperation(_configuration),
+                    new GetIdentityCertificateOperation(_configuration)
                 };
             var operation = lst.FirstOrDefault(_ => _.Code.Equals(type, StringComparison.InvariantCultureIgnoreCase));
             if (operation == null)

@@ -103,5 +103,10 @@
   "reject": "Rejeter",
   "reason-required": "La raison est requise",
   "prescription-revoked": "La prescription est révoquée",
-  "prescription-not-revoked": "La prescription ne peut pas être révoquée"
+  "prescription-not-revoked": "La prescription ne peut pas être révoquée",
+  "upload-certificate-to-mobile": "Télécharger le certificat sur votre application mobile",
+  "choose-id-certificate": "Choisir le certificat d'identité",
+  "password": "Mot de passe",
+  "generate-qr-code": "Générer le code QR",
+  "bad-password": "Mauvais mot de passe"
 }

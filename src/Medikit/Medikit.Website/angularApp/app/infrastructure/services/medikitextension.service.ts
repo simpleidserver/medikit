@@ -144,6 +144,24 @@ export class MedikitExtensionService {
         return result;
     }
 
+    getIdentityCertificate(idCertificate: string, password: string): Observable<any> {
+        var result = new Observable<any>((observer) => {
+            const win: any = window;
+            if (!win.MedikitExtension) {
+                observer.error(true);
+                return null;
+            }
+
+            var medikitExtension = new win.MedikitExtension();
+            medikitExtension.getIdentityCertificate(idCertificate, password).then(function (e: any) {
+                observer.next(e);
+            }).catch(function () {
+                observer.error(false);
+            });
+        });
+        return result;
+    }
+
     isExtensionInstalled(): Observable<boolean> {
         const win: any = window;
         if (win.MedikitExtension) {

@@ -103,5 +103,10 @@
   "reject": "Reject",
   "reason-required": "Reason is required",
   "prescription-revoked": "Prescription is revoked",
-  "prescription-not-revoked": "An error occured while trying to revoke the prescription"
+  "prescription-not-revoked": "An error occured while trying to revoke the prescription",
+  "upload-certificate-to-mobile": "Upload certificate to your mobile application",
+  "choose-id-certificate": "Choose identity certificate",
+  "password": "Password",
+  "generate-qr-code": "Generate QR code",
+  "bad-password": "Bad password"
 }
