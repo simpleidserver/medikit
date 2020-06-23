@@ -92,7 +92,7 @@ export class ExtensionComponent implements OnInit {
                     duration: 2000,
                 });
             } else {
-                const qrCode = e.content.certificate + '$' + e.content.password;
+                const qrCode = e.content.certificate + '$' + e.content.password + "$" + e.content.name;
                 self.qrCode = qrCode;
             }
         });
