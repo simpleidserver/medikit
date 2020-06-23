@@ -85,6 +85,10 @@ function MedikitExtension() { \n\
         var msg = {type: "GET_MEDICAL_PROFESSIONS" }; \n\
         return messagePromise(msg); \n\
     }; \n\
+    this.getIdentityCertificate = function(certificate, password) { \n\
+        var msg = {type: "GET_IDENTITY_CERTIFICATE", content: { certificate: certificate, password: password } }; \n\
+        return messagePromise(msg); \n\
+    }; \n\
     this.chooseMedicalProfession = function(profession) { \n\
         var msg = {type: "CHOOSE_MEDICAL_PROFESSION", content: { profession: profession } }; \n\
         return messagePromise(msg); \n\

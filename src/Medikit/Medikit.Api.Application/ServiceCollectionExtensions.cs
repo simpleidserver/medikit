@@ -3,9 +3,13 @@
 using Medikit.Api.Application;
 using Medikit.Api.Application.Domains;
 using Medikit.Api.Application.Domains.Events;
+using Medikit.Api.Application.File;
+using Medikit.Api.Application.File.Commands.Handlers;
+using Medikit.Api.Application.File.Queries.Handlers;
 using Medikit.Api.Application.Infrastructure;
 using Medikit.Api.Application.Infrastructure.Bus;
 using Medikit.Api.Application.Infrastructure.Bus.InMemory;
+using Medikit.Api.Application.Infrastructure.Caching;
 using Medikit.Api.Application.Infrastructure.EvtStore;
 using Medikit.Api.Application.Infrastructure.EvtStore.InMemory;
 using Medikit.Api.Application.MedicinalProduct;
@@ -48,6 +52,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddNomenclature()
                 .AddMedicinalPrescription()
                 .AddReferenceTable()
+                .AddFile()
+                .AddInMemoryCache()
                 // .AddInMemoryServices()
                 .AddEHealthServices(eheathCallback)
                 .AddMessageHandlers()
@@ -101,6 +107,14 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        private static IServiceCollection AddFile(this IServiceCollection services)
+        {
+            services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IGetFileQueryHandler, GetFileQueryHandler>();
+            services.AddTransient<ITransferFileCommandHandler, TransferFileCommandHandler>();
+            return services;
+        }
+
         private static IServiceCollection AddPersistence(this IServiceCollection services)
         {
             var referenceTables = new ConcurrentBag<ReferenceTable>();
@@ -112,6 +126,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IPatientQueryRepository>(new InMemoryPatientQueryRepository(patients));
             services.AddSingleton<ILanguageQueryRepository>(new InMemoryLanguageQueryRepository(languages));
             services.AddSingleton<ITranslationQueryRepository>(new InMemoryTranslationQueryRepository(translations));
+            return services;
+        }
+
+        private static IServiceCollection AddInMemoryCache(this IServiceCollection services)
+        {
+            services.AddSingleton<ICacheStore, InMemoryCacheStore>();
             return services;
         }
 

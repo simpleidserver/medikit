@@ -15,8 +15,41 @@
         </ul>
     </div>
 </div>
-<div fxLayout="row">
-    <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
+<div fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>{{ 'upload-certificate-to-mobile' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div fxLayout="row" fxLayoutGap="10px">
+                    <form (ngSubmit)="generateQRCode()" [formGroup]="generateQRCodeFormGroup" fxFlex="50%">
+                        <mat-form-field class="full-width">
+                            <mat-label>{{ 'choose-id-certificate' | translate }}</mat-label>
+                            <mat-select formControlName="idCertificate">
+                                <mat-option *ngFor="let certificate of certificates" [value]="certificate">
+                                    {{ certificate }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width">
+                            <mat-label>{{ "password" | translate }}</mat-label>
+                            <input type="password" matInput formControlName="password">
+                        </mat-form-field>
+                        <button mat-raised-button>{{ 'generate-qr-code' | translate }}</button>
+                    </form>
+                    <div fxFlex="50%">
+                        <div *ngIf="qrCode">
+                            <qrcode [qrdata]="qrCode" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+<div fxLayout="row" fxLayoutGap="10px" class="pt-20">
+    <div fxFlex="80%" fxFlexOffset="10%">
         <mat-card *ngIf="!isExtensionInstalled">
             <mat-card-content>
                 <button mat-raised-button color="primary">{{ "download-extension" | translate }}</button>

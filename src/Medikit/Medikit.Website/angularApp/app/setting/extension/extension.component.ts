@@ -14,7 +14,12 @@ class MedicalProfession {
     styleUrls: ['./extension.component.scss']
 })
 export class ExtensionComponent implements OnInit {
+    qrCode: string = null;
     isExtensionInstalled: boolean;
+    generateQRCodeFormGroup: FormGroup = new FormGroup({
+        idCertificate: new FormControl(),
+        password: new FormControl()
+    });
     medicalProfessionForm: FormGroup = new FormGroup({
         profession : new FormControl()
     });
@@ -73,6 +78,22 @@ export class ExtensionComponent implements OnInit {
                 self.snackBar.open(self.translateService.instant('identity-certificate-updated'), self.translateService.instant('undo'), {
                     duration: 2000,
                 });
+            }
+        });
+    }
+
+    generateQRCode() {
+        const self = this;
+        const idCertificate = this.generateQRCodeFormGroup.controls['idCertificate'].value;
+        const password = this.generateQRCodeFormGroup.controls['password'].value;
+        this.medikitExtensionService.getIdentityCertificate(idCertificate, password).subscribe(function (e: any) {
+            if (e.type === 'error') {
+                self.snackBar.open(self.translateService.instant('bad-password'), self.translateService.instant('undo'), {
+                    duration: 2000,
+                });
+            } else {
+                const qrCode = e.content.certificate + '.' + e.content.password;
+                self.qrCode = qrCode;
             }
         });
     }
