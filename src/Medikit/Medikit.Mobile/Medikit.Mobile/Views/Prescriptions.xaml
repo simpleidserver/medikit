@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:vm="clr-namespace:Medikit.Mobile.ViewModels"
+             x:Class="Medikit.Mobile.Views.Prescriptions">
+    <ContentPage.Resources>
+        <x:Array x:Key="fakePrescriptions" Type="{x:Type vm:PrescriptionViewModel}">
+            <vm:PrescriptionViewModel RID="123456789" />
+            <vm:PrescriptionViewModel RID="123456780" />
+        </x:Array>
+    </ContentPage.Resources>
+    <StackLayout>
+        <Button Text="Search insured" />
+        <ListView SelectionMode="None">
+            <d:ListView.ItemsSource>
+                <Binding Source="{StaticResource fakePrescriptions}"/>
+            </d:ListView.ItemsSource>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <FlexLayout Direction="Row">
+                            <Label Text="{Binding RID}"></Label>
+                            <Label FlexLayout.Grow="1" />
+                            <Button Text="Remove" />
+                            <Button Text="View" />
+                        </FlexLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

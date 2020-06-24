@@ -6,30 +6,41 @@
        mc:Ignorable="d"
        xmlns:local="clr-namespace:Medikit.Mobile.Views"
        Title="Medikit.Mobile"
-       x:Class="Medikit.Mobile.AppShell">
-
-    <!-- 
-        Styles and Resources 
-    -->
+       x:Class="Medikit.Mobile.AppShell"
+       Style="{StaticResource MedikitStyle}">
     <Shell.Resources>
         <ResourceDictionary>
-            <Color x:Key="NavigationPrimary">#2196F3</Color>
-            <Style x:Key="BaseStyle" TargetType="Element">
-                <Setter Property="Shell.BackgroundColor" Value="{StaticResource NavigationPrimary}" />
+            <Color x:Key="PrimaryBackgroundColor">#485f62</Color>
+            <Color x:Key="PrimaryForegroundColor">White</Color>
+            <Style x:Key="MedikitStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource PrimaryBackgroundColor}" />
                 <Setter Property="Shell.ForegroundColor" Value="White" />
                 <Setter Property="Shell.TitleColor" Value="White" />
                 <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource PrimaryBackgroundColor}" />
                 <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
                 <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="White"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="White"/>                
             </Style>
-            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
     </Shell.Resources>
 
-    <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid BackgroundColor="{DynamicResource PrimaryBackgroundColor}">
+                <Label Margin="30" FontSize="Large" TextColor="{DynamicResource PrimaryForegroundColor}">Medikit</Label>
+            </Grid>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
+
+    <ShellContent Route="Prescriptions"
+                  Title="Prescriptions"
+                  ContentTemplate="{DataTemplate local:Prescriptions}" />
+
+    <ShellContent Route="Settings"
+                  Title="Settings"
+                  ContentTemplate="{DataTemplate local:SettingsPage}" />
     <!--
     <TabBar>
         <Tab Title="Browse" Icon="tab_feed.png">
@@ -45,11 +56,6 @@
     // These may be provided inline as below or as separate classes.
 
     // This header appears at the top of the Flyout.
-    <Shell.FlyoutHeaderTemplate>
-        <DataTemplate>
-            <Grid>ContentHere</Grid>
-        </DataTemplate>
-    </Shell.FlyoutHeaderTemplate>
 
     // ItemTemplate is for ShellItems as displayed in a Flyout
     <Shell.ItemTemplate>

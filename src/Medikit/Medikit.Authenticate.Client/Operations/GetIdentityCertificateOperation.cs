@@ -63,7 +63,7 @@ namespace Medikit.Authenticate.Client.Operations
                 location = JsonConvert.DeserializeObject<JObject>(json)["location"].ToString();
             }
             
-            return BuildResponse(request, new GetIdentityCertificateResponse(location, getCertificate.Password));
+            return BuildResponse(request, new GetIdentityCertificateResponse(location, getCertificate.Password, getCertificate.Certificate));
         }
     }
 }

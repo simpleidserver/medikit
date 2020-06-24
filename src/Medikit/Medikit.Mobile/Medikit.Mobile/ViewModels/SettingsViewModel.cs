@@ -6,12 +6,14 @@ using Xamarin.Forms;
 
 namespace Medikit.Mobile.ViewModels
 {
-    public class HomeViewModel : BaseViewModel
+    public class SettingsViewModel : BaseViewModel
     {
+        private readonly CertificatesPage _certificatesPage;
         private readonly INavigationService _navigation;
 
-        public HomeViewModel()
+        public SettingsViewModel()
         {
+            _certificatesPage = new CertificatesPage();
             _navigation = DependencyService.Get<INavigationService>();
             ConfigureEHealthSessionCommand = new Command(async () => await HandleConfigureEHealthSessionCommand());
         }
@@ -20,7 +22,7 @@ namespace Medikit.Mobile.ViewModels
 
         private async Task HandleConfigureEHealthSessionCommand()
         {
-            await _navigation.PushAsync(new CertificatesPage());
+            await _navigation.PushAsync(_certificatesPage);
         }
     }
 }

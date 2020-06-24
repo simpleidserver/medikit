@@ -5,8 +5,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              Title="Certificates"
+             xmlns:vm="clr-namespace:Medikit.Mobile.ViewModels"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
              x:Class="Medikit.Mobile.Views.CertificatesPage">
+    <ContentPage.Resources>
+        <x:Array Type="{x:Type vm:CertificateViewModel}" x:Key="fakeCertificates">
+            <vm:CertificateViewModel Name="First certificate" CreateDateTime="{x:Static sys:DateTime.Now}" />
+            <vm:CertificateViewModel Name="Second certificate" IsSelected="True" CreateDateTime="{x:Static sys:DateTime.Now}" />
+        </x:Array>
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Delete" Command="{Binding DeleteCertificateCommand}" />
         <ToolbarItem Text="Add" Command="{Binding UploadCertificateCommand }" />
     </ContentPage.ToolbarItems>
+    <StackLayout Padding="5, 0, 5, 0">
+        <StackLayout>
+            <Label Text="Select active certificate"></Label>
+            <Picker ItemsSource="{Binding Certificates}"
+                    SelectedItem="{Binding ActiveCertificate}"
+                    ItemDisplayBinding="{Binding Name}">
+                <d:Picker.ItemsSource>
+                    <Binding Source="{StaticResource fakeCertificates}"/>
+                </d:Picker.ItemsSource>
+            </Picker>
+            <Button Text="Choose certificate" Command="{Binding ChooseCertificateCommand}"></Button>
+        </StackLayout>
+        <StackLayout>
+            <ListView x:Name="ItemsListView"
+                ItemsSource="{Binding Certificates}"
+                VerticalOptions="FillAndExpand"
+                HasUnevenRows="true"
+                SelectionMode="None"
+                RefreshCommand="{Binding LoadCertificatesCommand}"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+                <d:ListView.ItemsSource>
+                    <Binding Source="{StaticResource fakeCertificates}"/>
+                </d:ListView.ItemsSource>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Start" Padding="0, 15">
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" CheckedChanged="HandleCheckedChanged" />
+                                <StackLayout>
+                                    <Label Text="{Binding Name}" />
+                                    <Label Text="{Binding CreateDateTime, StringFormat='{0:MMMM d, yyyy HH:mm}'}" />
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </StackLayout>
 </ContentPage>

@@ -6,12 +6,12 @@ using Xamarin.Forms.Xaml;
 namespace Medikit.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class HomePage : ContentPage
+    public partial class SettingsPage : ContentPage
     {
-        public HomePage()
+        public SettingsPage()
         {
             InitializeComponent();
-            BindingContext = DependencyService.Get<HomeViewModel>();
+            BindingContext = DependencyService.Get<SettingsViewModel>();
         }
     }
 }

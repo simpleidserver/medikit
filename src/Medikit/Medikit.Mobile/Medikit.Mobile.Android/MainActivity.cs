@@ -4,8 +4,6 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
-using Medikit.Mobile.Services;
-using Xamarin.Forms;
 
 namespace Medikit.Mobile.Droid
 {

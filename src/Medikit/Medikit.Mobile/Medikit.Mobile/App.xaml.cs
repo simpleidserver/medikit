@@ -1,6 +1,5 @@
 ﻿using Medikit.Mobile.Services;
 using Medikit.Mobile.ViewModels;
-using System.ComponentModel;
 using Xamarin.Forms;
 
 namespace Medikit.Mobile
@@ -11,7 +10,9 @@ namespace Medikit.Mobile
         {
             InitializeComponent();
             DependencyService.Register<INavigationService, NavigationService>();
-            DependencyService.Register<HomeViewModel>();
+            DependencyService.Register<IAlertService, AlertService>();
+            DependencyService.Register<SettingsViewModel>();
+            DependencyService.Register<ICertificateStore, SqliteCertificateStore>();
             DependencyService.Register<CertificatesViewModel>();
             DependencyService.Register<MedikitMobileOptions>();
             MainPage = new AppShell();
