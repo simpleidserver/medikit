@@ -1,6 +1,9 @@
 ﻿using Medikit.EHealth.KeyStore;
 using Medikit.Mobile.Services;
 using Medikit.Mobile.ViewModels;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Xamarin.Forms;
@@ -23,7 +26,8 @@ namespace Medikit.Mobile
         
         protected override void OnStart()
         {
-            // Handle when your app starts
+            AppCenter.Start("android=ac140158-0029-4e8b-bd73-13f8b7088304;",
+                  typeof(Analytics), typeof(Crashes));
         }
 
         protected override void OnSleep()

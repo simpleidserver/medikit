@@ -1,4 +1,5 @@
 ﻿using Medikit.EHealth.SAML;
+using Medikit.Mobile.Infrastructure;
 using Medikit.Mobile.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -16,11 +17,11 @@ namespace Medikit.Mobile.ViewModels
         {
             _sessionService = sessionService;
             _prescriptionService = prescriptionService;
-            LoadPrescriptionsCommand = new Command(async () => await Load());
+            LoadPrescriptionsCommand = new AsyncCommand(Load);
             Prescriptions = new ObservableCollection<PrescriptionViewModel>();
         }
 
-        public ICommand LoadPrescriptionsCommand { get; private set; }
+        public IAsyncCommand LoadPrescriptionsCommand { get; private set; }
         public ObservableCollection<PrescriptionViewModel> Prescriptions { get; set; }
 
         public async Task Load()

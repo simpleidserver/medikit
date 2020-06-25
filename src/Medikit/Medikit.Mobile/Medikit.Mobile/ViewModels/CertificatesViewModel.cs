@@ -163,7 +163,7 @@ namespace Medikit.Mobile.ViewModels
 
         private async Task HandleDeleteCertificateCommand()
         {
-            var names = Certificates.Where(_ => _.IsSelected).Select(_ => _.Name);
+            var names = Certificates.Where(_ => _.IsSelected).Select(_ => _.Name).ToList();
             if (!names.Any())
             {
                 return;
