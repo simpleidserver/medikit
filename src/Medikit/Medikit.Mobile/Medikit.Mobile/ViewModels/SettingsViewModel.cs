@@ -11,10 +11,10 @@ namespace Medikit.Mobile.ViewModels
         private readonly CertificatesPage _certificatesPage;
         private readonly INavigationService _navigation;
 
-        public SettingsViewModel()
+        public SettingsViewModel(INavigationService navigationService)
         {
             _certificatesPage = new CertificatesPage();
-            _navigation = DependencyService.Get<INavigationService>();
+            _navigation = navigationService;
             ConfigureEHealthSessionCommand = new Command(async () => await HandleConfigureEHealthSessionCommand());
         }
 

@@ -66,7 +66,7 @@ namespace Medikit.Api.Application.Prescriptions.Commands.Handlers
 
             var niss = assertion.AttributeStatement.Attribute.First(_ => _.AttributeNamespace == EHealth.Constants.AttributeStatementNamespaces.Identification).AttributeValue;
             var profession = assertion.AttributeStatement.Attribute.First(_ => _.AttributeNamespace == EHealth.Constants.AttributeStatementNamespaces.Certified).AttributeName;
-            var cbe = _keyStoreManager.GetOrgAuthCertificate().ExtractCBE();
+            var cbe = _keyStoreManager.GetOrgAuthCertificate().Certificate.ExtractCBE();
             var msgType = new KmehrMessageBuilder()
                 .AddSender((_) =>
                 {

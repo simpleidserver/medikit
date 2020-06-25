@@ -1,6 +1,6 @@
 {
     "name": "Medikit extension",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "minimum_chrome_version": "40.0",
     "manifest_version": 2,
     "description": "The Medikit extension allows any applications to create EHEALTH session.",

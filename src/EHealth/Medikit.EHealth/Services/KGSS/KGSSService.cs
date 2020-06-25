@@ -69,8 +69,8 @@ namespace Medikit.EHealth.Services.KGSS
             var response = SOAPEnvelope<KGSSGetKeyResponseBody>.Deserialize(xml);
             var certificates = new List<X509Certificate2>
             {
-                orgAuthCertificate,
-                _keyStoreManager.GetOrgETKCertificate()
+                orgAuthCertificate.Certificate,
+                _keyStoreManager.GetOrgETKCertificate().Certificate
             };
             var unsealedPayload = TripleWrapper.Unseal(Convert.FromBase64String(response.Body.GetKeyResponse.SealedKeyResponse.SealedContent), certificates.ToCertificateCollection());
             return KGSSGetKeyResponseContent.Deserialize(unsealedPayload);
@@ -79,7 +79,7 @@ namespace Medikit.EHealth.Services.KGSS
         public Task<KGSSGetNewKeyResponseContent> GetOrgKGSS()
         {
             var orgAuthCertificate = _keyStoreManager.GetOrgAuthCertificate();
-            return GetKGSS(BuildOrgAllowedReaders(orgAuthCertificate));
+            return GetKGSS(BuildOrgAllowedReaders(orgAuthCertificate.Certificate));
         }
 
         public async Task<KGSSGetNewKeyResponseContent> GetKGSS(List<CredentialType> credentials)
@@ -113,8 +113,8 @@ namespace Medikit.EHealth.Services.KGSS
             var response = SOAPEnvelope<KGSSGetNewKeyResponseBody>.Deserialize(xml);
             var certificates = new List<X509Certificate2>
             {
-                orgAuthCertificate,
-                _keyStoreManager.GetOrgETKCertificate()
+                orgAuthCertificate.Certificate,
+                _keyStoreManager.GetOrgETKCertificate().Certificate
             };
             var unsealedPayload = TripleWrapper.Unseal(Convert.FromBase64String(response.Body.GetNewKeyResponse.SealedNewKeyResponse.SealedContent), certificates.ToCertificateCollection());
             return KGSSGetNewKeyResponseContent.Deserialize(unsealedPayload);

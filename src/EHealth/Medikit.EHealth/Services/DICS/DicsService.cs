@@ -35,7 +35,7 @@ namespace Medikit.EHealth.Services.DICS
                 Request = request
             })
                 .AddTimestamp(issueInstant, issueInstant.AddHours(1))
-                .AddBinarySecurityToken(orgAuthCertificate)
+                .AddBinarySecurityToken(orgAuthCertificate.Certificate)
                 .AddReferenceToBinarySecurityToken()
                 .SignWithCertificate(orgAuthCertificate)
                 .Build();

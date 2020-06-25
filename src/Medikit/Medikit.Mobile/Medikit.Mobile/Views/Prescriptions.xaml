@@ -14,7 +14,13 @@
     </ContentPage.Resources>
     <StackLayout>
         <Button Text="Search insured" />
-        <ListView SelectionMode="None">
+        <ListView 
+                ItemsSource="{Binding Prescriptions}"
+                HasUnevenRows="true"
+                SelectionMode="None"
+                RefreshCommand="{Binding LoadPrescriptionsCommand}"
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}">
             <d:ListView.ItemsSource>
                 <Binding Source="{StaticResource fakePrescriptions}"/>
             </d:ListView.ItemsSource>
@@ -23,9 +29,11 @@
                     <ViewCell>
                         <FlexLayout Direction="Row">
                             <Label Text="{Binding RID}"></Label>
+                            <!--
                             <Label FlexLayout.Grow="1" />
                             <Button Text="Remove" />
                             <Button Text="View" />
+                            -->
                         </FlexLayout>
                     </ViewCell>
                 </DataTemplate>

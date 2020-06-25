@@ -1,5 +1,6 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+using Medikit.Security.Cryptography.Pkcs;
 using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Pkcs;
@@ -21,27 +22,27 @@ namespace Medikit.EHealth.KeyStore
             _options = options.Value;
         }
 
-        public X509Certificate2 GetIdAuthCertificate()
+        public MedikitCertificate GetIdAuthCertificate()
         {
             return GetCertificate(_options.IdentityCertificateStore, new Regex(AUTHENTICATION_CERT_NAME), _options.IdentityCertificateStorePassword);
         }
 
-        public X509Certificate2 GetOrgAuthCertificate()
+        public MedikitCertificate GetOrgAuthCertificate()
         {
             return GetCertificate(_options.OrgCertificateStore, new Regex(AUTHENTICATION_CERT_NAME), _options.OrgCertificateStorePassword);
         }
 
-        public X509Certificate2 GetIdETKCertificate()
+        public MedikitCertificate GetIdETKCertificate()
         {
             return GetCertificate(_options.IdentityCertificateStore, new Regex("[0-9]{13}"), _options.IdentityCertificateStorePassword);
         }
 
-        public X509Certificate2 GetOrgETKCertificate()
+        public MedikitCertificate GetOrgETKCertificate()
         {
             return GetCertificate(_options.OrgCertificateStore, new Regex("[0-9]{13}"), _options.OrgCertificateStorePassword);
         }
 
-        private static X509Certificate2 GetCertificate(string path, Regex regex, string password)
+        private static MedikitCertificate GetCertificate(string path, Regex regex, string password)
         {
             var store = new Pkcs12Store(new MemoryStream(File.ReadAllBytes(path)), password.ToCharArray());
             string al = null;
@@ -60,7 +61,7 @@ namespace Medikit.EHealth.KeyStore
             rsa.ImportParameters(ToRSAParameters(key));
             var certificate = new X509Certificate2(cert.Certificate.GetEncoded(), password, X509KeyStorageFlags.PersistKeySet);
             certificate = certificate.CopyWithPrivateKey(rsa);
-            return certificate;
+            return new MedikitCertificate(certificate, rsa);
         }
 
         private static RSAParameters ToRSAParameters(RsaPrivateCrtKeyParameters privKey)

@@ -11,7 +11,7 @@ namespace Medikit.Mobile.Views
 
         public CertificatesPage()
         {
-            _viewModel = DependencyService.Get<CertificatesViewModel>();
+            _viewModel = App.ServiceProvider.GetService<CertificatesViewModel>();
             InitializeComponent();
             BindingContext =  _viewModel;
         }

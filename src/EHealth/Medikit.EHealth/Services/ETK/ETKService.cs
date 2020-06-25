@@ -33,7 +33,7 @@ namespace Medikit.EHealth.ETK
 
         public Task<ETKModel> GetOrgETK()
         {
-            var cbe = _keyStoreManager.GetOrgAuthCertificate().ExtractCBE();
+            var cbe = _keyStoreManager.GetOrgAuthCertificate().Certificate.ExtractCBE();
             return GetETK(_options.OrgType, cbe);
         }
 

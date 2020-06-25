@@ -13,29 +13,29 @@ namespace Medikit.EHealth.Pkcs
 {
     public class TripleWrapper
     {
-        public static byte[] Seal(byte[] payload, X509Certificate2 senderCertificate, X509Certificate2 recipientCertificate)
+        public static byte[] Seal(byte[] payload, MedikitCertificate senderCertificate, X509Certificate2 recipientCertificate)
         {
             var lst = new List<X509Certificate2>
             {
-                senderCertificate
+                senderCertificate.Certificate
             };
             var signer = new CertificateSigner(senderCertificate);
-            var inner = Sign(payload, senderCertificate, null, SigningPolicy.EHEALTH_CERT, signer);
+            var inner = Sign(payload, senderCertificate.Certificate, null, SigningPolicy.EHEALTH_CERT, signer);
             var envelopedMessage = Encrypt(inner, recipientCertificate);
-            var outer = Sign(envelopedMessage, senderCertificate, lst, SigningPolicy.EHEALTH_CERT, signer);
+            var outer = Sign(envelopedMessage, senderCertificate.Certificate, lst, SigningPolicy.EHEALTH_CERT, signer);
             return outer;
         }
 
-        public static byte[] Seal(byte[] payload, X509Certificate2 senderCertificate, string keyId, SymmetricAlgorithm symmetricAlg)
+        public static byte[] Seal(byte[] payload, MedikitCertificate senderCertificate, string keyId, SymmetricAlgorithm symmetricAlg)
         {
             var lst = new List<X509Certificate2>
             {
-                senderCertificate
+                senderCertificate.Certificate
             };
             var signer = new CertificateSigner(senderCertificate);
-            var inner = Sign(payload, senderCertificate, null, SigningPolicy.EHEALTH_CERT, signer);
+            var inner = Sign(payload, senderCertificate.Certificate, null, SigningPolicy.EHEALTH_CERT, signer);
             var envelopedMessage = Encrypt(inner, symmetricAlg, keyId);
-            var outer = Sign(envelopedMessage, senderCertificate, lst, SigningPolicy.EHEALTH_CERT, signer);
+            var outer = Sign(envelopedMessage, senderCertificate.Certificate, lst, SigningPolicy.EHEALTH_CERT, signer);
             return outer;
         }
 

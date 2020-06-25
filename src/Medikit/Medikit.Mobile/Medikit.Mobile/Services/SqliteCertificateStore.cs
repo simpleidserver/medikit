@@ -1,11 +1,11 @@
 ﻿using Medikit.Mobile.Models;
+using Microsoft.Extensions.Options;
 using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace Medikit.Mobile.Services
 {
@@ -14,9 +14,9 @@ namespace Medikit.Mobile.Services
         private readonly SQLiteAsyncConnection _database;
         private readonly MedikitMobileOptions _options;
 
-        public SqliteCertificateStore()
+        public SqliteCertificateStore(IOptions<MedikitMobileOptions> options)
         {
-            _options = DependencyService.Get<MedikitMobileOptions>();
+            _options = options.Value;
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Medikit.db3");
             _database = new SQLiteAsyncConnection(path);
             _database.CreateTableAsync<MedikitCertificate>().Wait();
@@ -26,6 +26,11 @@ namespace Medikit.Mobile.Services
         public Task<List<MedikitCertificate>> GetAll()
         {
             return _database.Table<MedikitCertificate>().ToListAsync();
+        }
+
+        public Task<MedikitCertificate> GetOrgCertificate()
+        {
+            return _database.Table<MedikitCertificate>().FirstOrDefaultAsync(_ => _.Type == MedikitCertificateTypes.ORG);
         }
 
         public Task<List<MedikitCertificate>> GetIdentityCertificates()

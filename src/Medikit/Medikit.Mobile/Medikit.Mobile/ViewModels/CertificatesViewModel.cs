@@ -22,11 +22,11 @@ namespace Medikit.Mobile.ViewModels
         private readonly ICertificateStore _certificateStore;
         private readonly IAlertService _alertService;
 
-        public CertificatesViewModel()
+        public CertificatesViewModel(INavigationService navigationService, ICertificateStore certificateStore, IAlertService alertService)
         {
-            _navigation = DependencyService.Resolve<INavigationService>();
-            _certificateStore = DependencyService.Resolve<ICertificateStore>();
-            _alertService = DependencyService.Resolve<IAlertService>();
+            _navigation = navigationService;
+            _certificateStore = certificateStore;
+            _alertService = alertService;
             UploadCertificateCommand = new Command(async () => await HandleUploadCertificateCommand());
             LoadCertificatesCommand = new Command(async () => await Load());
             DeleteCertificateCommand = new Command(async () => await HandleDeleteCertificateCommand(), CanDelete);

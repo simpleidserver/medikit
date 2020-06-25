@@ -3,6 +3,7 @@
 using Medikit.EHealth.Extensions;
 using Medikit.EHealth.SAML.DTOs;
 using Medikit.EHealth.SOAP.DTOs;
+using Medikit.Security.Cryptography.Pkcs;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -112,7 +113,7 @@ namespace Medikit.EHealth.SOAP
             return this;
         }
 
-        public SOAPRequestBuilder<T> SignWithCertificate(X509Certificate2 certificate)
+        public SOAPRequestBuilder<T> SignWithCertificate(MedikitCertificate certificate)
         {
             return SignWithCertificate(_ =>
             {

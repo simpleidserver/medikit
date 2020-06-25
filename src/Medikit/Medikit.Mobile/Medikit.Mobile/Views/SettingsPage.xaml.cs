@@ -1,5 +1,4 @@
-﻿
-using Medikit.Mobile.ViewModels;
+﻿using Medikit.Mobile.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +10,7 @@ namespace Medikit.Mobile.Views
         public SettingsPage()
         {
             InitializeComponent();
-            BindingContext = DependencyService.Get<SettingsViewModel>();
+            BindingContext = App.ServiceProvider.GetService<SettingsViewModel>();
         }
     }
 }

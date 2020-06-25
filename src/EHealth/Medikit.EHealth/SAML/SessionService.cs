@@ -6,6 +6,7 @@ using Medikit.EHealth.SAML.DTOs;
 using Medikit.EHealth.SOAP;
 using Medikit.EHealth.SOAP.DTOs;
 using Medikit.EID;
+using Medikit.Security.Cryptography.Pkcs;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -72,7 +73,7 @@ namespace Medikit.EHealth.SAML
                 using (var connection = discovery.Connect(readers.First()))
                 {
                     var certificate = connection.GetAuthCertificate();
-                    var idAuthCertificate = new X509Certificate2(connection.GetAuthCertificate().Export(X509ContentType.Cert));
+                    var idAuthCertificate = new MedikitCertificate(new X509Certificate2(connection.GetAuthCertificate().Export(X509ContentType.Cert)), null);
                     samlEnv = BuildRequest(idAuthCertificate, orgAuthCertificate, (_ =>
                     {
                         byte[] hashPayload = null;
@@ -101,7 +102,7 @@ namespace Medikit.EHealth.SAML
             }));
         }
 
-        private SOAPEnvelope<SAMLRequestBody> BuildRequest(X509Certificate2 idAuthCertificate, X509Certificate2 orgAuthCertificate, Func<byte[], byte[]> signCallback)
+        private SOAPEnvelope<SAMLRequestBody> BuildRequest(MedikitCertificate idAuthCertificate, MedikitCertificate orgAuthCertificate, Func<byte[], byte[]> signCallback)
         {
             var samlAttributes = new List<SAMLAttribute>
             {
@@ -109,13 +110,13 @@ namespace Medikit.EHealth.SAML
                 {
                     AttributeName = Constants.AttributeStatementNames.CertificateHolderPersonSSIN,
                     AttributeNamespace = Constants.AttributeStatementNamespaces.Identification,
-                    AttributeValue = idAuthCertificate.ExtractSSIN()
+                    AttributeValue = idAuthCertificate.Certificate.ExtractSSIN()
                 },
                 new SAMLAttribute
                 {
                     AttributeName = Constants.AttributeStatementNames.PersonSSIN,
                     AttributeNamespace = Constants.AttributeStatementNamespaces.Identification,
-                    AttributeValue = idAuthCertificate.ExtractSSIN()
+                    AttributeValue = idAuthCertificate.Certificate.ExtractSSIN()
                 },
                 new SAMLAttribute
                 {
@@ -129,8 +130,8 @@ namespace Medikit.EHealth.SAML
             var bodyId = $"id-{Guid.NewGuid().ToString()}";
             var requestId = $"request-{Guid.NewGuid().ToString()}";
             var assertionId = $"assertion-{Guid.NewGuid().ToString()}";
-            var userSubject = FormatSubject(idAuthCertificate.Subject);
-            var issuerSubject = FormatSubject(idAuthCertificate.Issuer);
+            var userSubject = FormatSubject(idAuthCertificate.Certificate.Subject);
+            var issuerSubject = FormatSubject(idAuthCertificate.Certificate.Issuer);
             var nameIdentifier = new SAMLNameIdentifier
             {
                 Format = "urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName",
@@ -179,7 +180,7 @@ namespace Medikit.EHealth.SAML
                             {
                                 X509Data = new SOAPX509Data
                                 {
-                                    X509Certificate = Convert.ToBase64String(orgAuthCertificate.Export(X509ContentType.Cert))
+                                    X509Certificate = Convert.ToBase64String(orgAuthCertificate.Certificate.Export(X509ContentType.Cert))
                                 }
                             }
                         }
@@ -214,7 +215,7 @@ namespace Medikit.EHealth.SAML
                 {
                     X509Data = new SOAPX509Data
                     {
-                        X509Certificate = Convert.ToBase64String(orgAuthCertificate.Export(X509ContentType.Cert))
+                        X509Certificate = Convert.ToBase64String(orgAuthCertificate.Certificate.Export(X509ContentType.Cert))
                     }
                 },
                 SignatureValue = signatureStr,
@@ -222,7 +223,7 @@ namespace Medikit.EHealth.SAML
             };
             return SOAPRequestBuilder<SAMLRequestBody>.New(samlRequestBody)
                 .AddTimestamp(issueInstant)
-                .AddBinarySecurityToken(idAuthCertificate)
+                .AddBinarySecurityToken(idAuthCertificate.Certificate)
                 .AddReferenceToBinarySecurityToken()
                 .SignWithCertificate(signCallback)
                 .Build();

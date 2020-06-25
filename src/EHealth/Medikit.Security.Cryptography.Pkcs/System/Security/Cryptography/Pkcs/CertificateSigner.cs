@@ -10,9 +10,9 @@ namespace Medikit.Security.Cryptography.Pkcs
 {
     public class CertificateSigner : ISigner
     {
-        private readonly X509Certificate2 _certificate;
+        private readonly MedikitCertificate _certificate;
 
-        public CertificateSigner(X509Certificate2 certificate)
+        public CertificateSigner(MedikitCertificate certificate)
         {
             _certificate = certificate;
         }
