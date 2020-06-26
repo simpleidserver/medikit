@@ -7,25 +7,7 @@
        xmlns:local="clr-namespace:Medikit.Mobile.Views"
        Title="Medikit.Mobile"
        x:Class="Medikit.Mobile.AppShell"
-       Style="{StaticResource MedikitStyle}">
-    <Shell.Resources>
-        <ResourceDictionary>
-            <Color x:Key="PrimaryBackgroundColor">#485f62</Color>
-            <Color x:Key="PrimaryForegroundColor">White</Color>
-            <Style x:Key="MedikitStyle" TargetType="Element">
-                <Setter Property="Shell.BackgroundColor" Value="{StaticResource PrimaryBackgroundColor}" />
-                <Setter Property="Shell.ForegroundColor" Value="White" />
-                <Setter Property="Shell.TitleColor" Value="White" />
-                <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
-                <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource PrimaryBackgroundColor}" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="White"/>                
-            </Style>
-        </ResourceDictionary>
-    </Shell.Resources>
-
+       xmlns:resources="clr-namespace:Medikit.Mobile.Resources">
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
             <Grid BackgroundColor="{DynamicResource PrimaryBackgroundColor}">
@@ -35,11 +17,11 @@
     </Shell.FlyoutHeaderTemplate>
 
     <ShellContent Route="Prescriptions"
-                  Title="Prescriptions"
+                  Title="{x:Static resources:AppResources.Prescriptions}"
                   ContentTemplate="{DataTemplate local:Prescriptions}" />
 
     <ShellContent Route="Settings"
-                  Title="Settings"
+                  Title="{x:Static resources:AppResources.Settings}"
                   ContentTemplate="{DataTemplate local:SettingsPage}" />
     <!--
     <TabBar>

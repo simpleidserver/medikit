@@ -17,41 +17,45 @@ namespace Medikit.Mobile.ViewModels
         {
             _sessionService = sessionService;
             _prescriptionService = prescriptionService;
-            LoadPrescriptionsCommand = new AsyncCommand(Load);
+            LoadPrescriptionsCommand = new Command(Load);
             Prescriptions = new ObservableCollection<PrescriptionViewModel>();
         }
 
-        public IAsyncCommand LoadPrescriptionsCommand { get; private set; }
+        public ICommand LoadPrescriptionsCommand { get; private set; }
         public ObservableCollection<PrescriptionViewModel> Prescriptions { get; set; }
 
-        public async Task Load()
+        public void Load()
         {
             IsBusy = true;
             Prescriptions.Clear();
-            var session = _sessionService.GetSession();
-            if (session == null)
+            Task.Factory.StartNew(async () =>
             {
-                try
+                var session = _sessionService.GetSession();
+                if (session == null)
                 {
                     session = await _sessionService.BuildFallbackSession();
                 }
-                catch
-                {
-                    IsBusy = false;
-                    return;
-                }
-            }
+                               
+                var assertion = session.Body.Response.Assertion;
+                var result = await _prescriptionService.GetOpenedPrescriptions("76020727360", assertion.Serialize().ToString());
+                return result;
 
-            var assertion = session.Body.Response.Assertion;
-            var result = await _prescriptionService.GetOpenedPrescriptions("76020727360", assertion.Serialize().ToString());
-            foreach(var prescription in result)
+            }).ContinueWith(_ =>
             {
-                Prescriptions.Add(new PrescriptionViewModel
+                if(_.Exception == null)
                 {
-                    RID = prescription
-                });
-            }
-            IsBusy = false;
+                    var result = _.Result.Result;
+                    foreach (var prescription in result)
+                    {
+                        Prescriptions.Add(new PrescriptionViewModel
+                        {
+                            RID = prescription
+                        });
+                    }
+                }
+
+                IsBusy = false;
+            });
         }
     }
 }

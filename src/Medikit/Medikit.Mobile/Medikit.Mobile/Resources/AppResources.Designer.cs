@@ -61,11 +61,29 @@ namespace Medikit.Mobile.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add.
+        /// </summary>
+        public static string Add {
+            get {
+                return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Certificate added.
         /// </summary>
         public static string CertificateAdded {
             get {
                 return ResourceManager.GetString("CertificateAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
             }
         }
         
@@ -79,11 +97,38 @@ namespace Medikit.Mobile.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Prescriptions.
+        /// </summary>
+        public static string Prescriptions {
+            get {
+                return ResourceManager.GetString("Prescriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Scan certificate.
         /// </summary>
         public static string ScanCertificate {
             get {
                 return ResourceManager.GetString("ScanCertificate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Search insured.
+        /// </summary>
+        public static string SearchInsured {
+            get {
+                return ResourceManager.GetString("SearchInsured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         

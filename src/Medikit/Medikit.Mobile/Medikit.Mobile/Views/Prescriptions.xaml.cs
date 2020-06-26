@@ -1,5 +1,4 @@
-﻿using Medikit.Mobile.Extensions;
-using Medikit.Mobile.ViewModels;
+﻿using Medikit.Mobile.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -20,8 +19,7 @@ namespace Medikit.Mobile.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            // https://johnthiriet.com/mvvm-going-async-with-async-command/ : Add async command.
-            _viewModel.LoadPrescriptionsCommand.ExecuteAsync().FireAndForgetSafeAsync();
+            _viewModel.LoadPrescriptionsCommand.Execute(null);
         }
     }
 }

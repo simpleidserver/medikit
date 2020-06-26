@@ -6,6 +6,19 @@
              mc:Ignorable="d"
              x:Class="Medikit.Mobile.App">
     <Application.Resources>
-        
+        <ResourceDictionary Source="Themes/LightTheme.xaml" />
+        <Style x:Key="BaseStyle" TargetType="Element">
+            <Setter Property="Shell.BackgroundColor" Value="{DynamicResource PrimaryBackgroundColor}" />
+            <Setter Property="Shell.ForegroundColor" Value="{DynamicResource PrimaryForegroundColor}" />
+            <!--
+            <Setter Property="Shell.ForegroundColor" Value="White" />
+            <Setter Property="Shell.TitleColor" Value="White" />
+            <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
+            <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
+            <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
+            <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
+            -->
+        </Style>
+        <Style TargetType="ShellItem" BasedOn="{StaticResource BaseStyle}" />        
     </Application.Resources>
 </Application>

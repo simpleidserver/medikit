@@ -5,19 +5,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:vm="clr-namespace:Medikit.Mobile.ViewModels"
-             x:Class="Medikit.Mobile.Views.Prescriptions">
+             x:Class="Medikit.Mobile.Views.Prescriptions"
+             xmlns:resources="clr-namespace:Medikit.Mobile.Resources">
     <ContentPage.Resources>
         <x:Array x:Key="fakePrescriptions" Type="{x:Type vm:PrescriptionViewModel}">
             <vm:PrescriptionViewModel RID="123456789" />
             <vm:PrescriptionViewModel RID="123456780" />
         </x:Array>
     </ContentPage.Resources>
-    <StackLayout>
-        <Button Text="Search insured" />
+    <StackLayout Padding="5, 0, 5, 0">
+        <Button Visual="MyVisual" Text="{x:Static resources:AppResources.SearchInsured}" Padding="5, 0, 5, 0" BorderRadius="10" Image="search.png"/>
         <ListView 
                 ItemsSource="{Binding Prescriptions}"
                 HasUnevenRows="true"
                 SelectionMode="None"
+                VerticalOptions="FillAndExpand"
                 RefreshCommand="{Binding LoadPrescriptionsCommand}"
                 IsPullToRefreshEnabled="true"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}">
@@ -27,7 +29,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <FlexLayout Direction="Row">
+                        <FlexLayout Direction="Row" Padding="0, 15">
                             <Label Text="{Binding RID}"></Label>
                             <!--
                             <Label FlexLayout.Grow="1" />
