@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<controls:StepBarProgressContentControl xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Medikit.Mobile.Controls"
+             Title="Select medication"
+             mc:Ignorable="d"
+             xmlns:resources="clr-namespace:Medikit.Mobile.Resources"
+             x:Class="Medikit.Mobile.Views.Steps.SelectMedicationStep">
+    <ContentView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Command="{Binding PreviousCommand}" Text="{x:Static resources:AppResources.Previous}"></Button>
+            </Grid>
+        </Grid>
+    </ContentView.Content>
+</controls:StepBarProgressContentControl>

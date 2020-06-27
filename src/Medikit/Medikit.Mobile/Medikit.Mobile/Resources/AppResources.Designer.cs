@@ -70,6 +70,15 @@ namespace Medikit.Mobile.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Advanced.
+        /// </summary>
+        public static string Advanced {
+            get {
+                return ResourceManager.GetString("Advanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Certificate added.
         /// </summary>
         public static string CertificateAdded {
@@ -79,11 +88,38 @@ namespace Medikit.Mobile.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Choose certificate.
+        /// </summary>
+        public static string ChooseCertificate {
+            get {
+                return ResourceManager.GetString("ChooseCertificate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Configure certificates.
+        /// </summary>
+        public static string ConfigureCertificates {
+            get {
+                return ResourceManager.GetString("ConfigureCertificates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Delete.
         /// </summary>
         public static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
             }
         }
         
@@ -106,6 +142,15 @@ namespace Medikit.Mobile.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Previous.
+        /// </summary>
+        public static string Previous {
+            get {
+                return ResourceManager.GetString("Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Scan certificate.
         /// </summary>
         public static string ScanCertificate {
@@ -120,6 +165,15 @@ namespace Medikit.Mobile.Resources {
         public static string SearchInsured {
             get {
                 return ResourceManager.GetString("SearchInsured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Select active certificate.
+        /// </summary>
+        public static string SelectActiveCertificate {
+            get {
+                return ResourceManager.GetString("SelectActiveCertificate", resourceCulture);
             }
         }
         

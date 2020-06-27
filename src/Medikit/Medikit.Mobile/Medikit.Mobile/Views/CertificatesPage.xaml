@@ -21,7 +21,7 @@
     </ContentPage.ToolbarItems>
     <StackLayout Padding="5, 0, 5, 0">
         <StackLayout>
-            <Label Text="Select active certificate"></Label>
+            <Label Text="{x:Static resources:AppResources.SelectActiveCertificate}"></Label>
             <Picker ItemsSource="{Binding Certificates}"
                     SelectedItem="{Binding ActiveCertificate}"
                     ItemDisplayBinding="{Binding Name}">
@@ -29,7 +29,7 @@
                     <Binding Source="{StaticResource fakeCertificates}"/>
                 </d:Picker.ItemsSource>
             </Picker>
-            <Button Text="Choose certificate" Command="{Binding ChooseCertificateCommand}"></Button>
+            <Button Text="{x:Static resources:AppResources.ChooseCertificate}" Command="{Binding ChooseCertificateCommand}"></Button>
         </StackLayout>
         <StackLayout>
             <ListView x:Name="ItemsListView"

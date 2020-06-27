@@ -5,11 +5,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Name="homePage"
-             x:Class="Medikit.Mobile.Views.SettingsPage">
+             x:Class="Medikit.Mobile.Views.SettingsPage"
+             xmlns:resources="clr-namespace:Medikit.Mobile.Resources">
     <TableView Intent="Settings">
         <TableRoot>
-            <TableSection Title="Advanced">
-                <TextCell Text="Configure EHEALTH certificates" Command="{Binding ConfigureEHealthSessionCommand}" />
+            <TableSection Title="{x:Static resources:AppResources.Advanced}">
+                <TextCell Text="{x:Static resources:AppResources.ConfigureCertificates}" Command="{Binding ConfigureEHealthSessionCommand}" />
             </TableSection>
         </TableRoot>
     </TableView>

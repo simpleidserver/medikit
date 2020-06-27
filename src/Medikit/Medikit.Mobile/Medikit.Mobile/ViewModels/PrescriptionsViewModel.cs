@@ -1,6 +1,6 @@
 ﻿using Medikit.EHealth.SAML;
-using Medikit.Mobile.Infrastructure;
 using Medikit.Mobile.Services;
+using Medikit.Mobile.Views;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,16 +12,20 @@ namespace Medikit.Mobile.ViewModels
     {
         private readonly ISessionService _sessionService;
         private readonly IPrescriptionService _prescriptionService;
+        private readonly INavigationService _navigationService;
 
-        public PrescriptionsViewModel(ISessionService sessionService, IPrescriptionService prescriptionService)
+        public PrescriptionsViewModel(INavigationService navigationService, ISessionService sessionService, IPrescriptionService prescriptionService)
         {
+            _navigationService = navigationService;
             _sessionService = sessionService;
             _prescriptionService = prescriptionService;
             LoadPrescriptionsCommand = new Command(Load);
+            AddPrescriptionCommand = new Command(HandleAddPrescriptionCommand);
             Prescriptions = new ObservableCollection<PrescriptionViewModel>();
         }
 
         public ICommand LoadPrescriptionsCommand { get; private set; }
+        public ICommand AddPrescriptionCommand { get; private set; }
         public ObservableCollection<PrescriptionViewModel> Prescriptions { get; set; }
 
         public void Load()
@@ -56,6 +60,11 @@ namespace Medikit.Mobile.ViewModels
 
                 IsBusy = false;
             });
+        }
+
+        private async void HandleAddPrescriptionCommand()
+        {
+            await _navigationService.PushAsync(new AddCertificatePage());
         }
     }
 }

@@ -13,6 +13,9 @@
             <vm:PrescriptionViewModel RID="123456780" />
         </x:Array>
     </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{x:Static resources:AppResources.Add}" Command="{Binding AddPrescriptionCommand }" />        
+    </ContentPage.ToolbarItems>
     <StackLayout Padding="5, 0, 5, 0">
         <Button Visual="MyVisual" Text="{x:Static resources:AppResources.SearchInsured}" Padding="5, 0, 5, 0" BorderRadius="10" Image="search.png"/>
         <ListView 

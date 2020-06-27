@@ -120,11 +120,23 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
   <data name="CertificateAdded" xml:space="preserve">
     <value>Certificate added</value>
   </data>
+  <data name="ChooseCertificate" xml:space="preserve">
+    <value>Choose certificate</value>
+  </data>
+  <data name="ConfigureCertificates" xml:space="preserve">
+    <value>Configure certificates</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
@@ -132,11 +144,17 @@
   <data name="Prescriptions" xml:space="preserve">
     <value>Prescriptions</value>
   </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
   <data name="ScanCertificate" xml:space="preserve">
     <value>Scan certificate</value>
   </data>
   <data name="SearchInsured" xml:space="preserve">
     <value>Search insured</value>
+  </data>
+  <data name="SelectActiveCertificate" xml:space="preserve">
+    <value>Select active certificate</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
