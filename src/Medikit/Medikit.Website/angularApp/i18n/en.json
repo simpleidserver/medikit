@@ -111,5 +111,8 @@
   "bad-password": "Bad password",
   "price": "Price {{price}}",
   "reimbursable": "Reimbursable",
-  "CBIP": "CBIP"
+  "CBIP": "CBIP",
+  "patients": "Patients",
+  "add-patient": "Add patient",
+  "updateDateTime": "Update datetime"
 }

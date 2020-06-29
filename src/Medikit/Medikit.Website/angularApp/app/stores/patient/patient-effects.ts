@@ -17,7 +17,7 @@ export class PatientEffects {
         .pipe(
             ofType(ActionTypes.SEARCH_PATIENTS),
             mergeMap((evt: SearchPatients) => {
-                return this.patientService.search(evt.firstname, evt.lastname, null, evt.startIndex, evt.count)
+                return this.patientService.search(evt.firstname, evt.lastname, null, evt.startIndex, evt.count, evt.active, evt.direction)
                     .pipe(
                         map(patients => { return { type: ActionTypes.PATIENTS_LOADED, patients: patients }; }),
                         catchError(() => of({ type: ActionTypes.ERROR_SEARCH_PATIENTS }))

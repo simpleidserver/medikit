@@ -14,5 +14,8 @@
   "reason-required": "Raison est requise",
   "price": "Prijs : {{price}}",
   "reimbursable": "Remboursable",
-  "CBIP": "BCFI"
+  "CBIP": "BCFI",
+  "patients": "Patients",
+  "add-patient": "Add patient",
+  "updateDateTime": "Update datetime"
 }

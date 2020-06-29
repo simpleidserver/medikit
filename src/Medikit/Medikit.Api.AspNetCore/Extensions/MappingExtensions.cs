@@ -169,7 +169,10 @@ namespace Medikit.Api.AspNetCore.Extensions
                 { "birthdate", patient.Birthdate },
                 { "firstname", patient.Firstname },
                 { "lastname", patient.Lastname },
-                { "niss", patient.Niss }
+                { "niss", patient.Niss },
+                { "create_datetime", patient.CreateDateTime },
+                { "update_datetime", patient.UpdateDateTime },
+                { "logo_url", patient.LogoUrl }
             };
         }
 

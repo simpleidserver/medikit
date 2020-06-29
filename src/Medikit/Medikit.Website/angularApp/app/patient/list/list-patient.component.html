@@ -1,0 +1,65 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <div class="mat-h1">{{ "patients" | translate }}</div>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-card fxFlex="60%">
+                <mat-card-content>
+
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex="40%">
+                <mat-card-content>
+                    <button mat-raised-button color="primary" class="full-width">{{ 'add-patient' | translate }}</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div>
+            <mat-card>
+                <mat-card-content>
+                    <div class="mat-elevation-z8 overflow-hidden">
+                        <table mat-table class="full-width" [dataSource]="patients$" matSortDirection="desc" matSort>
+                            <ng-container matColumnDef="logo">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let patient">
+                                    <ngx-avatar class="center" *ngIf="patient.logoUrl" src="{{ patient.logoUrl }}"></ngx-avatar>
+                                    <ngx-avatar class="center" *ngIf="!patient.logoUrl" name="{{ patient.firstname }}"></ngx-avatar>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="niss">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "niss" | translate }}</th>
+                                <td mat-cell *matCellDef="let patient">{{patient.niss}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="firstname">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "firstname" | translate }}</th>
+                                <td mat-cell *matCellDef="let patient">{{patient.firstname}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="lastname">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "lastname" | translate }}</th>
+                                <td mat-cell *matCellDef="let patient">{{ patient.lastname }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="updateDateTime">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "updateDateTime" | translate }}</th>
+                                <td mat-cell *matCellDef="let patient">{{ patient.updateDateTime | date:'fullDate'}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let patient">
+                                    <button mat-icon-button>
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -13,6 +13,7 @@ namespace Medikit.Api.Application.Domains
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string NationalIdentityNumber { get; set; }
+        public string LogoUrl { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
@@ -47,7 +48,10 @@ namespace Medikit.Api.Application.Domains
                 Lastname = Lastname,
                 NationalIdentityNumber = NationalIdentityNumber,
                 Version = Version,
-                Id = Id
+                Id = Id,
+                LogoUrl = LogoUrl,
+                BirthDate = BirthDate,
+                UpdateDateTime = UpdateDateTime
             };
         }
 

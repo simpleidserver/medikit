@@ -3,7 +3,7 @@
     $accent: map-get($theme, accent);
     $background: map-get($theme, background);
 
-    .active {
+    .active, .is-active {
         background: mat-color($background, 'hover');
     }
 

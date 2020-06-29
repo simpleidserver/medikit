@@ -111,5 +111,8 @@
   "bad-password": "Mauvais mot de passe",
   "price": "Prix : {{price}}",
   "reimbursable": "Remboursable",
-  "CBIP": "CBIP"
+  "CBIP": "CBIP",
+  "patients": "Patients",
+  "add-patient": "Ajouter patient",
+  "updateDateTime": "Date de mise à jour"
 }

@@ -51,7 +51,9 @@ namespace Medikit.Api.Host
                         BirthDate = DateTime.UtcNow,
                         NationalIdentityNumber = "76020727360",
                         Version = 0,
-                        PrescriberId = "admin"
+                        PrescriberId = "admin",
+                        LogoUrl = "https://img.icons8.com/material/4ac144/256/user-male.png",
+                        UpdateDateTime = DateTime.UtcNow
                     }
                 })
                 .AddLanguages(new List<string>

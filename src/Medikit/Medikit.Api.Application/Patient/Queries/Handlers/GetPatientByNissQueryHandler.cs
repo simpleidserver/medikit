@@ -31,7 +31,10 @@ namespace Medikit.Api.Application.Patient.Queries.Handlers
                 Birthdate = result.BirthDate,
                 Firstname = result.Firstname,
                 Lastname = result.Lastname,
-                Niss = result.NationalIdentityNumber
+                Niss = result.NationalIdentityNumber,
+                LogoUrl = result.LogoUrl,
+                CreateDateTime = result.CreateDateTime,
+                UpdateDateTime = result.UpdateDateTime
             };
         }
     }

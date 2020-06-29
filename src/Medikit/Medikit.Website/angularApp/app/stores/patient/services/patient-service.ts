@@ -25,7 +25,7 @@ export class PatientService {
         );
     }
 
-    search(firstName: string, lastName: string, niss: string, startIndex : number, count : number) : Observable<SearchPatientResult> {
+    search(firstName: string, lastName: string, niss: string, startIndex : number, count : number, active : string = null, direction : string = null) : Observable<SearchPatientResult> {
         let headers = new HttpHeaders();
         let targetUrl = process.env.API_URL + "/patients/.search";
         if (startIndex <= 0) {
@@ -47,6 +47,14 @@ export class PatientService {
 
         if (niss) {
             targetUrl += "&niss=" + niss;
+        }
+
+        if (active) {
+            targetUrl = targetUrl + "&order_by=" + active;
+        }
+
+        if (direction) {
+            targetUrl = targetUrl + "&order=" + direction;
         }
 
         headers = headers.set('Accept', 'application/json');
