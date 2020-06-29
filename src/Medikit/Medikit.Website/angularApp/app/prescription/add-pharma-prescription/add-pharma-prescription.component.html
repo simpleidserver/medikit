@@ -69,19 +69,24 @@
                                 </button>
                             </mat-form-field>
                         </form>
+                        <mat-paginator [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10]" class="mt-5"></mat-paginator>
                         <mat-selection-list [(ngModel)]="selectedMedicinalPackages">
                             <mat-accordion>
-                                <mat-expansion-panel *ngFor="let medicinalProduct of medicinalProducts;">
-                                    <mat-expansion-panel-header>
-                                        {{ medicinalProduct.Names | translateenum }}
-                                    </mat-expansion-panel-header>
-                                    <mat-list-option *ngFor="let package of medicinalProduct.Packages" [value]="package">
-                                        {{ package.PrescriptionNames | translateenum }} ({{ package.DeliveryMethods[0].Code }})
-                                    </mat-list-option>
-                                </mat-expansion-panel>
+                                <mat-list-option *ngFor="let package of medicinalPackages" [value]="package">
+                                    <div fxLayout="row">
+                                        <div fxFlex="90%">
+                                            {{ package.Names | translateenum }}
+                                            <div>
+                                                <mat-checkbox [checked]="package.Reimbursable" [disabled]="true">{{  'reimbursable' | translate }}</mat-checkbox>
+                                                &nbsp;
+                                                <a href="{{ package.Crmurl | translateenum }}" target="_blank">{{ 'CBIP' | translate }}</a>
+                                            </div>
+                                        </div>
+                                        <div fxFlex="10%">{{ 'price' | translate : { price: package.Price } }}</div>
+                                    </div>
+                                </mat-list-option>
                             </mat-accordion>
                         </mat-selection-list>
-                        <mat-paginator [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10]" class="mt-5"></mat-paginator>
                         <form [formGroup]="drugFormGroup" (submit)="confirmAddDrug()">
                             <mat-accordion>
                                 <!-- Posology -->

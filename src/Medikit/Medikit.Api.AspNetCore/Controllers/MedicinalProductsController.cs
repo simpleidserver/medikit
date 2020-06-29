@@ -21,7 +21,7 @@ namespace Medikit.Api.AspNetCore.Controllers
             _nomenclatureService = nomenclatureService;
         }
 
-        [HttpGet(".search")]
+        [HttpGet("packages/.search")]
         public async Task<IActionResult> Search()
         {
             try
@@ -39,9 +39,9 @@ namespace Medikit.Api.AspNetCore.Controllers
             }
         }
 
-        private static SearchMedicinalProduct BuildRequest(IEnumerable<KeyValuePair<string, object>> query)
+        private static SearchMedicinalPackage BuildRequest(IEnumerable<KeyValuePair<string, object>> query)
         {
-            var result = new SearchMedicinalProduct();
+            var result = new SearchMedicinalPackage();
             int startIndex;
             int count;
             string searchText;
@@ -76,7 +76,6 @@ namespace Medikit.Api.AspNetCore.Controllers
                 }
             }
 
-            result.Target = SearchMedicinalProductTargets.PRODUCT;
             return result;
         }
     }

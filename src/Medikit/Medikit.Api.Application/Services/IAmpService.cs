@@ -9,7 +9,7 @@ namespace Medikit.Api.Application.Services
 {
     public interface IAmpService
     {
-        Task<SearchResult<AmpResult>> SearchByMedicinalPackageName(SearchAmpRequest request, CancellationToken token);
+        Task<SearchResult<AmppResult>> SearchMedicinalPackage(SearchAmpRequest request, CancellationToken token);
         Task<AmpResult> SearchByCnkCode(string deliveryEnvironment, string cnk, CancellationToken token);
     }
 }

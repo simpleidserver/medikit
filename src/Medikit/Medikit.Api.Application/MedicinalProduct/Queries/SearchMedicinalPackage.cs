@@ -4,15 +4,16 @@ using Medikit.Api.Application.Domains;
 
 namespace Medikit.Api.Application.MedicinalProduct.Queries
 {
-    public class SearchMedicinalProduct
+    public class SearchMedicinalPackage
     {
-        public SearchMedicinalProduct()
+        public SearchMedicinalPackage()
         {
+            DeliveryEnvironment = DeliveryEnvironments.Public;
+            IsCommercialised = true;
             StartIndex = 0;
             Count = 10;
         }
 
-        public SearchMedicinalProductTargets Target { get; set; }
         public string SearchText { get; set; }
         public DeliveryEnvironments DeliveryEnvironment { get; set; }
         public bool? IsCommercialised { get; set; }

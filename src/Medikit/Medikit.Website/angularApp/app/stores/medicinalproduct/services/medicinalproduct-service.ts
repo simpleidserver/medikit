@@ -12,7 +12,7 @@ export class MedicinalProductService {
 
     search(searchText: string, startIndex: number, count: number, isCommercialised : boolean, deliveryEnvironment: string): Observable<SearchMedicinalProduct> {
         let headers = new HttpHeaders();
-        let targetUrl = process.env.API_URL + "/medicinalproducts/.search?search_text=" + searchText + "&start_index=" + startIndex + "&count=" + count;
+        let targetUrl = process.env.API_URL + "/medicinalproducts/packages/.search?search_text=" + searchText + "&start_index=" + startIndex + "&count=" + count;
         targetUrl += "&is_commercialised=" + isCommercialised;
         if (deliveryEnvironment) {
             targetUrl += "&delivery_environment=" + deliveryEnvironment;

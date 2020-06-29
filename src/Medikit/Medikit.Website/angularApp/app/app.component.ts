@@ -123,7 +123,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     login() {
-        console.log("BINGO");
         this.oauthService.customQueryParams = {
             'prompt': 'login'
         };

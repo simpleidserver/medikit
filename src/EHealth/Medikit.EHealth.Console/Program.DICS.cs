@@ -17,10 +17,33 @@ namespace Medikit.EHealth.Console
             {
                 FindByPackage = new DICSFindByPackage
                 {
-                    AnyNamePart = "abilify"
+                    AnyNamePart = "clamoxyl"
                 }
             });
             return result;
+        }
+        private static async Task FindAmppByPackageName()
+        {
+            var dicsClient = (IDicsService)_serviceProvider.GetService(typeof(IDicsService));
+            await dicsClient.FindAmpp(new DICSFindAmppRequest
+            {
+                FindByPackage = new DICSFindByPackage
+                {
+                    AnyNamePart = "clamoxyl"
+                }
+            });
+        }
+
+        private static async Task FindReimbursement()
+        {
+            var dicsClient = (IDicsService)_serviceProvider.GetService(typeof(IDicsService));
+            await dicsClient.FindReimbursement(new DICSFindReimbursementRequest
+            {
+                FindByPackage = new DICSFindByPackage
+                {
+                    AnyNamePart = "clamoxyl"
+                }
+            });
         }
 
         private static async Task<SOAPEnvelope<DICSFindAmpResponseBody>> FindAmpByDelivery()

@@ -9,6 +9,6 @@ namespace Medikit.Api.Application.MedicinalProduct
 {
     public interface IMedicinalProductService
     {
-        Task<SearchQueryResult<MedicinalProductResult>> Search(SearchMedicinalProduct query);
+        Task<SearchQueryResult<MedicinalPackageResult>> Search(SearchMedicinalPackage query);
     }
 }

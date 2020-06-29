@@ -11,5 +11,8 @@
   "electronic-prescription-end-execution-date": "Einddatum van de uitvoerbaarheid : {{date}}",
   "reject-prescription": "Rejeter la prescription",
   "reject": "Rejeter",
-  "reason-required": "Raison est requise"
+  "reason-required": "Raison est requise",
+  "price": "Prijs : {{price}}",
+  "reimbursable": "Remboursable",
+  "CBIP": "BCFI"
 }

@@ -7,5 +7,7 @@ namespace Medikit.Api.Application.Services.Results
         public string DeliveryEnvironment { get; set; }
         public string CodeType { get; set; }
         public string Code { get; set; }
+        public double Price { get; set; }
+        public bool Reimbursable { get; set; }
     }
 }

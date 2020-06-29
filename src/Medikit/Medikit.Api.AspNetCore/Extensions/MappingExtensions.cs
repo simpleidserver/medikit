@@ -96,7 +96,7 @@ namespace Medikit.Api.AspNetCore.Extensions
 
         #region Medicinal product
 
-        public static JObject ToDto(this SearchQueryResult<MedicinalProductResult> result)
+        public static JObject ToDto(this SearchQueryResult<MedicinalPackageResult> result)
         {
             return new JObject
             {
@@ -106,25 +106,30 @@ namespace Medikit.Api.AspNetCore.Extensions
             };
         }
 
-        public static JObject ToDto(this MedicinalProductResult amp)
+        public static JObject ToDto(this MedicinalPackageResult ampp)
         {
             var result = new JObject
             {
-                { "code", amp.Code },
-                { "official_name", amp.OfficialName }
+                { "code", ampp.Code },
+                { "price", ampp.Price },
+                { "names", ToDto(ampp.Names) },
+                { "reimbursable", ampp.Reimbursable },
+                { "leafleturl", ToDto(ampp.LeafletUrlLst) },
+                { "crmurl", ToDto(ampp.CrmUrlLst) },
+                { "spcurl", ToDto(ampp.SpcUrlLst) }
             };
-            var packages = new JArray();
-            foreach (var pkg in amp.Packages)
-            {
-                packages.Add(new JObject
-                {
-                    { "delivery_methods", ToDto(pkg.DeliveryMethods) },
-                    { "prescription_names", ToDto(pkg.PrescriptionNames) }
-                });
-            }
-            result.Add("packages", packages);
-            result.Add("names", ToDto(amp.Names));
             return result;
+        }
+
+        public static JArray ToDto(this ICollection<LinkTranslationResult> translations)
+        {
+            var names = new JArray();
+            foreach (var translation in translations)
+            {
+                names.Add(translation.ToDto());
+            }
+
+            return names;
         }
 
         public static JArray ToDto(this ICollection<TranslationResult> translations)
@@ -169,6 +174,15 @@ namespace Medikit.Api.AspNetCore.Extensions
         }
 
         #endregion
+
+        public static JObject ToDto(this LinkTranslationResult translation)
+        {
+            return new JObject
+            {
+                { "language", translation.Language },
+                { "href", translation.Href }
+            };
+        }
 
         public static JObject ToDto(this TranslationResult translation)
         {

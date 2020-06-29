@@ -42,6 +42,7 @@ namespace Medikit.EHealth
             public const string KGSS = "urn:be:fgov:ehealth:etee:kgss:1_0:protocol";
             public const string CONSULTRN = "urn:be:fgov:ehealth:consultRN:1_0:protocol";
             public const string DICSV5 = "urn:be:fgov:ehealth:dics:protocol:v5";
+            public const string CIVICS2 = "urn:be:fgov:ehealth:samcivics:schemas:v2";
             public const string COMMONCORE = "urn:be:fgov:ehealth:commons:core:v2";
             public const string COMMONPROTOCOL = "urn:be:fgov:ehealth:commons:protocol:v2";
             public const string RECIPE = "urn:be:fgov:ehealth:recipe:protocol:v4";
@@ -63,6 +64,7 @@ namespace Medikit.EHealth
             public static XNamespace KGSS = Namespaces.KGSS;
             public static XNamespace CONSULTRN = Namespaces.CONSULTRN;
             public static XNamespace DICSV5 = Namespaces.DICSV5;
+            public static XNamespace CIVICS2 = Namespaces.CIVICS2;
             public static XNamespace COMMONCORE = Namespaces.COMMONCORE;
             public static XNamespace COMMONPROTOCOL = Namespaces.COMMONPROTOCOL;
             public static XNamespace RECIPE = Namespaces.RECIPE;

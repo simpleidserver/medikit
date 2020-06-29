@@ -1,11 +1,11 @@
-﻿import { MedicinalProduct } from "./MedicinalProduct";
+﻿import { MedicinalPackage } from "./MedicinalPackage";
 
 export class SearchMedicinalProduct {
     constructor() {
         this.Content = [];
     }
 
-    Content: MedicinalProduct[];
+    Content: MedicinalPackage[];
     StartIndex: number;
     Count: number;
 
@@ -14,7 +14,7 @@ export class SearchMedicinalProduct {
         result.Count = json["count"];
         result.StartIndex = json["start_index"];
         json["content"].forEach(function (r: any) {
-            result.Content.push(MedicinalProduct.fromJson(r));
+            result.Content.push(MedicinalPackage.fromJson(r));
         });
 
         return result;

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Medikit.Api.Application.MedicinalProduct.Queries.Handlers
 {
-    public interface ISearchMedicinalProductHandler
+    public interface ISearchMedicinalPackageHandler
     {
-        Task<SearchQueryResult<MedicinalProductResult>> Handle(SearchMedicinalProduct query);
+        Task<SearchQueryResult<MedicinalPackageResult>> Handle(SearchMedicinalPackage query);
     }
 }

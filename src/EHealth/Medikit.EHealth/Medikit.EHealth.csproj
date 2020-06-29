@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\EID\Medikit.EID\Medikit.EID.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Services\CIVICS\Response\" />
     <Folder Include="Services\KGSS\Store\" />
   </ItemGroup>
 </Project>

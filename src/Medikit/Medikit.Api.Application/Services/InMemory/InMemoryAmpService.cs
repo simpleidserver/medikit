@@ -49,14 +49,14 @@ namespace Medikit.Api.Application.Services.InMemory
             },
         };
 
-        public Task<SearchResult<AmpResult>> SearchByMedicinalPackageName(SearchAmpRequest request, CancellationToken token)
+        public Task<SearchResult<AmppResult>> SearchMedicinalPackage(SearchAmpRequest request, CancellationToken token)
         {
             ICollection<AmpResult> result = AMP_LST.Where(amp => amp.Names.Any(n => n.Value.ToLowerInvariant().Contains(request.ProductName.ToLowerInvariant()))).ToList();
-            return Task.FromResult(new SearchResult<AmpResult>
+            return Task.FromResult(new SearchResult<AmppResult>
             {
                 StartIndex = 0,
                 Count = 2,
-                Content = result
+                Content = result.SelectMany(_ => _.AmppLst).ToList()
             });
         }
 

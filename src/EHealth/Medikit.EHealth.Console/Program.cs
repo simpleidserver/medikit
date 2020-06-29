@@ -27,6 +27,7 @@ namespace Medikit.EHealth.Console
                 string sss = "";
             });
             */
+            /*
             BuildSTSIdentityRequest().ContinueWith((s) =>
             {
                 // AddPrescription(s.Result.Body.Response.Assertion);
@@ -40,10 +41,22 @@ namespace Medikit.EHealth.Console
 
             });
             */
-            /*
             FindAmpByPackageName().ContinueWith((s) =>
             {
 
+            });
+            /*
+            FindCNKCivics().ContinueWith((_) =>
+            {
+
+            });
+            FindReimbursement().ContinueWith((_) =>
+            {
+
+            });
+            FindAmppByPackageName().ContinueWith((_) =>
+            {
+                
             });
             */
             System.Console.ReadLine();

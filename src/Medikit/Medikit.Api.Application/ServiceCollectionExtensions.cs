@@ -84,7 +84,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static IServiceCollection AddNomenclature(this IServiceCollection services)
         {
             services.AddTransient<IMedicinalProductService, MedicinalProductService>();
-            services.AddTransient<ISearchMedicinalProductHandler, SearchMedicinalProductHandler>();
+            services.AddTransient<ISearchMedicinalPackageHandler, SearchMedicinalPackageHandler>();
             return services;
         }
 

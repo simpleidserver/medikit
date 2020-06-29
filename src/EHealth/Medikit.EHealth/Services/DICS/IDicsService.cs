@@ -9,6 +9,8 @@ namespace Medikit.EHealth.Services.DICS
 {
     public interface IDicsService
     {
+        Task FindAmpp(DICSFindAmppRequest request);
         Task<SOAPEnvelope<DICSFindAmpResponseBody>> FindAmp(DICSFindAmpRequest request);
+        Task FindReimbursement(DICSFindReimbursementRequest request);
     }
 }

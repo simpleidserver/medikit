@@ -108,5 +108,8 @@
   "choose-id-certificate": "Choose identity certificate",
   "password": "Password",
   "generate-qr-code": "Generate QR code",
-  "bad-password": "Bad password"
+  "bad-password": "Bad password",
+  "price": "Price {{price}}",
+  "reimbursable": "Reimbursable",
+  "CBIP": "CBIP"
 }

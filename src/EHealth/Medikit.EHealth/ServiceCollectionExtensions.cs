@@ -5,6 +5,7 @@ using Medikit.EHealth.ETK;
 using Medikit.EHealth.ETK.Store;
 using Medikit.EHealth.KeyStore;
 using Medikit.EHealth.SAML;
+using Medikit.EHealth.Services.CIVICS;
 using Medikit.EHealth.Services.DICS;
 using Medikit.EHealth.Services.KGSS;
 using Medikit.EHealth.Services.Recipe;
@@ -63,6 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IETKService, ETKService>();
             services.AddTransient<IKGSSService, KGSSService>();
             services.AddTransient<IRecipeService, RecipeService>();
+            services.AddTransient<ICIVICSService, CIVICSService>();
             return services;
         }
 

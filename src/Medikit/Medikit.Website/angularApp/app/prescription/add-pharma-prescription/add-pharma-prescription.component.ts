@@ -2,16 +2,16 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatListOption, MatPaginator, MatSelectionList, MatStepper, MatSnackBar } from '@angular/material';
+import { MatListOption, MatPaginator, MatSelectionList, MatSnackBar, MatStepper } from '@angular/material';
+import { Router } from '@angular/router';
 import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
 import { Translation } from "@app/infrastructure/Translation";
-import { MedicinalPackage } from '@app/medicinalproduct/models/MedicinalPackage';
-import { MedicinalProduct } from '@app/medicinalproduct/models/MedicinalProduct';
-import { SearchMedicinalProduct } from '@app/medicinalproduct/models/SearchMedicinalProduct';
-import { MedicinalProductService } from '@app/medicinalproduct/services/medicinalproduct-service';
 import { ReferenceTableRecord } from '@app/referencetable/models/reference-table-record';
 import { ReferenceTableService } from '@app/referencetable/services/reference-table-service';
 import * as fromAppState from '@app/stores/appstate';
+import { MedicinalPackage } from '@app/stores/medicinalproduct/models/MedicinalPackage';
+import { SearchMedicinalProduct } from '@app/stores/medicinalproduct/models/SearchMedicinalProduct';
+import { MedicinalProductService } from '@app/stores/medicinalproduct/services/medicinalproduct-service';
 import { Patient } from '@app/stores/patient/models/patient';
 import { SearchPatientResult } from '@app/stores/patient/models/search-patient-result';
 import * as fromPatientActions from '@app/stores/patient/patient-actions';
@@ -19,16 +19,15 @@ import { PharmaDrugPrescription } from '@app/stores/pharmaprescription/models/ph
 import { PharmaDuration } from '@app/stores/pharmaprescription/models/pharma-duration';
 import { PharmaPosologyFreeText, PharmaPosologyStructured, PharmaPosologyTakes } from '@app/stores/pharmaprescription/models/pharma-posology';
 import { PharmaPrescription } from '@app/stores/pharmaprescription/models/pharma-prescription';
+import * as fromPrescriptionActions from '@app/stores/pharmaprescription/prescription-actions';
+import { AddPharmaPrescription } from '@app/stores/pharmaprescription/prescription-actions';
 import { PharmaPrescriptionService } from '@app/stores/pharmaprescription/services/prescription-service';
-import { select, Store, ScannedActionsSubject } from '@ngrx/store';
+import { ScannedActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
-import { AddPharmaPrescription } from '@app/stores/pharmaprescription/prescription-actions';
-import * as fromPrescriptionActions from '@app/stores/pharmaprescription/prescription-actions';
+import { filter } from 'rxjs/operators';
 import { AddDrugPrescription, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep, SelectPatient } from './actions/pharma-prescription';
 import { AddPharmaPrescriptionFormState } from './states/pharma-prescription-state';
-import { filter } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
 class PrescriptionType {
     constructor(public code: number, public name: string) { }
@@ -56,7 +55,7 @@ export class AddPharmaPrescriptionComponent implements OnInit, OnDestroy {
     prescribePharmadDrugs: PharmaDrugPrescription[] = []; 
     timeUnits: ReferenceTableRecord[] = [];
     administrationUnits: ReferenceTableRecord[] = [];
-    medicinalProducts: MedicinalProduct[] = [];
+    medicinalPackages: MedicinalPackage[] = [];
     selectedMedicinalPackages: MedicinalPackage[] = [];
     prescriptionTypes: PrescriptionType[] = [];
     subscribeSessionCreated: any;
@@ -238,7 +237,7 @@ export class AddPharmaPrescriptionComponent implements OnInit, OnDestroy {
         this.setIsLoadingProduct(true);
         this.medicinalProductService.search(drug, startIndex, count, true, '1').subscribe((res: SearchMedicinalProduct) => {
             this.length = res.Count;
-            this.medicinalProducts = res.Content;
+            this.medicinalPackages = res.Content;
             this.setIsLoadingProduct(false);
         }, () => {
             this.setIsLoadingProduct(false);
@@ -253,8 +252,8 @@ export class AddPharmaPrescriptionComponent implements OnInit, OnDestroy {
         var selectedPackage = this.selectedMedicinalPackages[0];
         var drugPrescription = new PharmaDrugPrescription();
         drugPrescription.TechnicalId = this.newGuid();
-        drugPrescription.PackageCode = selectedPackage.DeliveryMethods[0].Code;
-        drugPrescription.PackageNames = selectedPackage.PrescriptionNames;
+        drugPrescription.PackageCode = selectedPackage.Code;
+        drugPrescription.PackageNames = selectedPackage.Names;
         drugPrescription.InstructionForPatient = this.drugFormGroup.get('instructionforpatient').value;
         drugPrescription.InstructionForReimbursement = this.drugFormGroup.get('instructionforreimbursement').value;
         drugPrescription.BeginMoment = this.drugFormGroup.get('beginMoment').value;

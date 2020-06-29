@@ -7,6 +7,9 @@ namespace Medikit.Api.Application.Services.Results
 {
     public class AmppResult
     {
+        public ICollection<TranslationResult> LeafletUrlLst { get; set; }
+        public ICollection<TranslationResult> SpcUrlLst { get; set; }
+        public ICollection<TranslationResult> CrmUrlLst { get; set; }
         public ICollection<TranslationResult> PrescriptionNames { get; set; }
         public ICollection<DmppResult> DeliveryMethods { get; set; }
     }

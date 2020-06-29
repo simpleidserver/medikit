@@ -9,14 +9,14 @@ namespace Medikit.Api.Application.MedicinalProduct
 {
     public class MedicinalProductService : IMedicinalProductService
     {
-        private readonly ISearchMedicinalProductHandler _searchMedicinalProductHandler;
+        private readonly ISearchMedicinalPackageHandler _searchMedicinalProductHandler;
 
-        public MedicinalProductService(ISearchMedicinalProductHandler searchMedicinalProductHandler)
+        public MedicinalProductService(ISearchMedicinalPackageHandler searchMedicinalProductHandler)
         {
             _searchMedicinalProductHandler = searchMedicinalProductHandler;
         }
 
-        public Task<SearchQueryResult<MedicinalProductResult>> Search(SearchMedicinalProduct query)
+        public Task<SearchQueryResult<MedicinalPackageResult>> Search(SearchMedicinalPackage query)
         {
             return _searchMedicinalProductHandler.Handle(query);
         }

@@ -23,7 +23,7 @@ namespace Medikit.Api.Application.Services.EHealth
             _dicsService = dicsService;
         }
 
-        public async Task<SearchResult<AmpResult>> SearchByMedicinalPackageName(SearchAmpRequest request, CancellationToken token)
+        public async Task<SearchResult<AmppResult>> SearchMedicinalPackage(SearchAmpRequest request, CancellationToken token)
         {
             var issueInstant = DateTime.UtcNow;
             var soapResponse = await _dicsService.FindAmp(new DICSFindAmpRequest
@@ -33,41 +33,34 @@ namespace Medikit.Api.Application.Services.EHealth
                     AnyNamePart = request.ProductName
                 }
             });
-            var ampLst = soapResponse.Body.Response.Amp;
-            for(var y = ampLst.Count() - 1; y >= 0; y--)
+            var amppLst = soapResponse.Body.Response.Amp.SelectMany(_ => _.AmppLst).Where(_ => _.Status == "AUTHORIZED").ToList();
+            for(var y = amppLst.Count() - 1; y >= 0; y--)
             {
-                var amp = ampLst.ElementAt(y);
-                if (request.IsCommercialised != null)
+                var ampp = amppLst.ElementAt(y);
+                if (request.IsCommercialised != null && ((ampp.Commercialization == null && request.IsCommercialised.Value) || (ampp.Commercialization != null && !request.IsCommercialised.Value)))
                 {
-                    amp.AmppLst = amp.AmppLst.Where(a => a.Commercialization != null && request.IsCommercialised.Value || a.Commercialization == null && !request.IsCommercialised.Value).ToList();
+                    amppLst.RemoveAt(y);
+                    continue;
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.DeliveryEnvironment))
                 {
-                    for (var i = amp.AmppLst.Count() - 1; i >= 0; i--)
+                    // Note : Only public !
+                    ampp.DmppLst = ampp.DmppLst.Where(p => request.DeliveryEnvironment == p.DeliveryEnvironment && p.CodeType == "CNK").ToList();
+                    if (!ampp.DmppLst.Any())
                     {
-                        var ampp = amp.AmppLst[i];
-                        ampp.DmppLst = ampp.DmppLst.Where(p => request.DeliveryEnvironment == p.DeliveryEnvironment && p.CodeType == "CNK").ToList();
-                        if (!ampp.DmppLst.Any())
-                        {
-                            amp.AmppLst.RemoveAt(i);
-                        }
+                        amppLst.RemoveAt(y);
                     }
-                }
-
-                if (!amp.AmppLst.Any())
-                {
-                    ampLst.RemoveAt(y);
                 }
             }
 
-            var count = ampLst.Count();
-            ampLst = ampLst.OrderBy(a => a.OfficialName).Skip(request.StartIndex).Take(request.Count).ToList();
-            return new SearchResult<AmpResult>
+            var count = amppLst.Count();
+            amppLst = amppLst.OrderBy(a => a.PackDisplayValue).Skip(request.StartIndex).Take(request.Count).ToList();
+            return new SearchResult<AmppResult>
             {
                 StartIndex = request.StartIndex,
                 Count = count,
-                Content = ToResult(ampLst)
+                Content = ToResult(amppLst)
             };
         }
 
@@ -102,22 +95,32 @@ namespace Medikit.Api.Application.Services.EHealth
                                Value = t.Content
                            }).ToList(),
                            OfficialName = a.OfficialName,
-                           AmppLst = a.AmppLst.Select(b => new AmppResult
-                           {
-                               PrescriptionNames = b.PrescriptionNames.Select(t => new TranslationResult
-                               {
-                                   Language = t.Lang,
-                                   Value = t.Content
-                               }).ToList(),
-                               DeliveryMethods = b.DmppLst.Select(d => new DmppResult
-                               {
-                                   Code = d.Code,
-                                   CodeType = d.CodeType,
-                                   DeliveryEnvironment = d.DeliveryEnvironment
-                               }).ToList()
-                           }).ToList()
+                           AmppLst = ToResult(a.AmppLst).ToList()
                        }
                    ).ToList();
         }    
+
+        public ICollection<AmppResult> ToResult(List<DICSAmpp> amppLst)
+        {
+            return amppLst.Select(b => new AmppResult
+            {
+                CrmUrlLst = b.CrmUrls == null ? new List<TranslationResult>() : b.CrmUrls.Select(_ => new TranslationResult { Language = _.Lang, Value = _.Content }).ToList(),
+                SpcUrlLst = b.SpcUrls == null ? new List<TranslationResult>() : b.SpcUrls.Select(_ => new TranslationResult { Language = _.Lang, Value = _.Content }).ToList(),
+                LeafletUrlLst = b.LeafletUrls == null ? new List<TranslationResult>() : b.LeafletUrls.Select(_ => new TranslationResult { Language = _.Lang, Value = _.Content }).ToList(),
+                PrescriptionNames = b.PrescriptionNames.Select(t => new TranslationResult
+                {
+                    Language = t.Lang,
+                    Value = t.Content
+                }).ToList(),
+                DeliveryMethods = b.DmppLst.Select(d => new DmppResult
+                {
+                    Code = d.Code,
+                    CodeType = d.CodeType,
+                    DeliveryEnvironment = d.DeliveryEnvironment,
+                    Price = d.Price,
+                    Reimbursable = d.Reimbursable
+                }).ToList()
+            }).ToList();
+        }
     }
 }
