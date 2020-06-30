@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Certificates\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\certificates\CBE=0543979265 20200417-143522.acc-p12" Link="Certificates\CBE=0543979265 20200417-143522.acc-p12">

@@ -21,7 +21,7 @@ export class SearchPatientsByNiss implements Action {
 
 export class SearchPatients implements Action {
     readonly type = ActionTypes.SEARCH_PATIENTS;
-    constructor(public firstname: string, public lastname: string, public startIndex : number, public count: number, public active : string = null, public direction: string = null) { }
+    constructor(public niss: string, public firstname: string, public lastname: string, public startIndex : number, public count: number, public active : string = null, public direction: string = null) { }
 }
 
 export class GetPatient implements Action {

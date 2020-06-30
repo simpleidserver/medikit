@@ -34,7 +34,10 @@ namespace Medikit.Api.Host
                 .AllowAnyMethod()
                 .AllowAnyHeader()));
             var certificatesPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Certificates");
-            services.AddMedikitApiApplication(eheathCallback: o =>
+            services.AddMedikitApiApplication(_ =>
+            {
+                _.RootPath = _env.WebRootPath;
+            }, eheathCallback: o =>
             {
                 o.OrgCertificateStore = Path.Combine(certificatesPath, "CBE=0543979265 20200417-143522.acc-p12");
                 o.OrgCertificateStorePassword = "AJH9ka/fh%.?75WF";

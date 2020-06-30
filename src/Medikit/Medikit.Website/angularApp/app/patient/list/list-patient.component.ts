@@ -6,6 +6,7 @@ import { MatSort, MatPaginator } from '@angular/material';
 import { merge } from 'rxjs';
 import { Patient } from '@app/stores/patient/models/patient';
 import { SearchPatientResult } from '@app/stores/patient/models/search-patient-result';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'list-patient-component',
@@ -17,6 +18,12 @@ export class ListPatientComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     patients$: Patient[] = [];
+    searchInsuredFormGroup: FormGroup = new FormGroup(
+    {
+        niss: new FormControl(),
+        firstname: new FormControl(),
+        lastname: new FormControl()
+    });
     length: number;
 
     constructor(private store: Store<fromAppState.AppState>) {
@@ -43,11 +50,18 @@ export class ListPatientComponent implements OnInit, OnDestroy {
 
     }
 
+    onSubmitSearchInsuredForm() {
+        this.refresh();
+    }
+
     refresh() {
         let startIndex: number = 0;
         let count: number = 5;
         let active = "create_datetime";
         let direction = "desc";
+        var niss = this.searchInsuredFormGroup.controls['niss'].value;
+        var firstname = this.searchInsuredFormGroup.controls['firstname'].value;
+        var lastname = this.searchInsuredFormGroup.controls['lastname'].value;
         if (this.sort.active) {
             active = this.sort.active;
         }
@@ -64,6 +78,6 @@ export class ListPatientComponent implements OnInit, OnDestroy {
             count = this.paginator.pageSize;
         }
 
-        this.store.dispatch(new fromPatientActions.SearchPatients(null, null, startIndex, count, active, direction));
+        this.store.dispatch(new fromPatientActions.SearchPatients(niss, firstname, lastname, startIndex, count, active, direction));
     }
 }

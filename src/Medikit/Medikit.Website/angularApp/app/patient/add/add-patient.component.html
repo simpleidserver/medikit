@@ -1,0 +1,106 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <ul>
+            <li>
+                <div class="mat-h1">
+                    <a [routerLink]="['/patient']">{{ "patients" | translate }}</a>
+                </div>
+            </li>
+            <li class="separator"><div class="mat-h1">\</div></li>
+            <li>
+                <div class="mat-h1">
+                    {{ "add-patient" | translate }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-horizontal-stepper linear #stepper class="mat-elevation-z8">
+                <mat-step [stepControl]="patientInfoFormGroup">
+                    <ng-template matStepLabel>{{ 'patient-info' | translate }}</ng-template>
+                    <form [formGroup]="patientInfoFormGroup" (submit)="confirmGeneralInfo()">
+                        <div fxLayout="row" fxLayoutGap="10px">
+                            <div fxFlex="20%">
+                                <ngx-avatar class="center" *ngIf="logoUrl" src="{{ logoUrl }}"></ngx-avatar>
+                                <ngx-avatar class="center" *ngIf="!logoUrl" name="DEFAULT"></ngx-avatar>
+                                <a mat-raised-button (click)="fileInput.click()" class="mt-5">{{ "select-logo" | translate }}</a>
+                                <input hidden (change)="onLogoSelected($event)" #fileInput type="file" id="file" accept=".jpg, .jpeg, .png">
+                            </div>
+                            <div fxFlex="80%">
+                                <!-- Firstname -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "firstname" | translate }}</mat-label>
+                                    <input matInput placeholder="{{ 'enter-firstname' | translate }}" formControlName="firstname" required />
+                                </mat-form-field>
+                                <!-- Lastname -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "lastname" | translate }}</mat-label>
+                                    <input matInput placeholder="{{ 'enter-lastname' | translate }}" formControlName="lastname" required />
+                                </mat-form-field>
+                                <!-- Gender -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "gender" | translate }}</mat-label>
+                                    <mat-select formControlName="gender" required>
+                                        <mat-option value="0">{{ "male" | translate }}</mat-option>
+                                        <mat-option value="1">{{ "female" | translate }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- Niss -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'niss' | translate }}</mat-label>
+                                    <input matInput placeholder="{{ 'enter-niss' | translate }}" formControlName="niss" required>
+                                </mat-form-field>
+                                <!-- Birthdate -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'birthdate' | translate }}</mat-label>
+                                    <input matInput placeholder="{{ 'enter-birthdate' | translate }}" type="date" formControlName="birthdate">
+                                </mat-form-field>
+                                <!-- EID card number -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'eid-cardnumber' | translate }}</mat-label>
+                                    <input matInput placeholder="{{ 'enter-eid-cardnumber' | translate }}" formControlName="eidCardNumber">
+                                </mat-form-field>
+                                <!-- EID card validity -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ 'eid-cardvalidity' | translate }}</mat-label>
+                                    <input matInput placeholder="{{ 'enter-eid-cardvalidity' | translate }}" formControlName="eidCardValidity">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="mt-5">
+                            <button mat-raised-button color="primary" class="float-right" [disabled]="patientInfoFormGroup.invalid">{{ "next" | translate }}</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>{{ 'patient-address' | translate }}</ng-template>
+                    <div fxLayout="row">
+                        <div fxFlex="50%">
+
+                        </div>
+                        <div fxFlex="50%">
+                            <div id="address_map"></div>
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="mt-5">
+                        <button mat-raised-button (click)="previousStep()">{{ "back" | translate }}</button>
+                        <button mat-raised-button color="primary" class="float-right" (click)="nextStep()">{{ "next" | translate }}</button>
+                    </div>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>{{ 'patient-contact' | translate }}</ng-template>
+                    <mat-divider></mat-divider>
+                    <div class="mt-5">
+                        <button mat-raised-button (click)="previousStep()">{{ "back" | translate }}</button>
+                        <button mat-raised-button color="primary" class="float-right" (click)="addPatient()">{{ "add" | translate }}</button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
+    </div>
+</div>

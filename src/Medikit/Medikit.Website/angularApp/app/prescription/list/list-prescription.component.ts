@@ -183,6 +183,6 @@ export class ListPrescriptionComponent implements OnInit, OnDestroy {
             count = this.prescriptionPaginator.pageSize;
         }
 
-        this.store.dispatch(new fromPatientActions.SearchPatients(firstname, lastname, startIndex, count));
+        this.store.dispatch(new fromPatientActions.SearchPatients(null, firstname, lastname, startIndex, count));
     }
 }

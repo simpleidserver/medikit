@@ -235,6 +235,7 @@ export class AddPharmaPrescriptionComponent implements OnInit, OnDestroy {
 
         const drug = this.drugSearchFormGroup.get('drugName').value;
         this.setIsLoadingProduct(true);
+        this.medicinalPackages = [];
         this.medicinalProductService.search(drug, startIndex, count, true, '1').subscribe((res: SearchMedicinalProduct) => {
             this.length = res.Count;
             this.medicinalPackages = res.Content;

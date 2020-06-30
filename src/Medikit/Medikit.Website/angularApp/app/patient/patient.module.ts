@@ -5,6 +5,9 @@ import { SharedModule } from '@app/infrastructure/shared.module';
 import { ListPatientComponent } from './list/list-patient.component';
 import { PatientRoutes } from './patient.routes';
 import { AvatarModule } from 'ngx-avatar';
+import { AddPatientComponent } from './add/add-patient.component';
+import { StoreModule } from '@ngrx/store';
+import * as reducersAddPatient from './add/reducers/patient-reducer';
 
 @NgModule({
     imports: [
@@ -12,15 +15,18 @@ import { AvatarModule } from 'ngx-avatar';
         PatientRoutes,
         MaterialModule,
         SharedModule,
-        AvatarModule
+        AvatarModule,
+        StoreModule.forFeature('patientForm', reducersAddPatient.PatientFormReducer)
     ],
 
     declarations: [
-        ListPatientComponent
+        ListPatientComponent,
+        AddPatientComponent
     ],
 
     exports: [
-        ListPatientComponent
+        ListPatientComponent,
+        AddPatientComponent
     ],
 
     providers: [ ]

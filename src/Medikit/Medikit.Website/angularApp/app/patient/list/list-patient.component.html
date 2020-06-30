@@ -8,12 +8,26 @@
         <div fxLayout="row" fxLayoutGap="10px">
             <mat-card fxFlex="60%">
                 <mat-card-content>
-
+                    <form [formGroup]="searchInsuredFormGroup" (ngSubmit)="onSubmitSearchInsuredForm(searchInsuredFormGroup)">
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>{{ 'niss' | translate }}</mat-label>
+                            <input matInput placeholder="{{ 'enter-niss' | translate }}" name="niss" formControlName="niss" />
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>{{ 'firstname' | translate }}</mat-label>
+                            <input matInput placeholder="{{ 'enter-firstname' | translate }}" name="firstname" formControlName="firstname" />
+                        </mat-form-field>
+                        <mat-form-field class="full-width" appearance="outline">
+                            <mat-label>{{ 'lastname' | translate }}</mat-label>
+                            <input matInput placeholder="{{ 'enter-lastname' | translate }}" name="lastname" formControlName="lastname" />
+                        </mat-form-field>
+                        <button mat-raised-button color="primary">{{ 'search' | translate }}</button>
+                    </form>
                 </mat-card-content>
             </mat-card>
             <mat-card fxFlex="40%">
                 <mat-card-content>
-                    <button mat-raised-button color="primary" class="full-width">{{ 'add-patient' | translate }}</button>
+                    <button mat-raised-button color="primary" [routerLink]="['/patient/add']" class="full-width">{{ 'add-patient' | translate }}</button>
                 </mat-card-content>
             </mat-card>
         </div>

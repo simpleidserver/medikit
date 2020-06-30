@@ -42,6 +42,7 @@
             <mat-nav-list *ngIf="isConnected">
                 <a mat-list-item [routerLink]="['/prescription']" [routerLinkActive]="['is-active']"><img src="{{ prescriptionsLogoUrl }}" />{{ "prescriptions" | translate }}</a>
                 <a mat-list-item [routerLink]="['/patient']" [routerLinkActive]="['is-active']"><img src="{{ patientsLogoUrl }}" /> {{ "patients" | translate }}</a>
+                <a mat-list-item [routerLink]="['/setting']" [routerLinkActive]="['is-active']"><mat-icon>settings</mat-icon> {{ "settings" | translate }}</a>
             </mat-nav-list>
         </mat-sidenav>
         <mat-sidenav-content>

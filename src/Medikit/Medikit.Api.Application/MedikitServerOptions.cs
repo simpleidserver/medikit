@@ -11,5 +11,6 @@ namespace Medikit.Api.Application
         }
 
         public int SnapshotFrequency { get; set; }
+        public string RootPath { get; set; }
     }
 }

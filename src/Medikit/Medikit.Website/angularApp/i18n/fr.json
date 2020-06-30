@@ -114,5 +114,6 @@
   "CBIP": "CBIP",
   "patients": "Patients",
   "add-patient": "Ajouter patient",
-  "updateDateTime": "Date de mise à jour"
+  "updateDateTime": "Date de mise à jour",
+  "settings": "Paramètres"
 }
