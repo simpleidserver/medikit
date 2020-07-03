@@ -12,7 +12,6 @@ namespace Medikit.Api.Application.Domains
     {
         public PatientAggregate()
         {
-            Addresses = new List<PatientAddress>();
             ContactInformations = new List<PatientContactInformation>();
         }
 
@@ -27,12 +26,12 @@ namespace Medikit.Api.Application.Domains
         public DateTime? EidCardValidity { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public ICollection<PatientAddress> Addresses { get; set; }
+        public PatientAddress Address { get; set; }
         public ICollection<PatientContactInformation> ContactInformations { get; set; }
 
-        public static PatientAggregate New(string id, string prescriberId, string firstName, string lastName, string nationalIdentityNumber, GenderTypes gender, DateTime birthDate, string logoUrl, string eidCardNumber, DateTime? eidCardValidity, ICollection<PatientAddress> addresses, ICollection<PatientContactInformation> contactInformations)
+        public static PatientAggregate New(string id, string prescriberId, string firstName, string lastName, string nationalIdentityNumber, GenderTypes gender, DateTime birthDate, string logoUrl, string eidCardNumber, DateTime? eidCardValidity, PatientAddress address, ICollection<PatientContactInformation> contactInformations)
         {
-            var evt = new PatientAddedEvent(Guid.NewGuid().ToString(), id, 0, prescriberId, firstName, lastName, nationalIdentityNumber, DateTime.UtcNow, gender, birthDate, logoUrl, eidCardNumber, eidCardValidity, addresses, contactInformations);
+            var evt = new PatientAddedEvent(Guid.NewGuid().ToString(), id, 0, prescriberId, firstName, lastName, nationalIdentityNumber, DateTime.UtcNow, DateTime.UtcNow, gender, birthDate, logoUrl, eidCardNumber, eidCardValidity, address, contactInformations);
             var result = new PatientAggregate();
             result.Handle(evt);
             result.DomainEvents.Add(evt);
@@ -64,7 +63,7 @@ namespace Medikit.Api.Application.Domains
                 LogoUrl = LogoUrl,
                 BirthDate = BirthDate,
                 UpdateDateTime = UpdateDateTime,
-                Addresses = Addresses.Select(_ => (PatientAddress)_.Clone()).ToList(),
+                Address = Address == null ? null : (PatientAddress)Address.Clone(),
                 ContactInformations = ContactInformations.Select(_ => (PatientContactInformation)_.Clone()).ToList(),
                 EidCardNumber = EidCardNumber,
                 EidCardValidity = EidCardValidity,
@@ -82,6 +81,7 @@ namespace Medikit.Api.Application.Domains
             Id = evt.AggregateId;
             PrescriberId = evt.PrescriberId;
             CreateDateTime = evt.CreateDateTime;
+            UpdateDateTime = evt.UpdateDateTime;
             Firstname = evt.Firstname;
             Lastname = evt.Lastname;
             Gender = evt.Gender;
@@ -90,8 +90,9 @@ namespace Medikit.Api.Application.Domains
             LogoUrl = evt.LogoUrl;
             EidCardNumber = evt.EidCardNumber;
             EidCardValidity = evt.EidCardValidity;
-            Addresses = evt.Addresses;
+            Address = evt.Address;
             ContactInformations = evt.ContactInformations;
+            Version = evt.Version;
         }
 
         public string GetStreamName()

@@ -4,9 +4,9 @@ namespace Medikit.Api.Application.Domains
 {
     public enum ContactInformationTypes
     {
-        EMAIL,
-        FAX,
-        MOBILE_PHONE_NUMBER,
-        FIX_PHONE_NUMBER
+        EMAIL = 0,
+        FAX = 1,
+        MOBILE_PHONE_NUMBER = 2,
+        FIX_PHONE_NUMBER = 3
     }
 }

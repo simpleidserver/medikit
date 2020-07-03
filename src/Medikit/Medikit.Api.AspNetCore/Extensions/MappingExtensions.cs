@@ -5,9 +5,11 @@ using Medikit.Api.Application.Common;
 using Medikit.Api.Application.Domains;
 using Medikit.Api.Application.MedicinalProduct.Queries.Results;
 using Medikit.Api.Application.Metadata;
+using Medikit.Api.Application.Patient.Commands;
 using Medikit.Api.Application.Patient.Queries.Results;
 using Medikit.Api.Application.Prescriptions.Results;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -162,17 +164,171 @@ namespace Medikit.Api.AspNetCore.Extensions
 
         #region Patient 
 
-        public static JObject ToDto(this PatientResult patient)
+        public static JObject ToDto(this PatientResult patient, string baseUrl)
+        {
+            var result = new JObject
+            {
+                { MedikitApiConstants.PatientNames.BirthDate, patient.Birthdate },
+                { MedikitApiConstants.PatientNames.Firstname, patient.Firstname },
+                { MedikitApiConstants.PatientNames.Lastname, patient.Lastname },
+                { MedikitApiConstants.PatientNames.EidCardNumber, patient.EidCardNumber },
+                { MedikitApiConstants.PatientNames.Gender, (int)patient.Gender },
+                { MedikitApiConstants.PatientNames.Niss, patient.Niss },
+                { MedikitApiConstants.PatientNames.CreateDateTime, patient.CreateDateTime },
+                { MedikitApiConstants.PatientNames.UpdateDateTime, patient.UpdateDateTime },
+                { MedikitApiConstants.PatientNames.ContactInformations, new JArray(patient.ContactInformations.Select(_ => ToDto(_))) },
+                { MedikitApiConstants.PatientNames.Address, patient.Address.ToDto() }
+            };
+            if (patient.EidCardValidity != null)
+            {
+                result.Add(MedikitApiConstants.PatientNames.EidCardValidity, patient.EidCardValidity.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(patient.LogoUrl))
+            {
+                result.Add(MedikitApiConstants.PatientNames.LogoUrl, $"{baseUrl}/{patient.LogoUrl}");
+            }
+
+            return result;
+        }
+
+        public static JObject ToDto(this AddressResult address)
         {
             return new JObject
             {
-                { "birthdate", patient.Birthdate },
-                { "firstname", patient.Firstname },
-                { "lastname", patient.Lastname },
-                { "niss", patient.Niss },
-                { "create_datetime", patient.CreateDateTime },
-                { "update_datetime", patient.UpdateDateTime },
-                { "logo_url", patient.LogoUrl }
+                { MedikitApiConstants.AddressNames.Country, address.Country },
+                { MedikitApiConstants.AddressNames.PostalCode, address.PostalCode },
+                { MedikitApiConstants.AddressNames.Street, address.Street },
+                { MedikitApiConstants.AddressNames.StreetNumber, address.StreetNumber },
+                { MedikitApiConstants.AddressNames.Coordinates, new JArray(address.Coordinates) }
+            };
+        }
+
+        public static AddPatientCommand ToAddPatientCommand(this JObject jObj, string prescriberId)
+        {
+            var result = new AddPatientCommand
+            {
+                PrescriberId = prescriberId
+            };
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.PatientNames.Firstname, out string firstname))
+            {
+                result.Firstname = firstname;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.Lastname, out string lastname))
+            {
+                result.Lastname = lastname;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.Niss, out string niss))
+            {
+                result.NationalIdentityNumber = niss;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.Gender, out GenderTypes gender))
+            {
+                result.Gender = gender;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.BirthDate, out DateTime birthDate))
+            {
+                result.BirthDate = birthDate;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.Base64EncodedImage, out string base64EncodedImage))
+            {
+                result.Base64EncodedImage = base64EncodedImage;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.EidCardNumber, out string eidCardNumber))
+            {
+                result.EidCardNumber = eidCardNumber;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PatientNames.EidCardValidity, out DateTime eidCardValidity))
+            {
+                result.EidCardValidity = eidCardValidity;
+            }
+
+            if (values.ContainsKey(MedikitApiConstants.PatientNames.Address))
+            {
+                var address = new AddPatientCommand.Address();
+                var addressDic = ((JObject)values[MedikitApiConstants.PatientNames.Address]).ToObject<Dictionary<string, object>>();
+                if (addressDic.TryGet(MedikitApiConstants.AddressNames.Street, out string street))
+                {
+                    address.Street = street;
+                }
+
+                if (addressDic.TryGet(MedikitApiConstants.AddressNames.StreetNumber, out int streetNumber))
+                {
+                    address.StreetNumber = streetNumber;
+                }
+
+                if (addressDic.TryGet(MedikitApiConstants.AddressNames.Country, out string country))
+                {
+                    address.Country = country;
+                }
+
+                if (addressDic.TryGet(MedikitApiConstants.AddressNames.PostalCode, out string postalCode))
+                {
+                    address.PostalCode = postalCode;
+                }
+
+                if (addressDic.TryGetValue(MedikitApiConstants.AddressNames.Coordinates, out object coordinates))
+                {
+                    var coords = new List<double>();
+                    var jArr = coordinates as JArray;
+                    if (jArr != null)
+                    {
+                        foreach(var r in jArr)
+                        {
+                            if (double.TryParse(r.ToString(), out double d))
+                            {
+                                coords.Add(d);
+                            }
+                        }
+                    }
+
+                    address.Coordinates = coords;
+                }
+
+                result.PatientAddress = address;
+            }
+
+            if (values.ContainsKey(MedikitApiConstants.PatientNames.ContactInformations))
+            {
+                var jArr = values[MedikitApiConstants.PatientNames.ContactInformations] as JArray;
+                var contactInfos = new List<AddPatientCommand.ContactInformation>();
+                foreach (JObject o in jArr)
+                {
+                    var ci = new AddPatientCommand.ContactInformation();
+                    var dic = o.ToObject<Dictionary<string, object>>();
+                    if (dic.TryGet(MedikitApiConstants.ContactInfoNames.Type, out ContactInformationTypes type))
+                    {
+                        ci.Type = type;
+                    }
+
+                    if (dic.TryGet(MedikitApiConstants.ContactInfoNames.Value, out string value))
+                    {
+                        ci.Value = value;
+                    }
+
+                    contactInfos.Add(ci);
+                }
+
+                result.ContactInformations = contactInfos;
+            }
+
+            return result;
+        }
+
+        public static JObject ToDto(this ContactInformationResult contactInfo)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.ContactInfoNames.Type, (int)contactInfo.Type },
+                { MedikitApiConstants.ContactInfoNames.Value, contactInfo.Value }
             };
         }
 
@@ -196,14 +352,14 @@ namespace Medikit.Api.AspNetCore.Extensions
             };
         }
 
-        public static JObject ToDto(this PagedResult<PatientResult> search)
+        public static JObject ToDto(this PagedResult<PatientResult> search, string baseUrl)
         {
             return new JObject
             {
                 { "count", search.Count },
                 { "start_index", search.StartIndex },
                 { "total_length", search.TotalLength },
-                { "content", new JArray(search.Content.Select(_ => _.ToDto())) }
+                { "content", new JArray(search.Content.Select(_ => _.ToDto(baseUrl))) }
             };
         }
 

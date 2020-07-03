@@ -1,0 +1,15 @@
+﻿<mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ "address" | translate }}</mat-label>
+    <input matInput placeholder="{{ 'enter-address' | translate}}" [matAutocomplete]="auto" [formControl]="addressText" />
+    <mat-spinner diameter="20" matSuffix *ngIf="isLoadingAddresses"></mat-spinner>
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selectAddress($event)" [displayWith]="displayFn">
+        <mat-option *ngFor="let address of addresses" [value]="address">
+            <div style="height: 20px">
+                {{ address.houseNumber }} {{ address.street }}
+            </div>
+            <div>
+                <i><small>{{ address.postalcode }} {{ address.municipality }} ({{ address.country }})</small></i>
+            </div>
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

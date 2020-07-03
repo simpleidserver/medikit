@@ -11,11 +11,41 @@ import { SearchPatientResult } from "../models/search-patient-result";
 export class PatientService {
     constructor(private http: HttpClient) { }
 
-    get(niss: string): Observable<Patient> {
+    getById(id: string): Observable<Patient> {
         let headers = new HttpHeaders();
-        let targetUrl = process.env.API_URL + "/patients/" + niss;
+        let targetUrl = process.env.API_URL + "/patients/" + id;
         headers = headers.set('Accept', 'application/json');
         return this.http.get(targetUrl, { headers: headers }).pipe(
+            map((res: any) => {
+                return Patient.fromJson(res);
+            }),
+            catchError(err => {
+                return throwError(err);
+            })
+        );
+    }
+
+    getByNiss(niss: string): Observable<Patient> {
+        let headers = new HttpHeaders();
+        let targetUrl = process.env.API_URL + "/patients/niss/" + niss;
+        headers = headers.set('Accept', 'application/json');
+        return this.http.get(targetUrl, { headers: headers }).pipe(
+            map((res: any) => {
+                return Patient.fromJson(res);
+            }),
+            catchError(err => {
+                return throwError(err);
+            })
+        );
+    }
+
+    add(patient: Patient) {
+        const request = JSON.stringify(Patient.getJSON(patient));
+        let headers = new HttpHeaders();
+        let targetUrl = process.env.API_URL + "/patients";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers }).pipe(
             map((res: any) => {
                 return Patient.fromJson(res);
             }),

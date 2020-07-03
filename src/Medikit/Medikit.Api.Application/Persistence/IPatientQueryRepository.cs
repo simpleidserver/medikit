@@ -10,6 +10,7 @@ namespace Medikit.Api.Application.Persistence
 {
     public interface IPatientQueryRepository
     {
+        Task<PatientAggregate> GetById(string id, CancellationToken token);
         Task<PatientAggregate> GetByNiss(string niss, CancellationToken token);
         Task<PagedResult<PatientAggregate>> Search(SearchPatientsQuery parameter, CancellationToken token);
     }

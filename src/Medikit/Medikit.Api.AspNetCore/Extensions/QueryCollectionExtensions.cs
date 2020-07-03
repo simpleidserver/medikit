@@ -19,6 +19,7 @@ namespace Medikit.Api.AspNetCore.Extensions
 
             return result;
         }
+
         public static bool TryGet(this IEnumerable<KeyValuePair<string, object>> queryCollection, string name, out string[] values)
         {
             values = null;
@@ -47,7 +48,7 @@ namespace Medikit.Api.AspNetCore.Extensions
             }
 
             T result;
-            if (Enum.TryParse<T>(val, out result))
+            if (Enum.TryParse<T>(val, true, out result))
             {
                 enumeration = result;
                 return true;

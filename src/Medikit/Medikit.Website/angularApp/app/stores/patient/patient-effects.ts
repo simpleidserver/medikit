@@ -2,7 +2,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ActionTypes, SearchPatients, GetPatient, SearchPatientsByNiss } from './patient-actions';
+import { ActionTypes, SearchPatients, GetPatientById, GetPatientByNiss, SearchPatientsByNiss, AddPatient } from './patient-actions';
 import { PatientService } from './services/patient-service';
 
 @Injectable()
@@ -38,17 +38,45 @@ export class PatientEffects {
                     );
             }
             )
-        );
+    );
 
     @Effect()
-    getPatient$ = this.actions$
+    getPatientById$ = this.actions$
         .pipe(
-            ofType(ActionTypes.GET_PATIENT),
-            mergeMap((evt: GetPatient) => {
-                return this.patientService.get(evt.niss)
+            ofType(ActionTypes.GET_PATIENT_BY_ID),
+            mergeMap((evt: GetPatientById) => {
+                return this.patientService.getById(evt.id)
                     .pipe(
                         map(patient => { return { type: ActionTypes.PATIENT_LOADED, patient: patient }; }),
                         catchError(() => of({ type: ActionTypes.ERROR_GET_PATIENT }))
+                    );
+            }
+            )
+        );
+
+    @Effect()
+    getPatientByNiss$ = this.actions$
+        .pipe(
+            ofType(ActionTypes.GET_PATIENT_BY_NISS),
+            mergeMap((evt: GetPatientByNiss) => {
+                return this.patientService.getByNiss(evt.niss)
+                    .pipe(
+                        map(patient => { return { type: ActionTypes.PATIENT_LOADED, patient: patient }; }),
+                        catchError(() => of({ type: ActionTypes.ERROR_GET_PATIENT }))
+                    );
+            }
+            )
+    );
+
+    @Effect()
+    addPatient$ = this.actions$
+        .pipe(
+            ofType(ActionTypes.ADD_PATIENT),
+            mergeMap((evt: AddPatient) => {
+                return this.patientService.add(evt.patient)
+                    .pipe(
+                        map(() => { return { type: ActionTypes.ADD_PATIENT_SUCCESS }; }),
+                        catchError(() => of({ type: ActionTypes.ADD_PATIENT_ERROR }))
                     );
             }
             )

@@ -14,10 +14,10 @@ namespace Medikit.Api.Application.Patient.Commands
         public string NationalIdentityNumber { get; set; }
         public GenderTypes Gender { get; set; }
         public DateTime BirthDate { get; set; }
-        public string LogoUrl { get; set; }
+        public string Base64EncodedImage { get; set; }
         public string EidCardNumber { get; set; }
         public DateTime? EidCardValidity { get; set; }
-        public ICollection<Address> Addresses { get; set; }
+        public Address PatientAddress { get; set; }
         public ICollection<ContactInformation> ContactInformations { get; set; }
 
         public class Address
@@ -26,7 +26,7 @@ namespace Medikit.Api.Application.Patient.Commands
             public string PostalCode { get; set; }
             public string Street { get; set; }
             public int StreetNumber { get; set; }
-            public int Box { get; set; }
+            public IEnumerable<double> Coordinates { get; set; }
         }
 
         public class ContactInformation

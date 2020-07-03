@@ -14,6 +14,7 @@ import { AppComponent, AuthPinDialog, InstallExtensionHelpDialog } from './app.c
 import { routes } from './app.routes';
 import { HomeModule } from './home/home.module';
 import { MaterialModule } from './infrastructure/material.module';
+import { AddressService } from './infrastructure/services/address.service';
 import { AuthGuard } from './infrastructure/services/auth-guard.service';
 import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
 import { SharedModule } from './infrastructure/shared.module';
@@ -58,6 +59,6 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     entryComponents: [AuthPinDialog, InstallExtensionHelpDialog],
     bootstrap: [AppComponent],
-    providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AuthGuard ]
+    providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AddressService, AuthGuard ]
 })
 export class AppModule { }

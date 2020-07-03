@@ -36,10 +36,31 @@ export function PatientFormReducer(state = initialState, action: fromActions.Act
             state.patient.eidCardValidity = action.eidCardValidity;
             state.patient.firstname = action.firstname;
             state.patient.lastname = action.lastname;
-            state.patient.logoUrl = action.logoUrl;
+            state.patient.base64Image = action.base64Image;
             state.patient.niss = action.niss;
             state.patient.gender = action.gender;
             state.stepperIndex += 1;
+            persist(state);
+            return { ...state };
+        case fromActions.ActionTypes.UPDATE_ADDRESS:
+            state.patient.address = action.address;
+            persist(state);
+            return { ...state };
+        case fromActions.ActionTypes.ADD_CONTACT_INFO:
+            state.patient.contactInformations.push(action.contactInfo);
+            persist(state);
+            return { ...state };
+        case fromActions.ActionTypes.DELETE_CONTACT_INFO:
+            state.patient.contactInformations = state.patient.contactInformations.filter((_) => {
+                if (action.contactInfos.filter((__) => {
+                    return _.id == __;
+                }).length > 0) {
+                    return false;
+                }
+
+                return true;
+            });
+
             persist(state);
             return { ...state };
         case fromActions.ActionTypes.NEXT_STEP:

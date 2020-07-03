@@ -10,24 +10,24 @@ using System.Threading.Tasks;
 
 namespace Medikit.Api.Application.Patient.Queries.Handlers
 {
-    public class GetPatientByNissQueryHandler : IGetPatientByNissQueryHandler
+    public class GetPatientByIdQueryHandler : IGetPatientByIdQueryHandler
     {
         private readonly IPatientQueryRepository _patientQueryRepository;
 
-        public GetPatientByNissQueryHandler(IPatientQueryRepository patientQueryRepository)
+        public GetPatientByIdQueryHandler(IPatientQueryRepository patientQueryRepository)
         {
             _patientQueryRepository = patientQueryRepository;
         }
 
-        public async Task<PatientResult> Handle(GetPatientByNissQuery query, CancellationToken token)
+        public async Task<PatientResult> Handle(GetPatientByIdQuery query, CancellationToken token)
         {
-            var result = await _patientQueryRepository.GetByNiss(query.Niss, token);
-            if (result == null)
+            var patient = await _patientQueryRepository.GetById(query.Id, token);
+            if (patient == null)
             {
-                throw new UnknownPatientException(query.Niss, string.Format(Global.UnknownPatient, query.Niss));
+                throw new UnknownPatientException(query.Id, string.Format(Global.UnknownPatient, query.Id));
             }
 
-            return result.ToResult();
+            return patient.ToResult();
         }
     }
 }

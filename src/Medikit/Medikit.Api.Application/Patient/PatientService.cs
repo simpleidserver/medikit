@@ -16,12 +16,14 @@ namespace Medikit.Api.Application.Patient
         private readonly IGetPatientByNissQueryHandler _getPatientByNissQueryHandler;
         private readonly IAddPatientCommandHandler _addPatientCommandHandler;
         private readonly ISearchPatientsQueryHandler _searchPatientsQueryHandler;
+        private readonly IGetPatientByIdQueryHandler _getPatientByIdQueryHandler;
 
-        public PatientService(IGetPatientByNissQueryHandler getPatientByNissQueryHandler, IAddPatientCommandHandler addPatientCommandHandler, ISearchPatientsQueryHandler searchPatientsQueryHandler)
+        public PatientService(IGetPatientByNissQueryHandler getPatientByNissQueryHandler, IAddPatientCommandHandler addPatientCommandHandler, ISearchPatientsQueryHandler searchPatientsQueryHandler, IGetPatientByIdQueryHandler getPatientByIdQueryHandler)
         {
             _getPatientByNissQueryHandler = getPatientByNissQueryHandler;
             _addPatientCommandHandler = addPatientCommandHandler;
             _searchPatientsQueryHandler = searchPatientsQueryHandler;
+            _getPatientByIdQueryHandler = getPatientByIdQueryHandler;
         }
 
         public Task<PatientResult> GetPatientByNiss(GetPatientByNissQuery query, CancellationToken token)
@@ -37,6 +39,11 @@ namespace Medikit.Api.Application.Patient
         public Task<PagedResult<PatientResult>> Search(SearchPatientsQuery query, CancellationToken token)
         {
             return _searchPatientsQueryHandler.Handle(query, token);
+        }
+
+        public Task<PatientResult> GetPatientById(GetPatientByIdQuery query, CancellationToken token)
+        {
+            return _getPatientByIdQueryHandler.Handle(query, token);
         }
     }
 }

@@ -9,9 +9,14 @@ export enum ActionTypes {
     SEARCH_PATIENTS = "[Patient] SEARCH_PATIENTS",
     PATIENTS_LOADED = "[Patient] PATIENTS_LOADED",
     ERROR_SEARCH_PATIENTS = "[Patient] ERROR_SEARCH_PATIENTS",
-    GET_PATIENT = "[Patient] GET_PATIENT",
+    GET_PATIENT_BY_ID = "[Patient] GET_PATIENT_BY_ID",
+    GET_PATIENT_BY_NISS = "[Patient] GET_PATIENT_BY_NISS",
     PATIENT_LOADED = "[Patient] PATIENT_LOADED",
-    ERROR_GET_PATIENT = "[Patient] ERROR_GET_PATIENT"
+    ERROR_GET_PATIENT = "[Patient] ERROR_GET_PATIENT",
+    ADD_PATIENT = "[Patient] ADD_PATIENT",
+    ADD_PATIENT_SUCCESS = "[Patient] ADD_PATIENT_SUCCESS",
+    ADD_PATIENT_ERROR = "[Patient] ADD_PATIENT_ERROR"
+
 }
 
 export class SearchPatientsByNiss implements Action {
@@ -24,9 +29,19 @@ export class SearchPatients implements Action {
     constructor(public niss: string, public firstname: string, public lastname: string, public startIndex : number, public count: number, public active : string = null, public direction: string = null) { }
 }
 
-export class GetPatient implements Action {
-    readonly type = ActionTypes.GET_PATIENT;
+export class GetPatientById implements Action {
+    readonly type = ActionTypes.GET_PATIENT_BY_ID;
+    constructor(public id: string) { }
+}
+
+export class GetPatientByNiss implements Action {
+    readonly type = ActionTypes.GET_PATIENT_BY_NISS;
     constructor(public niss: string) { }
+}
+
+export class AddPatient implements Action {
+    readonly type = ActionTypes.ADD_PATIENT;
+    constructor(public patient: Patient) { }
 }
 
 export class PatientsLoaded implements Action {
@@ -44,4 +59,4 @@ export class PatientsByNissLoaded implements Action {
     constructor(public patients: SearchPatientResult) { }
 }
 
-export type ActionsUnion = SearchPatients | PatientsLoaded | GetPatient | PatientLoaded | SearchPatientsByNiss | PatientsByNissLoaded;
+export type ActionsUnion = SearchPatients | PatientsLoaded | GetPatientByNiss | PatientLoaded | SearchPatientsByNiss | PatientsByNissLoaded | AddPatient | GetPatientById;

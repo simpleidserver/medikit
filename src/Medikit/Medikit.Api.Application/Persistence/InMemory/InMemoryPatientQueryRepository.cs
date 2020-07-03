@@ -29,6 +29,11 @@ namespace Medikit.Api.Application.Persistence.InMemory
             _patients = patients;
         }
 
+        public Task<PatientAggregate> GetById(string id, CancellationToken token)
+        {
+            return Task.FromResult(_patients.FirstOrDefault(_ => _.Id == id));
+        }
+
         public Task<PatientAggregate> GetByNiss(string niss, CancellationToken token)
         {
             return Task.FromResult(_patients.FirstOrDefault(p => p.NationalIdentityNumber == niss));

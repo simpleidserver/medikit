@@ -55,7 +55,6 @@ namespace Medikit.Api.Host
                         NationalIdentityNumber = "76020727360",
                         Version = 0,
                         PrescriberId = "admin",
-                        LogoUrl = "https://img.icons8.com/material/4ac144/256/user-male.png",
                         UpdateDateTime = DateTime.UtcNow
                     }
                 })
@@ -76,6 +75,7 @@ namespace Medikit.Api.Host
                 app.UsePathBase(_configuration["pathBase"]);
             }
 
+            app.UseStaticFiles();
             app.UseForwardedHeaders();
             app.UseAuthentication();
             app.UseCors("AllowAll");

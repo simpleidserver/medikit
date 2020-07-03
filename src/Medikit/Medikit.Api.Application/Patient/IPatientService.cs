@@ -14,5 +14,6 @@ namespace Medikit.Api.Application.Patient
         Task<PatientResult> GetPatientByNiss(GetPatientByNissQuery query, CancellationToken token);
         Task<string> AddPatient(AddPatientCommand command, CancellationToken token);
         Task<PagedResult<PatientResult>> Search(SearchPatientsQuery query, CancellationToken token);
+        Task<PatientResult> GetPatientById(GetPatientByIdQuery query, CancellationToken token);
     }
 }

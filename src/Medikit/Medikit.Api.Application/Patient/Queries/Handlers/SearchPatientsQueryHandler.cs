@@ -1,6 +1,7 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Medikit.Api.Application.Common;
+using Medikit.Api.Application.Extensions;
 using Medikit.Api.Application.Patient.Queries.Results;
 using Medikit.Api.Application.Persistence;
 using System.Linq;
@@ -26,16 +27,7 @@ namespace Medikit.Api.Application.Patient.Queries.Handlers
                 Count = result.Count,
                 StartIndex = result.StartIndex,
                 TotalLength = result.TotalLength,
-                Content = result.Content.Select(_ => new PatientResult
-                {
-                    Birthdate = _.BirthDate,
-                    Firstname = _.Firstname,
-                    Lastname = _.Lastname,
-                    Niss = _.NationalIdentityNumber,
-                    CreateDateTime = _.CreateDateTime,
-                    UpdateDateTime = _.UpdateDateTime,
-                    LogoUrl = _.LogoUrl
-                }).ToList()
+                Content = result.Content.Select(_ => _.ToResult()).ToList()
             };
         }
     }

@@ -26,32 +26,31 @@ namespace Medikit.Api.Application.Patient.Commands.Handlers
 
         public async Task<string> Handle(AddPatientCommand command, CancellationToken cancellationToken)
         {
-            var patientAddresses = command.Addresses == null ? new List<PatientAddress>() : command.Addresses.Select(_ =>
-                new PatientAddress
-                {
-                    Box = _.Box,
-                    Country = _.Country,
-                    PostalCode = _.PostalCode,
-                    Street = _.Street,
-                    StreetNumber = _.StreetNumber
-                }
-            ).ToList();
+            var patientAddresses = command.PatientAddress == null ? null : new PatientAddress
+            {
+                Country = command.PatientAddress.Country,
+                StreetNumber = command.PatientAddress.StreetNumber,
+                Street = command.PatientAddress.Street,
+                PostalCode = command.PatientAddress.PostalCode,
+                Coordinates = command.PatientAddress.Coordinates
+            };
             var contactInformations = command.ContactInformations == null ? new List<PatientContactInformation>() : command.ContactInformations.Select(_ =>
             new PatientContactInformation
             {
                 Type = _.Type,
                 Value = _.Value
             }).ToList();
-            var img = ConvertImage(command.LogoUrl);
-            string logoUrl = null;
+            var img = ConvertImage(command.Base64EncodedImage);
+            var id = Guid.NewGuid().ToString();
+            var relativePath = string.Empty;
             if (img != null)
             {
-                logoUrl = Path.Combine(_options.RootPath, "images", $"{command.LogoUrl}.png");
+                relativePath =$"images/patient-{id}.png";
+                var logoUrl = Path.Combine(_options.RootPath, Path.Combine("images", $"patient-{id}.png"));
                 await System.IO.File.WriteAllBytesAsync(logoUrl, img, cancellationToken);
             }
             
-            var id = Guid.NewGuid().ToString();
-            var patient = PatientAggregate.New(id, command.PrescriberId, command.Firstname, command.Lastname, command.NationalIdentityNumber, command.Gender, command.BirthDate, logoUrl, command.EidCardNumber, command.EidCardValidity, patientAddresses, contactInformations);
+            var patient = PatientAggregate.New(id, command.PrescriberId, command.Firstname, command.Lastname, command.NationalIdentityNumber, command.Gender, command.BirthDate, relativePath, command.EidCardNumber, command.EidCardValidity, patientAddresses, contactInformations);
             var streamName = patient.GetStreamName();
             await _commitAggregateHelper.Commit(patient, streamName, Constants.QueueNames.Patient);
             return id;

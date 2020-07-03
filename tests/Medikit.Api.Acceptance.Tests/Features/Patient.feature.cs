@@ -80,13 +80,13 @@ namespace Medikit.Api.Acceptance.Tests.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Get patient by NISS")]
+        [Xunit.SkippableFactAttribute(DisplayName="Add patient")]
         [Xunit.TraitAttribute("FeatureTitle", "Patient")]
-        [Xunit.TraitAttribute("Description", "Get patient by NISS")]
-        public virtual void GetPatientByNISS()
+        [Xunit.TraitAttribute("Description", "Add patient")]
+        public virtual void AddPatient()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Get patient by NISS", null, ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add patient", null, ((string[])(null)));
 #line 3
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -107,30 +107,93 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
+                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Key",
+                            "Value"});
+                table1.AddRow(new string[] {
+                            "firstname",
+                            "firstname"});
+                table1.AddRow(new string[] {
+                            "lastname",
+                            "lastname"});
+                table1.AddRow(new string[] {
+                            "niss",
+                            "niss"});
+                table1.AddRow(new string[] {
+                            "gender",
+                            "1"});
+                table1.AddRow(new string[] {
+                            "eid_cardnumber",
+                            "eidcardnumber"});
+                table1.AddRow(new string[] {
+                            "address",
+                            "{ street: \'street\', street_number: 2, postal_code: \'1000\', country: \'BE\' }"});
+                table1.AddRow(new string[] {
+                            "contact_infos",
+                            "[ { type: 0, value : \'toto@mail.com\' } ]"});
 #line 4
- testRunner.When("execute HTTP GET request \'http://localhost/patients/071089\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("execute HTTP POST JSON request \'http://localhost/patients\'", ((string)(null)), table1, "When ");
 #line hidden
-#line 5
+#line 14
  testRunner.And("extract JSON from body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 6
+#line 15
+ testRunner.And("extract \'id\' from JSON body into \'id\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 16
+ testRunner.And("execute HTTP GET request \'http://localhost/patients/$id$\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 17
+ testRunner.And("extract JSON from body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 18
  testRunner.Then("HTTP status code equals to \'200\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 7
- testRunner.Then("JSON \'firstname\'=\'thierry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 19
+ testRunner.Then("JSON \'firstname\'=\'firstname\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 20
+ testRunner.Then("JSON \'lastname\'=\'lastname\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 21
+ testRunner.Then("JSON \'eid_cardnumber\'=\'eidcardnumber\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 22
+ testRunner.Then("JSON \'gender\'=\'1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 23
+ testRunner.Then("JSON \'niss\'=\'niss\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 24
+ testRunner.Then("JSON \'contact_infos[0].type\'=\'0\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 25
+ testRunner.Then("JSON \'contact_infos[0].value\'=\'toto@mail.com\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 26
+ testRunner.Then("JSON \'address.postal_code\'=\'1000\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 27
+ testRunner.Then("JSON \'address.country\'=\'BE\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 28
+ testRunner.Then("JSON \'address.street\'=\'street\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 29
+ testRunner.Then("JSON \'address.street_number\'=\'2\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Search patients")]
+        [Xunit.SkippableFactAttribute(DisplayName="Get patient by NISS")]
         [Xunit.TraitAttribute("FeatureTitle", "Patient")]
-        [Xunit.TraitAttribute("Description", "Search patients")]
-        public virtual void SearchPatients()
+        [Xunit.TraitAttribute("Description", "Get patient by NISS")]
+        public virtual void GetPatientByNISS()
         {
             string[] tagsOfScenario = ((string[])(null));
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Search patients", null, ((string[])(null)));
-#line 9
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Get patient by NISS", null, ((string[])(null)));
+#line 32
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -150,32 +213,75 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 10
+#line 33
+ testRunner.When("execute HTTP GET request \'http://localhost/patients/niss/071089\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 34
+ testRunner.And("extract JSON from body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 35
+ testRunner.Then("HTTP status code equals to \'200\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 36
+ testRunner.Then("JSON \'firstname\'=\'thierry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Search patients")]
+        [Xunit.TraitAttribute("FeatureTitle", "Patient")]
+        [Xunit.TraitAttribute("Description", "Search patients")]
+        public virtual void SearchPatients()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Search patients", null, ((string[])(null)));
+#line 38
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 39
  testRunner.When("execute HTTP GET request \'http://localhost/patients/.search?firstname=thierry&nis" +
                         "s=071089&lastname=habart\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 11
+#line 40
  testRunner.And("extract JSON from body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 12
+#line 41
  testRunner.Then("HTTP status code equals to \'200\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 13
+#line 42
  testRunner.Then("JSON \'start_index\'=\'0\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 14
+#line 43
  testRunner.Then("JSON \'count\'=\'100\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 15
+#line 44
  testRunner.Then("JSON \'total_length\'=\'1\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 16
+#line 45
  testRunner.Then("JSON \'content[0].firstname\'=\'thierry\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 17
+#line 46
  testRunner.Then("JSON \'content[0].lastname\'=\'habart\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 18
+#line 47
  testRunner.Then("JSON \'content[0].niss\'=\'071089\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }

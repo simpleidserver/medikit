@@ -19,13 +19,14 @@
     <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
         <div fxLayout="row" fxLayoutGap="10px">
             <mat-horizontal-stepper linear #stepper class="mat-elevation-z8">
+                <!-- Information -->
                 <mat-step [stepControl]="patientInfoFormGroup">
                     <ng-template matStepLabel>{{ 'patient-info' | translate }}</ng-template>
                     <form [formGroup]="patientInfoFormGroup" (submit)="confirmGeneralInfo()">
                         <div fxLayout="row" fxLayoutGap="10px">
                             <div fxFlex="20%">
-                                <ngx-avatar class="center" *ngIf="logoUrl" src="{{ logoUrl }}"></ngx-avatar>
-                                <ngx-avatar class="center" *ngIf="!logoUrl" name="DEFAULT"></ngx-avatar>
+                                <ngx-avatar class="center" *ngIf="base64Image" src="{{ base64Image }}"></ngx-avatar>
+                                <ngx-avatar class="center" *ngIf="!base64Image" name="DEFAULT"></ngx-avatar>
                                 <a mat-raised-button (click)="fileInput.click()" class="mt-5">{{ "select-logo" | translate }}</a>
                                 <input hidden (change)="onLogoSelected($event)" #fileInput type="file" id="file" accept=".jpg, .jpeg, .png">
                             </div>
@@ -34,11 +35,13 @@
                                 <mat-form-field appearance="outline" class="full-width">
                                     <mat-label>{{ "firstname" | translate }}</mat-label>
                                     <input matInput placeholder="{{ 'enter-firstname' | translate }}" formControlName="firstname" required />
+                                    <mat-error *ngIf="patientInfoFormGroup.controls['firstname'].hasError('required') && (patientInfoFormGroup.controls['firstname'].touched)">{{ 'firstname-required' | translate }}</mat-error>
                                 </mat-form-field>
                                 <!-- Lastname -->
                                 <mat-form-field appearance="outline" class="full-width">
                                     <mat-label>{{ "lastname" | translate }}</mat-label>
                                     <input matInput placeholder="{{ 'enter-lastname' | translate }}" formControlName="lastname" required />
+                                    <mat-error *ngIf="patientInfoFormGroup.controls['lastname'].hasError('required') && (patientInfoFormGroup.controls['lastname'].touched)">{{ 'lastname-required' | translate }}</mat-error>
                                 </mat-form-field>
                                 <!-- Gender -->
                                 <mat-form-field appearance="outline" class="full-width">
@@ -47,16 +50,20 @@
                                         <mat-option value="0">{{ "male" | translate }}</mat-option>
                                         <mat-option value="1">{{ "female" | translate }}</mat-option>
                                     </mat-select>
+                                    <mat-error *ngIf="patientInfoFormGroup.controls['gender'].hasError('required') && (patientInfoFormGroup.controls['gender'].touched)">{{ 'gender-required' | translate }}</mat-error>
                                 </mat-form-field>
                                 <!-- Niss -->
                                 <mat-form-field appearance="outline" class="full-width">
                                     <mat-label>{{ 'niss' | translate }}</mat-label>
                                     <input matInput placeholder="{{ 'enter-niss' | translate }}" formControlName="niss" required>
+                                    <mat-error *ngIf="patientInfoFormGroup.controls['niss'].hasError('required') && (patientInfoFormGroup.controls['niss'].touched)">{{ 'niss-required' | translate }}</mat-error>
+                                    <mat-error *ngIf="patientInfoFormGroup.controls['niss'].hasError('pattern') && (patientInfoFormGroup.controls['niss'].touched)">{{ 'niss-invalid' | translate }}</mat-error>
                                 </mat-form-field>
                                 <!-- Birthdate -->
                                 <mat-form-field appearance="outline" class="full-width">
                                     <mat-label>{{ 'birthdate' | translate }}</mat-label>
-                                    <input matInput placeholder="{{ 'enter-birthdate' | translate }}" type="date" formControlName="birthdate">
+                                    <input matInput placeholder="{{ 'enter-birthdate' | translate }}" type="date" formControlName="birthdate" required>
+                                    <mat-error *ngIf="patientInfoFormGroup.controls['birthdate'].hasError('required') && (patientInfoFormGroup.controls['birthdate'].touched)">{{ 'birthdate-required' | translate }}</mat-error>
                                 </mat-form-field>
                                 <!-- EID card number -->
                                 <mat-form-field appearance="outline" class="full-width">
@@ -66,7 +73,7 @@
                                 <!-- EID card validity -->
                                 <mat-form-field appearance="outline" class="full-width">
                                     <mat-label>{{ 'eid-cardvalidity' | translate }}</mat-label>
-                                    <input matInput placeholder="{{ 'enter-eid-cardvalidity' | translate }}" formControlName="eidCardValidity">
+                                    <input matInput placeholder="{{ 'enter-eid-cardvalidity' | translate }}" formControlName="eidCardValidity" type="date">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -76,14 +83,47 @@
                         </div>
                     </form>
                 </mat-step>
-                <mat-step>
+                <!-- Address -->
+                <mat-step [completed]="true">
                     <ng-template matStepLabel>{{ 'patient-address' | translate }}</ng-template>
-                    <div fxLayout="row">
+                    <div fxLayout="row" fxLayoutGap="10px">
                         <div fxFlex="50%">
-
+                            <searchaddress (select)="selectAddress($event)"></searchaddress>
+                            <div id="address_map"></div>
                         </div>
                         <div fxFlex="50%">
-                            <div id="address_map"></div>
+                            <form [formGroup]="addressFormGroup">
+                                <!-- Street -->
+                                <div fxLayout="row" fxLayoutGap="10px">
+                                    <div fxFlex="20%">
+                                        <mat-form-field appearance="outline" class="full-width">
+                                            <mat-label>{{ "housenumber" | translate }}</mat-label>
+                                            <input matInput formControlName="houseNumber" />
+                                        </mat-form-field>
+                                    </div>
+                                    <div fxFlex="80%">
+                                        <mat-form-field appearance="outline" class="full-width">
+                                            <mat-label>{{ "street" | translate }}</mat-label>
+                                            <input matInput formControlName="road" />
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <!-- Postal code -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "postal-code" | translate }}</mat-label>
+                                    <input matInput formControlName="postalCode" />
+                                </mat-form-field>
+                                <!-- City -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "city" | translate }}</mat-label>
+                                    <input matInput formControlName="city" />
+                                </mat-form-field>
+                                <!-- Country -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "country" | translate }}</mat-label>
+                                    <input matInput formControlName="country" />
+                                </mat-form-field>
+                            </form>
                         </div>
                     </div>
                     <mat-divider></mat-divider>
@@ -92,12 +132,64 @@
                         <button mat-raised-button color="primary" class="float-right" (click)="nextStep()">{{ "next" | translate }}</button>
                     </div>
                 </mat-step>
+                <!-- Contact information -->
                 <mat-step>
                     <ng-template matStepLabel>{{ 'patient-contact' | translate }}</ng-template>
-                    <mat-divider></mat-divider>
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <div fxFlex="50%">
+                            <form [formGroup]="addContactInfoFormGroup" (submit)="addContactInfo(addContactInfoFormGroup.value)">
+                                <!-- Contact type -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "contact-type" | translate }}</mat-label>
+                                    <mat-select formControlName="contactType" required>
+                                        <mat-select-trigger>
+                                            <span *ngIf="addContactInfoFormGroup.controls['contactType'].value == 0">{{ "email" | translate }}</span>
+                                            <span *ngIf="addContactInfoFormGroup.controls['contactType'].value == 1">{{ "fax" | translate }}</span>
+                                            <span *ngIf="addContactInfoFormGroup.controls['contactType'].value == 2">{{ "mobile-number" | translate }}</span>
+                                            <span *ngIf="addContactInfoFormGroup.controls['contactType'].value == 3">{{ "home-number" | translate }}</span>
+                                        </mat-select-trigger>
+                                        <mat-option value="0">
+                                            <mat-icon>email</mat-icon> {{ "email" | translate }}
+                                        </mat-option>
+                                        <mat-option value="1">
+                                            <mat-icon>scanner</mat-icon> {{ "fax" | translate }}
+                                        </mat-option>
+                                        <mat-option value="2">
+                                            <mat-icon>stay_current_portrait</mat-icon> {{ "mobile-number" | translate }}
+                                        </mat-option>
+                                        <mat-option value="3">
+                                            <mat-icon>phone</mat-icon> {{ "home-number" | translate }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="addContactInfoFormGroup.controls['contactType'].hasError('required') && (addContactInfoFormGroup.controls['contactType'].touched || addContactInfoFormGroup.controls['contactType'].dirty)">{{ 'contacttype-required' | translate }}</mat-error>
+                                </mat-form-field>
+                                <!-- Contact value code -->
+                                <mat-form-field appearance="outline" class="full-width">
+                                    <mat-label>{{ "contact-value" | translate }}</mat-label>
+                                    <input matInput formControlName="contactValue" required />
+                                    <mat-error *ngIf="addContactInfoFormGroup.controls['contactValue'].hasError('required') && (addContactInfoFormGroup.controls['contactValue'].touched || addContactInfoFormGroup.controls['contactValue'].dirty)">{{ 'contactvalue-required' | translate }}</mat-error>
+                                </mat-form-field>
+                                <button mat-raised-button [disabled]="addContactInfoFormGroup.invalid">{{ "add" | translate }}</button>
+                            </form>
+                        </div>
+                        <div fxFlex="50%">
+                            <button mat-raised-button color="warn" [disabled]="selectedContactInfos.length == 0" (click)="deleteContactInfos()">{{ "delete" | translate }}</button>
+                            <mat-selection-list [(ngModel)]="selectedContactInfos">
+                                <mat-list-option *ngFor="let contactInfo of contactInfos" [value]="contactInfo">
+                                    <div [ngSwitch]="contactInfo.type">
+                                        <span *ngSwitchCase="0"><mat-icon>email</mat-icon> {{ 'email' | translate }} : {{ contactInfo.value }}</span>
+                                        <span *ngSwitchCase="1"><mat-icon>scanner</mat-icon> {{ 'fax' | translate }} : {{ contactInfo.value }}</span>
+                                        <span *ngSwitchCase="2"><mat-icon>stay_current_portrait</mat-icon> {{ 'mobile-number' | translate }} : {{ contactInfo.value }}</span>
+                                        <span *ngSwitchCase="3"><mat-icon>phone</mat-icon> {{ 'home-number' | translate }} : {{ contactInfo.value }}</span>
+                                    </div>
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </div>
+                    </div>
+                    <mat-divider class="mt-5"></mat-divider>
                     <div class="mt-5">
                         <button mat-raised-button (click)="previousStep()">{{ "back" | translate }}</button>
-                        <button mat-raised-button color="primary" class="float-right" (click)="addPatient()">{{ "add" | translate }}</button>
+                        <button mat-raised-button color="primary" class="float-right" (click)="addPatient()" [disabled]="isAddingPatient">{{ "add" | translate }}</button>
                     </div>
                 </mat-step>
             </mat-horizontal-stepper>
