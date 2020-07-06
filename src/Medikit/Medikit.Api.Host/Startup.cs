@@ -1,6 +1,12 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using Medikit.Api.Application.Domains;
+using MediatR;
+using Medikit.Api.Common.Application;
+using Medikit.Api.EHealth.Application.MedicinalProduct.Queries.Handlers;
+using Medikit.Api.Medicalfile.Application.Prescription.Commands.Handlers;
+using Medikit.Api.Patient.Application.Domains;
+using Medikit.Api.Patient.Application.Queries.Handlers;
+using Medikit.Api.QRFile.Application.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -34,7 +40,7 @@ namespace Medikit.Api.Host
                 .AllowAnyMethod()
                 .AllowAnyHeader()));
             var certificatesPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Certificates");
-            services.AddMedikitApiApplication(_ =>
+            services.AddMedikitApi(_ =>
             {
                 _.RootPath = _env.WebRootPath;
             }, eheathCallback: o =>
@@ -54,7 +60,6 @@ namespace Medikit.Api.Host
                         BirthDate = DateTime.UtcNow,
                         NationalIdentityNumber = "76020727360",
                         Version = 0,
-                        PrescriberId = "admin",
                         UpdateDateTime = DateTime.UtcNow
                     }
                 })
@@ -62,6 +67,11 @@ namespace Medikit.Api.Host
                 {
                     "nl", "en", "fr"
                 });
+            services.AddMediatR(
+                typeof(SearchMedicinalPackageHandler),
+                typeof(AddPharmaceuticalPrescriptionCommandHandler),
+                typeof(GetPatientByIdQueryHandler),
+                typeof(GetQRFileQuery));
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;

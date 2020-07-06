@@ -1,6 +1,7 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Medikit.EHealth;
+using Medikit.EHealth.EHealthServices;
 using Medikit.EHealth.ETK;
 using Medikit.EHealth.ETK.Store;
 using Medikit.EHealth.KeyStore;
@@ -38,10 +39,18 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
 
             services.AddETK()
+                .AddEHealthServices()
                 .AddSAML()
                 .AddServices()
                 .AddSOAP()
                 .AddKeyStore();
+            return services;
+        }
+
+        private static IServiceCollection AddEHealthServices(this IServiceCollection services)
+        {
+            services.AddTransient<IEHealthAmpService, EHealthAmpService>();
+            services.AddTransient<IEHealthPrescriptionService, EHealthPrescriptionService>();
             return services;
         }
 

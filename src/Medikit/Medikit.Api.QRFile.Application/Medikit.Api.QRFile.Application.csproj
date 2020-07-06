@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Description>Medikit API medical file application.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Medikit.Api.Common.Application\Medikit.Api.Common.Application.csproj" />
+  </ItemGroup>
+</Project>

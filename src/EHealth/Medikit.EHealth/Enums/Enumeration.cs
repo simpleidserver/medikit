@@ -49,6 +49,24 @@ namespace Medikit.EHealth.Enums
             return fields.Select(f => f.GetValue(null)).Cast<T>();
         }
 
+        public static bool TryParse<T>(int id, out T result) where T : Enumeration
+        {
+            var r = Parse<T>(id);
+            if (r == null)
+            {
+                result = null;
+                return false;
+            }
+
+            result = r;
+            return true;
+        }
+
+        public static T Parse<T>(int val) where T : Enumeration
+        {
+            return Enumeration.GetAll<T>().FirstOrDefault(_ => _.Value == val);
+        }
+
         public int CompareTo(object other) => Value.CompareTo(((Enumeration)other).Value);
 
         public override int GetHashCode()

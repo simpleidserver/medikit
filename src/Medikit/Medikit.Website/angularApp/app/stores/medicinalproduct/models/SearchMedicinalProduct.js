@@ -1,4 +1,4 @@
-import { MedicinalProduct } from "./MedicinalProduct";
+import { MedicinalPackage } from "./MedicinalPackage";
 var SearchMedicinalProduct = (function () {
     function SearchMedicinalProduct() {
         this.Content = [];
@@ -8,7 +8,7 @@ var SearchMedicinalProduct = (function () {
         result.Count = json["count"];
         result.StartIndex = json["start_index"];
         json["content"].forEach(function (r) {
-            result.Content.push(MedicinalProduct.fromJson(r));
+            result.Content.push(MedicinalPackage.fromJson(r));
         });
         return result;
     };

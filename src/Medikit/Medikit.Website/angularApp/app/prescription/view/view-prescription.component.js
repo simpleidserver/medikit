@@ -8,12 +8,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { LoadPharmaPrescription } from './actions/pharma-prescription';
-import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
-import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
+import { LoadPharmaPrescription } from '@app/stores/pharmaprescription/prescription-actions';
+import * as fromAppState from '@app/stores/appstate';
+import { select, Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { FormGroup, FormControl } from '@angular/forms';
 var ViewPrescriptionComponent = (function () {
     function ViewPrescriptionComponent(translateService, snackBar, store, route, medikitExtensionService) {
         this.translateService = translateService;
@@ -21,14 +23,22 @@ var ViewPrescriptionComponent = (function () {
         this.store = store;
         this.route = route;
         this.medikitExtensionService = medikitExtensionService;
+        this.isLoading = false;
+        this.nbPrescriptions = 1;
+        this.updateNbPrescriptionsForm = new FormGroup({
+            nbPrescriptions: new FormControl(1)
+        });
     }
     ViewPrescriptionComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.store.pipe(select('pharmaPrescriptionView')).subscribe(function (st) {
-            if (!st.prescription) {
+        this.store.pipe(select(fromAppState.selectPharmaPrescriptionResult)).subscribe(function (st) {
+            if (!st) {
                 return;
             }
-            _this.prescription = st.prescription;
+            if (_this.isLoading) {
+                _this.prescription = st;
+                _this.isLoading = false;
+            }
         });
         this.refresh();
     };
@@ -48,8 +58,13 @@ var ViewPrescriptionComponent = (function () {
             return;
         }
         var id = this.route.snapshot.params['id'];
+        this.isLoading = true;
         var loadPharmaPrescriptions = new LoadPharmaPrescription(id, session['assertion_token']);
         this.store.dispatch(loadPharmaPrescriptions);
+    };
+    ViewPrescriptionComponent.prototype.updateNbPrescriptions = function (evt, form) {
+        evt.preventDefault();
+        this.nbPrescriptions = form.nbPrescriptions;
     };
     ViewPrescriptionComponent = __decorate([
         Component({

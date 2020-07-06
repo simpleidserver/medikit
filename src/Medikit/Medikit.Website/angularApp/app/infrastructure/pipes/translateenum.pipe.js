@@ -35,8 +35,7 @@ var TranslateEnumPipe = (function () {
             _this.value = filteredTranslations[0].Value;
             _this._ref.markForCheck();
         };
-        this._dispose();
-        var defaultLang = this.translateService.getDefaultLang();
+        var defaultLang = this.translateService.store.currentLang;
         if (this.value == null) {
             onTranslation(translations, defaultLang);
         }

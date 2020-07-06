@@ -11,6 +11,7 @@ import { SharedModule } from '@app/infrastructure/shared.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ExtensionComponent } from './extension/extension.component';
 import { ListSettingComponent } from './list/list-setting.component';
+import { QRCodeModule } from 'angularx-qrcode';
 import { SettingRoutes } from './setting.routes';
 var SettingModule = (function () {
     function SettingModule() {
@@ -22,6 +23,7 @@ var SettingModule = (function () {
                 MaterialModule,
                 SettingRoutes,
                 SharedModule,
+                QRCodeModule,
                 StoreDevtoolsModule.instrument({
                     maxAge: 10
                 })

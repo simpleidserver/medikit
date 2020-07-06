@@ -22,6 +22,9 @@ export function ListPharmaPrescriptionReducer(state, action) {
         case fromActions.ActionTypes.PHARMA_PRESCRIPTIONS_LOADED:
             state.prescriptionIds = action.prescriptionIds;
             return __assign({}, state);
+        case fromActions.ActionTypes.REVOKE_PHARMA_PRESCRIPTION_SUCCESS:
+            state.prescriptionIds = state.prescriptionIds.filter(function (_) { return _ != action.rid; });
+            return __assign({}, state);
         default:
             return state;
     }

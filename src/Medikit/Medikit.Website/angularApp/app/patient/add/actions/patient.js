@@ -1,18 +1,62 @@
 export var ActionTypes;
 (function (ActionTypes) {
-    ActionTypes["LOAD_PHARMA_PRESCRIPTION"] = "[AddPharmaPrescription] LOAD_ADD_PRESCRIPTION";
-    ActionTypes["NEXT_STEP"] = "[AddPharmaPrescription] NEXT_STEP";
-    ActionTypes["PREVIOUS_STEP"] = "[AddPharmaPrescription] PREVIOUS_STEP";
-    ActionTypes["ADD_DRUG_PRESCRIPTION"] = "[AddPharmaPrescription] ADD_DRUG_PRESCRIPTION";
-    ActionTypes["DELETE_DRUG_PRESCRIPTION"] = "[DeletePharmaPrescription] DELETE_DRUG_PRESCRIPTION";
+    ActionTypes["LOAD_PATIENT"] = "[AddPatient] LOAD_PATIENT";
+    ActionTypes["UPDATE_INFORMATION"] = "[AddPatient] UPDATE_INFORMATION";
+    ActionTypes["UPDATE_ADDRESS"] = "[AddPatient] UPDATE_ADDRESS";
+    ActionTypes["ADD_CONTACT_INFORMATON"] = "[AddPatient] ADD_CONTACT_INFORMATION";
+    ActionTypes["DELETE_CONTACT_INFORMATION"] = "[AddPatient] DELETE_CONTACT_INFORMATION";
+    ActionTypes["NEXT_STEP"] = "[AddPatient] NEXT_STEP";
+    ActionTypes["PREVIOUS_STEP"] = "[AddPatient] PREVIOUS_STEP";
+    ActionTypes["ADD_ADDRESS"] = "[AddPatient] ADD_ADDRESS";
+    ActionTypes["ADD_CONTACT_INFO"] = "[AddPatient] ADD_CONTACT_INFO";
+    ActionTypes["DELETE_CONTACT_INFO"] = "[AddPatient] DELETE_CONTACT_INFO";
 })(ActionTypes || (ActionTypes = {}));
-var LoadPrescription = (function () {
-    function LoadPrescription() {
-        this.type = ActionTypes.LOAD_PHARMA_PRESCRIPTION;
+var LoadPatient = (function () {
+    function LoadPatient() {
+        this.type = ActionTypes.LOAD_PATIENT;
     }
-    return LoadPrescription;
+    return LoadPatient;
 }());
-export { LoadPrescription };
+export { LoadPatient };
+var UpdateInformation = (function () {
+    function UpdateInformation(firstname, lastname, gender, niss, birthdate, eidCardNumber, eidCardValidity, base64Image) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.gender = gender;
+        this.niss = niss;
+        this.birthdate = birthdate;
+        this.eidCardNumber = eidCardNumber;
+        this.eidCardValidity = eidCardValidity;
+        this.base64Image = base64Image;
+        this.type = ActionTypes.UPDATE_INFORMATION;
+    }
+    return UpdateInformation;
+}());
+export { UpdateInformation };
+var UpdateAddress = (function () {
+    function UpdateAddress(address) {
+        this.address = address;
+        this.type = ActionTypes.UPDATE_ADDRESS;
+    }
+    return UpdateAddress;
+}());
+export { UpdateAddress };
+var AddContactInformation = (function () {
+    function AddContactInformation(contactInfo) {
+        this.contactInfo = contactInfo;
+        this.type = ActionTypes.ADD_CONTACT_INFO;
+    }
+    return AddContactInformation;
+}());
+export { AddContactInformation };
+var DeleteContactInformation = (function () {
+    function DeleteContactInformation(contactInfos) {
+        this.contactInfos = contactInfos;
+        this.type = ActionTypes.DELETE_CONTACT_INFO;
+    }
+    return DeleteContactInformation;
+}());
+export { DeleteContactInformation };
 var NextStep = (function () {
     function NextStep() {
         this.type = ActionTypes.NEXT_STEP;
@@ -27,20 +71,4 @@ var PreviousStep = (function () {
     return PreviousStep;
 }());
 export { PreviousStep };
-var AddDrugPrescription = (function () {
-    function AddDrugPrescription(drugPrescription) {
-        this.drugPrescription = drugPrescription;
-        this.type = ActionTypes.ADD_DRUG_PRESCRIPTION;
-    }
-    return AddDrugPrescription;
-}());
-export { AddDrugPrescription };
-var DeleteDrugPrescription = (function () {
-    function DeleteDrugPrescription(technicalId) {
-        this.technicalId = technicalId;
-        this.type = ActionTypes.DELETE_DRUG_PRESCRIPTION;
-    }
-    return DeleteDrugPrescription;
-}());
-export { DeleteDrugPrescription };
-//# sourceMappingURL=pharma-prescription.js.map
+//# sourceMappingURL=patient.js.map

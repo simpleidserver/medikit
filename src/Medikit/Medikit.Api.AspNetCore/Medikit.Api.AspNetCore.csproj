@@ -8,6 +8,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Medikit.Api.Application\Medikit.Api.Application.csproj" />
+    <ProjectReference Include="..\Medikit.Api.EHealth.Application\Medikit.Api.EHealth.Application.csproj" />
+    <ProjectReference Include="..\Medikit.Api.Medicalfile.Application\Medikit.Api.Medicalfile.Application.csproj" />
+    <ProjectReference Include="..\Medikit.Api.Patient.Application\Medikit.Api.Patient.Application.csproj" />
+    <ProjectReference Include="..\Medikit.Api.QRFile.Application\Medikit.Api.QRFile.Application.csproj" />
   </ItemGroup>
 </Project>

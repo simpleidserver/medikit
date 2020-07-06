@@ -8,11 +8,17 @@
     <None Remove="angularApp\app\infrastructure\auth-guard.service.ts" />
     <None Remove="angularApp\app\prescription\view\view-prescription.component.ts" />
     <None Remove="angularApp\app\stores\appstate.ts" />
+    <None Remove="angularApp\app\stores\medicalfile\models\medicalfile.ts" />
+    <None Remove="angularApp\app\stores\medicalfile\services\medicalfile-service.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\medicalfile.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\services\medicalfile-service.ts" />
   </ItemGroup>
 </Project>

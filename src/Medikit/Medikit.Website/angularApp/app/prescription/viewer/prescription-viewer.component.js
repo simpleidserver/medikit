@@ -8,9 +8,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component, Input, ViewChild, ElementRef } from "@angular/core";
-import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
 import { TranslateService } from "@ngx-translate/core";
 import { formatDate } from "@angular/common";
+import { PharmaPrescription } from "@app/stores/pharmaprescription/models/pharma-prescription";
 var PDFObject = require('pdfobject');
 var jsPDF = require('jspdf');
 var JsBarCode = require('jsbarcode');
@@ -18,6 +18,7 @@ var PrescriptionViewerComponent = (function () {
     function PrescriptionViewerComponent(translateService) {
         this.translateService = translateService;
         this._nbPrescriptions = 1;
+        this._jsPdf = null;
     }
     PrescriptionViewerComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -31,6 +32,9 @@ var PrescriptionViewerComponent = (function () {
         },
         set: function (nb) {
             this._nbPrescriptions = nb;
+            if (this._prescription) {
+                this.refresh();
+            }
         },
         enumerable: true,
         configurable: true
@@ -61,10 +65,10 @@ var PrescriptionViewerComponent = (function () {
         var txtPaddingTop = 10;
         JsBarCode(this.barCodeCanvas.nativeElement, "BE" + this._prescription.Type + this._prescription.Id);
         var url = this.barCodeCanvas.nativeElement.toDataURL("image/jpeg");
-        var doc = new jsPDF('p', 'px');
-        var pageWidth = doc.internal.pageSize.getWidth();
+        this._jsPdf = new jsPDF('p', 'px');
+        var pageWidth = this._jsPdf.internal.pageSize.getWidth();
         var widthPrescription = (pageWidth / 2) - margin;
-        doc.setFontSize(10);
+        this._jsPdf.setFontSize(10);
         for (var i = 1; i <= this._nbPrescriptions; i++) {
             var leftOffset = margin;
             var topOffset = margin;
@@ -72,68 +76,68 @@ var PrescriptionViewerComponent = (function () {
                 leftOffset += widthPrescription;
             }
             else if (i >= 2) {
-                doc.addPage();
+                this._jsPdf.addPage();
             }
             var barCodeLeftOffset = ((widthPrescription - barCodeWidth) / 2) + leftOffset;
             var barCodeTopOffset = topOffset + 5;
-            doc.rect(leftOffset, topOffset, widthPrescription, 70);
-            doc.addImage(url, 'JPEG', barCodeLeftOffset, barCodeTopOffset, barCodeWidth, barCodeHeight);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 70);
+            this._jsPdf.addImage(url, 'JPEG', barCodeLeftOffset, barCodeTopOffset, barCodeWidth, barCodeHeight);
             topOffset += 70;
-            doc.rect(leftOffset, topOffset, widthPrescription, 30);
-            doc.setFontStyle("bold");
-            doc.text(this.translateService.instant("electronic-prescription-proof"), leftOffset + 30, topOffset + 18);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 30);
+            this._jsPdf.setFontStyle("bold");
+            this._jsPdf.text(this.translateService.instant("electronic-prescription-proof"), leftOffset + 30, topOffset + 18);
             topOffset += 30;
-            doc.rect(leftOffset, topOffset, widthPrescription, 50);
-            doc.setFontStyle("normal");
-            var strArr = doc.splitTextToSize(this.translateService.instant("electronic-prescription-instruction"), widthPrescription - txtPaddingLeft);
-            doc.text(strArr, leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 50);
+            this._jsPdf.setFontStyle("normal");
+            var strArr = this._jsPdf.splitTextToSize(this.translateService.instant("electronic-prescription-instruction"), widthPrescription - txtPaddingLeft);
+            this._jsPdf.text(strArr, leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
             topOffset += 50;
-            doc.rect(leftOffset, topOffset, widthPrescription, 30);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 30);
             if (this._prescription.Prescriber) {
-                doc.text([
+                this._jsPdf.text([
                     this.translateService.instant("prescriber") + " : " + this._prescription.Prescriber.Firstname + " " + this._prescription.Prescriber.Lastname,
                     this.translateService.instant("inami-number") + " : " + this._prescription.Prescriber.RizivNumber
                 ], leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
             }
             topOffset += 30;
-            doc.rect(leftOffset, topOffset, widthPrescription, 30);
-            doc.text([
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 30);
+            this._jsPdf.text([
                 this.translateService.instant("beneficiary") + " : " + this._prescription.Patient.firstname + " " + this._prescription.Patient.lastname,
                 this.translateService.instant("niss") + " : " + this._prescription.Patient.niss
             ], leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
             topOffset += 30;
-            doc.rect(leftOffset, topOffset, widthPrescription, 30);
-            doc.setFontStyle("bold");
-            doc.text(this.translateService.instant("electronic-prescription-content"), leftOffset + 30, topOffset + 18);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 30);
+            this._jsPdf.setFontStyle("bold");
+            this._jsPdf.text(this.translateService.instant("electronic-prescription-content"), leftOffset + 30, topOffset + 18);
             topOffset += 30;
-            doc.rect(leftOffset, topOffset, widthPrescription, heightRowMedicalPrescription * medicalPrescriptionRowMargin + medicalPrescriptionPaddingBottom);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, heightRowMedicalPrescription * medicalPrescriptionRowMargin + medicalPrescriptionPaddingBottom);
             for (var index = 1; index <= 5; index++) {
-                doc.rect(leftOffset + medicalPrescriptionRowMargin, topOffset, widthPrescription - (medicalPrescriptionRowMargin * 2), heightRowMedicalPrescription);
-                doc.line(leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth, topOffset, leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth, topOffset + heightRowMedicalPrescription);
-                doc.setFontStyle("bold");
-                doc.text("" + index + "", leftOffset + medicalPrescriptionRowMargin + 10, topOffset + 20);
-                doc.setFontStyle("normal");
+                this._jsPdf.rect(leftOffset + medicalPrescriptionRowMargin, topOffset, widthPrescription - (medicalPrescriptionRowMargin * 2), heightRowMedicalPrescription);
+                this._jsPdf.line(leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth, topOffset, leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth, topOffset + heightRowMedicalPrescription);
+                this._jsPdf.setFontStyle("bold");
+                this._jsPdf.text("" + index + "", leftOffset + medicalPrescriptionRowMargin + 10, topOffset + 20);
+                this._jsPdf.setFontStyle("normal");
                 if (index <= this.pharmaPrescription.DrugsPrescribed.length) {
                     var drugPrescribed = this.pharmaPrescription.DrugsPrescribed[index - 1];
-                    doc.text(this.translate(drugPrescribed.PackageNames), leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth + txtPaddingLeft, topOffset + txtPaddingTop);
+                    this._jsPdf.text(this.translate(drugPrescribed.PackageNames), leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth + txtPaddingLeft, topOffset + txtPaddingTop);
                     if (drugPrescribed.Posology) {
-                        doc.text(this.convertPosologyToDisplayedText(drugPrescribed.Posology), leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth + txtPaddingLeft, topOffset + txtPaddingTop + txtPaddingTop);
+                        this._jsPdf.text(this.convertPosologyToDisplayedText(drugPrescribed.Posology), leftOffset + medicalPrescriptionRowMargin + medicalPrescriptionCellWidth + txtPaddingLeft, topOffset + txtPaddingTop + txtPaddingTop);
                     }
                 }
                 topOffset += heightRowMedicalPrescription;
             }
             topOffset += medicalPrescriptionPaddingBottom;
-            doc.rect(leftOffset, topOffset, widthPrescription, 40);
-            strArr = doc.splitTextToSize(this.translateService.instant("electronic-prescription-warning"), widthPrescription - txtPaddingLeft);
-            doc.text(strArr, leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 40);
+            strArr = this._jsPdf.splitTextToSize(this.translateService.instant("electronic-prescription-warning"), widthPrescription - txtPaddingLeft);
+            this._jsPdf.text(strArr, leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
             topOffset += 40;
-            doc.rect(leftOffset, topOffset, widthPrescription, 30);
-            doc.text(this.translateService.instant("electronic-prescription-date", { date: formatDate(this._prescription.CreateDateTime, 'dd/MM/yyyy', 'en-US') }), leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 30);
+            this._jsPdf.text(this.translateService.instant("electronic-prescription-date", { date: formatDate(this._prescription.CreateDateTime, 'dd/MM/yyyy', 'en-US') }), leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
             topOffset += 30;
-            doc.rect(leftOffset, topOffset, widthPrescription, 30);
-            doc.text(this.translateService.instant("electronic-prescription-end-execution-date", { date: formatDate(this._prescription.EndExecutionDate, 'dd/MM/yyyy', 'en-US') }), leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
+            this._jsPdf.rect(leftOffset, topOffset, widthPrescription, 30);
+            this._jsPdf.text(this.translateService.instant("electronic-prescription-end-execution-date", { date: formatDate(this._prescription.EndExecutionDate, 'dd/MM/yyyy', 'en-US') }), leftOffset + txtPaddingLeft, topOffset + txtPaddingTop);
         }
-        PDFObject.embed(doc.output("bloburl"), '#preview-pane');
+        PDFObject.embed(this._jsPdf.output("bloburl"), '#preview-pane');
     };
     PrescriptionViewerComponent.prototype.translate = function (translations) {
         var _this = this;
@@ -150,7 +154,6 @@ var PrescriptionViewerComponent = (function () {
         }
         return "";
     };
-    var _a, _b;
     __decorate([
         ViewChild('barcode'),
         __metadata("design:type", ElementRef)
@@ -162,8 +165,8 @@ var PrescriptionViewerComponent = (function () {
     ], PrescriptionViewerComponent.prototype, "nbPrescriptions", null);
     __decorate([
         Input(),
-        __metadata("design:type", typeof (_a = typeof PharmaPrescription !== "undefined" && PharmaPrescription) === "function" ? _a : Object),
-        __metadata("design:paramtypes", [typeof (_b = typeof PharmaPrescription !== "undefined" && PharmaPrescription) === "function" ? _b : Object])
+        __metadata("design:type", PharmaPrescription),
+        __metadata("design:paramtypes", [PharmaPrescription])
     ], PrescriptionViewerComponent.prototype, "pharmaPrescription", null);
     PrescriptionViewerComponent = __decorate([
         Component({

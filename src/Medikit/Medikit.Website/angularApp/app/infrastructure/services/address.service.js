@@ -8,114 +8,59 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable, EventEmitter } from "@angular/core";
-import { of } from "rxjs";
-import { map, catchError } from "rxjs/operators";
-var ehealthSessionName = "ehealthSession";
-var extensionUrl = "http://localhost:5050";
-var MedikitExtensionService = (function () {
-    function MedikitExtensionService(http) {
-        this.http = http;
-        this.sessionCreated = new EventEmitter();
-        this.sessionDropped = new EventEmitter();
+import { Injectable } from "@angular/core";
+import { throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+var url = "https://photon.komoot.de/api/?q={0}&lang=fr&limit=10";
+var Address = (function () {
+    function Address() {
     }
-    MedikitExtensionService.prototype.getEhealthSession = function () {
-        var json = sessionStorage.getItem(ehealthSessionName);
-        if (!json) {
-            return null;
+    Address.fromJson = function (json) {
+        var result = new Address();
+        if (json['properties']) {
+            var properties = json["properties"];
+            result.houseNumber = properties.housenumber;
+            result.street = properties.street;
+            result.postalcode = properties.postcode;
+            result.municipality = properties.state;
+            result.country = properties.country;
         }
-        var session = JSON.parse(json);
-        var now = new Date();
-        if (now < new Date(session.not_before) || new Date(session.not_onorafter) < now) {
-            this.disconnect();
-            return null;
+        if (json['geometry']) {
+            var geometry = json['geometry'];
+            result.coordinates = geometry.coordinates;
         }
-        return session;
+        return result;
     };
-    MedikitExtensionService.prototype.createEhealthSessionWithCertificate = function () {
-        var self = this;
+    return Address;
+}());
+export { Address };
+var AddressService = (function () {
+    function AddressService(http) {
+        this.http = http;
+    }
+    AddressService.prototype.search = function (query) {
+        var targetUrl = url.replace("{0}", query);
         var headers = new HttpHeaders();
-        var nonce = this.buildGuid();
-        var request = JSON.stringify({ type: 'EHEALTH_AUTH', nonce: nonce });
-        var targetUrl = extensionUrl + "/operations";
         headers = headers.set('Accept', 'application/json');
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(targetUrl, request, { headers: headers }).pipe(map(function (res) {
-            if (res.type !== 'SAML_ASSERTION' || res.nonce !== nonce) {
-                return false;
+        return this.http.get(targetUrl, { headers: headers }).pipe(map(function (res) {
+            var result = [];
+            if (res) {
+                res["features"].forEach(function (r) {
+                    result.push(Address.fromJson(r));
+                });
             }
-            self.sessionCreated.emit(res.content);
-            sessionStorage.setItem(ehealthSessionName, JSON.stringify(res.content));
-            return res;
-        }), catchError(function () { return of(false); }));
+            return result;
+        }), catchError(function (err) {
+            return throwError(err);
+        }));
     };
-    MedikitExtensionService.prototype.getIdentityCertificates = function () {
-        var headers = new HttpHeaders();
-        var nonce = this.buildGuid();
-        var request = JSON.stringify({ type: 'GET_IDENTITIY_CERTIFICATES', nonce: nonce });
-        var targetUrl = extensionUrl + "/operations";
-        headers = headers.set('Accept', 'application/json');
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(targetUrl, request, { headers: headers });
-    };
-    MedikitExtensionService.prototype.chooseIdentityCertificate = function (certificate, password) {
-        var headers = new HttpHeaders();
-        var nonce = this.buildGuid();
-        var request = JSON.stringify({ type: 'CHOOSE_IDENTITY_CERTIFICATE', nonce: nonce, certificate: certificate, password: password });
-        var targetUrl = extensionUrl + "/operations";
-        headers = headers.set('Accept', 'application/json');
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(targetUrl, request, { headers: headers });
-    };
-    MedikitExtensionService.prototype.getMedicalProfessions = function () {
-        var headers = new HttpHeaders();
-        var nonce = this.buildGuid();
-        var request = JSON.stringify({ type: 'GET_MEDICAL_PROFESSIONS', nonce: nonce });
-        var targetUrl = extensionUrl + "/operations";
-        headers = headers.set('Accept', 'application/json');
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(targetUrl, request, { headers: headers });
-    };
-    MedikitExtensionService.prototype.chooseMedicalProfession = function (profession) {
-        var headers = new HttpHeaders();
-        var nonce = this.buildGuid();
-        var request = JSON.stringify({ type: 'CHOOSE_MEDICAL_PROFESSION', nonce: nonce, profession: profession });
-        var targetUrl = extensionUrl + "/operations";
-        headers = headers.set('Accept', 'application/json');
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(targetUrl, request, { headers: headers });
-    };
-    MedikitExtensionService.prototype.isExtensionInstalled = function () {
-        var headers = new HttpHeaders();
-        var nonce = this.buildGuid();
-        var request = JSON.stringify({ type: 'PING', nonce: nonce });
-        var targetUrl = extensionUrl + "/operations";
-        headers = headers.set('Accept', 'application/json');
-        headers = headers.set('Content-Type', 'application/json');
-        return this.http.post(targetUrl, request, { headers: headers }).pipe(map(function (res) {
-            if (res.nonce !== nonce) {
-                return false;
-            }
-            return true;
-        }), catchError(function () { return of(false); }));
-    };
-    MedikitExtensionService.prototype.disconnect = function () {
-        this.sessionDropped.emit();
-        sessionStorage.removeItem(ehealthSessionName);
-    };
-    MedikitExtensionService.prototype.buildGuid = function () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    };
-    MedikitExtensionService = __decorate([
+    AddressService = __decorate([
         Injectable({
             providedIn: 'root'
         }),
         __metadata("design:paramtypes", [HttpClient])
-    ], MedikitExtensionService);
-    return MedikitExtensionService;
+    ], AddressService);
+    return AddressService;
 }());
-export { MedikitExtensionService };
-//# sourceMappingURL=medikitextension.service.js.map
+export { AddressService };
+//# sourceMappingURL=address.service.js.map

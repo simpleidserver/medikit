@@ -17,9 +17,9 @@ var PatientService = (function () {
     function PatientService(http) {
         this.http = http;
     }
-    PatientService.prototype.get = function (niss) {
+    PatientService.prototype.getById = function (id) {
         var headers = new HttpHeaders();
-        var targetUrl = process.env.API_URL + "/patients/" + niss;
+        var targetUrl = process.env.API_URL + "/patients/" + id;
         headers = headers.set('Accept', 'application/json');
         return this.http.get(targetUrl, { headers: headers }).pipe(map(function (res) {
             return Patient.fromJson(res);
@@ -27,20 +27,54 @@ var PatientService = (function () {
             return throwError(err);
         }));
     };
-    PatientService.prototype.search = function (firstName, lastName, niss) {
+    PatientService.prototype.getByNiss = function (niss) {
+        var headers = new HttpHeaders();
+        var targetUrl = process.env.API_URL + "/patients/niss/" + niss;
+        headers = headers.set('Accept', 'application/json');
+        return this.http.get(targetUrl, { headers: headers }).pipe(map(function (res) {
+            return Patient.fromJson(res);
+        }), catchError(function (err) {
+            return throwError(err);
+        }));
+    };
+    PatientService.prototype.add = function (patient) {
+        var request = JSON.stringify(Patient.getJSON(patient));
+        var headers = new HttpHeaders();
+        var targetUrl = process.env.API_URL + "/patients";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers }).pipe(map(function (res) {
+            return Patient.fromJson(res);
+        }), catchError(function (err) {
+            return throwError(err);
+        }));
+    };
+    PatientService.prototype.search = function (firstName, lastName, niss, startIndex, count, active, direction) {
+        if (active === void 0) { active = null; }
+        if (direction === void 0) { direction = null; }
         var headers = new HttpHeaders();
         var targetUrl = process.env.API_URL + "/patients/.search";
-        var separator = "?";
+        if (startIndex <= 0) {
+            startIndex = 0;
+        }
+        if (count <= 0) {
+            count = 5;
+        }
+        targetUrl += "?start_index=" + startIndex + "&count=" + count;
         if (firstName) {
-            targetUrl += separator + "firstname=" + firstName;
-            separator = "&";
+            targetUrl += "&firstname=" + firstName;
         }
         if (lastName) {
-            targetUrl += separator + "lastname=" + lastName;
-            separator = "&";
+            targetUrl += "&lastname=" + lastName;
         }
         if (niss) {
-            targetUrl += separator + "niss=" + niss;
+            targetUrl += "&niss=" + niss;
+        }
+        if (active) {
+            targetUrl = targetUrl + "&order_by=" + active;
+        }
+        if (direction) {
+            targetUrl = targetUrl + "&order=" + direction;
         }
         headers = headers.set('Accept', 'application/json');
         return this.http.get(targetUrl, { headers: headers }).pipe(map(function (res) {

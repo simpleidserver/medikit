@@ -1,15 +1,13 @@
-var Patient = (function () {
-    function Patient() {
+var ContactInformation = (function () {
+    function ContactInformation() {
     }
-    Patient.fromJson = function (json) {
-        var result = new Patient();
-        result.firstname = json["firstname"];
-        result.birthdate = json["birthdate"];
-        result.lastname = json["lastname"];
-        result.niss = json["niss"];
+    ContactInformation.fromJson = function (json) {
+        var result = new ContactInformation();
+        result.type = json["type"];
+        result.value = json["value"];
         return result;
     };
-    return Patient;
+    return ContactInformation;
 }());
-export { Patient };
-//# sourceMappingURL=patient.js.map
+export { ContactInformation };
+//# sourceMappingURL=contact-information.js.map

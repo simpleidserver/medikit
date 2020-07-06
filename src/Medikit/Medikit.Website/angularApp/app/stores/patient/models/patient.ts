@@ -6,6 +6,7 @@ export class Patient {
         this.contactInformations = [];
     }
 
+    id: string;
     logoUrl: string;
     base64Image: string;
     firstname: string;
@@ -22,6 +23,7 @@ export class Patient {
 
     public static fromJson(json: any): Patient {
         var result = new Patient();
+        result.id = json["id"];
         result.firstname = json["firstname"];
         result.birthdate = json["birthdate"];
         result.lastname = json["lastname"];

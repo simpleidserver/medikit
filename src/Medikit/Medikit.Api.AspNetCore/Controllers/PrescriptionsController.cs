@@ -1,26 +1,27 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using Medikit.Api.Application.Domains;
-using Medikit.Api.Application.Exceptions;
-using Medikit.Api.Application.Prescriptions;
-using Medikit.Api.Application.Prescriptions.Commands;
-using Medikit.Api.Application.Prescriptions.Queries;
 using Medikit.Api.AspNetCore.Extensions;
+using Medikit.Api.Medicalfile.Application.Prescription;
+using Medikit.Api.Medicalfile.Application.Prescription.Commands;
+using Medikit.Api.Medicalfile.Application.Prescription.Queries;
+using Medikit.EHealth.Enums;
+using Medikit.EHealth.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using static Medikit.Api.Medicalfile.Application.Prescription.Commands.AddPharmaceuticalPrescriptionCommand;
 
 namespace Medikit.Api.AspNetCore.Controllers
 {
-    [Route("prescriptions")]
+    [Route(MedikitApiConstants.RouteNames.Prescriptions)]
     public class PrescriptionsController : Controller
     {
-        private readonly IPharmaceuticalPrescriptionService _pharmaceuticalPrescriptionService;
+        private readonly IPrescriptionService _pharmaceuticalPrescriptionService;
 
-        public PrescriptionsController(IPharmaceuticalPrescriptionService pharmaceuticalPrescriptionService)
+        public PrescriptionsController(IPrescriptionService pharmaceuticalPrescriptionService)
         {
             _pharmaceuticalPrescriptionService = pharmaceuticalPrescriptionService;
         }
@@ -171,7 +172,7 @@ namespace Medikit.Api.AspNetCore.Controllers
                     var medicationDic = medication.ToObject<Dictionary<string, object>>();
                     DateTime beginMoment;
                     string packageCode, instructionForPatient, instructionForReimbursement;
-                    var newMedication = new AddPharmaceuticalPrescriptionMedication();
+                    var newMedication = new AddMedicationCommand();
                     if (medicationDic.TryGet("package_code", out packageCode))
                     {
                         newMedication.PackageCode = packageCode;
@@ -200,7 +201,7 @@ namespace Medikit.Api.AspNetCore.Controllers
                         {
                             if (posologyType == "freetext")
                             {
-                                newMedication.Posology = new PharmaceuticalPrescriptionFreeTextPosology
+                                newMedication.Posology = new AddPosologyFreeTextCommand
                                 {
                                     Content = posology.SelectToken("value").ToString()
                                 };

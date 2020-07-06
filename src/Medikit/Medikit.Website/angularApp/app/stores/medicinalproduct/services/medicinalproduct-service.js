@@ -18,9 +18,9 @@ var MedicinalProductService = (function () {
     }
     MedicinalProductService.prototype.search = function (searchText, startIndex, count, isCommercialised, deliveryEnvironment) {
         var headers = new HttpHeaders();
-        var targetUrl = process.env.API_URL + "/medicinalproducts/.search?search_text=" + searchText + "&start_index=" + startIndex + "&count=" + count;
+        var targetUrl = process.env.API_URL + "/medicinalproducts/packages/.search?search_text=" + searchText + "&start_index=" + startIndex + "&count=" + count;
         targetUrl += "&is_commercialised=" + isCommercialised;
-        if (!deliveryEnvironment) {
+        if (deliveryEnvironment) {
             targetUrl += "&delivery_environment=" + deliveryEnvironment;
         }
         headers = headers.set('Accept', 'application/json');

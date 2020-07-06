@@ -8,36 +8,55 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { SelectionModel } from '@angular/cdk/collections';
+import { DatePipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatPaginator, MatSelectionList, MatSnackBar, MatStepper } from '@angular/material';
-import { MedicinalProductService } from '@app/medicinalproduct/services/medicinalproduct-service';
+import { Router } from '@angular/router';
+import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
 import { ReferenceTableService } from '@app/referencetable/services/reference-table-service';
+import * as fromAppState from '@app/stores/appstate';
+import { MedicinalProductService } from '@app/stores/medicinalproduct/services/medicinalproduct-service';
+import * as fromPatientActions from '@app/stores/patient/patient-actions';
+import { PharmaDrugPrescription } from '@app/stores/pharmaprescription/models/pharma-drug-prescription';
+import { PharmaDuration } from '@app/stores/pharmaprescription/models/pharma-duration';
+import { PharmaPosologyFreeText, PharmaPosologyStructured, PharmaPosologyTakes } from '@app/stores/pharmaprescription/models/pharma-posology';
+import * as fromPrescriptionActions from '@app/stores/pharmaprescription/prescription-actions';
+import { AddPharmaPrescription } from '@app/stores/pharmaprescription/prescription-actions';
+import { PharmaPrescriptionService } from '@app/stores/pharmaprescription/services/prescription-service';
 import { ScannedActionsSubject, select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { AddDrugPrescription, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep } from './actions/pharma-prescription';
-import * as fromPatientActions from '@app/stores/patient/patient-actions';
-import { PharmaDrugPrescription } from '@app/prescription/models/pharma-drug-prescription';
-import { PharmaDuration } from '@app/prescription/models/pharma-duration';
-import { PharmaPosologyFreeText, PharmaPosologyStructured, PharmaPosologyTakes } from '@app/prescription/models/pharma-posology';
+import { AddDrugPrescription, DeleteDrugPrescription, LoadPrescription, NextStep, PreviousStep, SelectPatient } from './actions/pharma-prescription';
+var PrescriptionType = (function () {
+    function PrescriptionType(code, name) {
+        this.code = code;
+        this.name = name;
+    }
+    return PrescriptionType;
+}());
 var AddPharmaPrescriptionComponent = (function () {
-    function AddPharmaPrescriptionComponent(formBuilder, medicinalProductService, store, patientStore, translateService, actions$, snackBar, referenceTableService) {
+    function AddPharmaPrescriptionComponent(formBuilder, medicinalProductService, store, appStore, translateService, referenceTableService, prescriptionService, datePipe, medikitExtensionService, actions$, snackBar, router) {
         this.formBuilder = formBuilder;
         this.medicinalProductService = medicinalProductService;
         this.store = store;
-        this.patientStore = patientStore;
+        this.appStore = appStore;
         this.translateService = translateService;
+        this.referenceTableService = referenceTableService;
+        this.prescriptionService = prescriptionService;
+        this.datePipe = datePipe;
+        this.medikitExtensionService = medikitExtensionService;
         this.actions$ = actions$;
         this.snackBar = snackBar;
-        this.referenceTableService = referenceTableService;
-        this.nextPatientFormBtnDisabled = true;
+        this.router = router;
+        this.filteredPatientsByNiss = [];
         this.prescribePharmadDrugs = [];
         this.timeUnits = [];
         this.administrationUnits = [];
-        this.medicinalProducts = [];
+        this.medicinalPackages = [];
         this.selectedMedicinalPackages = [];
+        this.prescriptionTypes = [];
     }
     AddPharmaPrescriptionComponent.prototype.getAdministrationUnitTranslations = function (code) {
         var result = this.administrationUnits.filter(function (a) { return a.Code == code; });
@@ -55,6 +74,16 @@ var AddPharmaPrescriptionComponent = (function () {
     };
     AddPharmaPrescriptionComponent.prototype.ngOnInit = function () {
         var _this = this;
+        var self = this;
+        if (this.medikitExtensionService.getEhealthSession() !== null) {
+            this.sessionExists = true;
+        }
+        this.subscribeSessionCreated = this.medikitExtensionService.sessionCreated.subscribe(function () {
+            _this.sessionExists = true;
+        });
+        this.subscribeSessionDropped = this.medikitExtensionService.sessionDropped.subscribe(function () {
+            _this.sessionExists = false;
+        });
         this.selectionList.selectedOptions = new SelectionModel(false);
         this.patientFormGroup = this.formBuilder.group({
             niss: new FormControl('', [
@@ -80,6 +109,7 @@ var AddPharmaPrescriptionComponent = (function () {
         this.drugFormGroup = this.formBuilder.group({
             isPosologyFreeText: new FormControl(''),
             posologyText: new FormControl(''),
+            beginMoment: new FormControl(''),
             structuredPosology: this.formBuilder.group({
                 low: new FormControl(''),
                 high: new FormControl(''),
@@ -96,39 +126,62 @@ var AddPharmaPrescriptionComponent = (function () {
             instructionforpatient: new FormControl(''),
             instructionforreimbursement: new FormControl('')
         });
-        this.actions$.pipe(filter(function (action) { return action.type == fromPatientActions.ActionTypes.ERROR_GET_PATIENT; }))
+        this.createPrescriptionFormGroup = this.formBuilder.group({
+            prescriptionType: new FormControl(''),
+            startDate: new FormControl(''),
+            expirationDate: new FormControl(''),
+        });
+        this.actions$.pipe(filter(function (action) { return action.type == fromPrescriptionActions.ActionTypes.ADD_PHARMA_PRESCRIPTION_ERROR; }))
             .subscribe(function () {
-            _this.snackBar.open(_this.translateService.instant('niss-unknown'), _this.translateService.instant('undo'), {
+            _this.snackBar.open(_this.translateService.instant('error-add-prescription'), _this.translateService.instant('undo'), {
                 duration: 2000
             });
+            _this.isAddingPrescription = false;
         });
-        this.store.pipe(select('pharmaPrescriptionForm')).subscribe(function (st) {
+        this.actions$.pipe(filter(function (action) { return action.type == fromPrescriptionActions.ActionTypes.ADD_PHARMA_PRESCRIPTION_SUCCESS; }))
+            .subscribe(function () {
+            sessionStorage.removeItem('pharma-prescription');
+            _this.snackBar.open(_this.translateService.instant('prescription-added'), _this.translateService.instant('undo'), {
+                duration: 2000
+            });
+            _this.router.navigate(['/prescription']);
+            _this.isAddingPrescription = false;
+        });
+        this.store.pipe(select('pharmaPrescriptionForm')).subscribe(function (_) {
+            if (!_ || !_.prescription) {
+                return;
+            }
+            _this.pharmaPrescription = _.prescription;
+            _this.prescribePharmadDrugs = _.prescription.DrugsPrescribed;
+            if (_.prescription.Patient != null) {
+                self.patientFormGroup.controls['niss'].setErrors(null);
+                _this.patientFormGroup.get('niss').setValue(_.prescription.Patient.niss);
+                _this.patientFormGroup.get('firstname').setValue(_.prescription.Patient.firstname);
+                _this.patientFormGroup.get('lastname').setValue(_.prescription.Patient.lastname);
+                _this.patientFormGroup.get('birthdate').setValue(_this.datePipe.transform(_.prescription.Patient.birthdate, "MM/dd/yyyy"));
+            }
+            else {
+                self.patientFormGroup.controls['niss'].setErrors({ unknownNiss: true });
+            }
+            _this.stepper.selectedIndex = _.stepperIndex;
+            if (_this.stepper.steps) {
+                _this.stepper.steps.forEach(function (__, i) {
+                    if (i <= _.stepperIndex) {
+                        __.interacted = true;
+                    }
+                });
+            }
+        });
+        this.appStore.pipe(select(fromAppState.selectPatientsByNissResult)).subscribe(function (st) {
             if (!st) {
                 return;
             }
-            _this.stepper.selectedIndex = st.stepperIndex;
-            _this.nextPatientFormBtnDisabled = st.nextPatientFormBtnDisabled;
-            if (st.prescription.Patient != null) {
-                _this.patientFormGroup.get('niss').setValue(st.prescription.Patient.niss);
-                _this.patientFormGroup.get('firstname').setValue(st.prescription.Patient.firstname);
-                _this.patientFormGroup.get('lastname').setValue(st.prescription.Patient.lastname);
-                _this.patientFormGroup.get('birthdate').setValue(st.prescription.Patient.birthdate);
-            }
-            _this.prescribePharmadDrugs = st.prescription.DrugsPrescribed;
-            if (_this.nextPatientFormBtnDisabled) {
-                _this.patientFormGroup.controls['niss'].setErrors({ unknownNiss: true });
-            }
-            else {
-                _this.patientFormGroup.controls['niss'].setErrors(null);
-            }
+            _this.filteredPatientsByNiss = st.content;
+        });
+        this.patientFormGroup.controls['niss'].valueChanges.subscribe(function (_) {
+            self.appStore.dispatch(new fromPatientActions.SearchPatientsByNiss(_));
         });
         this.init();
-    };
-    AddPharmaPrescriptionComponent.prototype.checkNiss = function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        var niss = this.patientFormGroup.get('niss').value;
-        this.patientStore.dispatch(new fromPatientActions.GetPatient(niss));
     };
     AddPharmaPrescriptionComponent.prototype.nextStep = function () {
         var request = new NextStep();
@@ -154,9 +207,10 @@ var AddPharmaPrescriptionComponent = (function () {
         }
         var drug = this.drugSearchFormGroup.get('drugName').value;
         this.setIsLoadingProduct(true);
-        this.medicinalProductService.search(drug, startIndex, count, true, "P").subscribe(function (res) {
+        this.medicinalPackages = [];
+        this.medicinalProductService.search(drug, startIndex, count, true, '1').subscribe(function (res) {
             _this.length = res.Count;
-            _this.medicinalProducts = res.Content;
+            _this.medicinalPackages = res.Content;
             _this.setIsLoadingProduct(false);
         }, function () {
             _this.setIsLoadingProduct(false);
@@ -169,10 +223,11 @@ var AddPharmaPrescriptionComponent = (function () {
         var selectedPackage = this.selectedMedicinalPackages[0];
         var drugPrescription = new PharmaDrugPrescription();
         drugPrescription.TechnicalId = this.newGuid();
-        drugPrescription.PackageCode = selectedPackage.DeliveryMethods[0].Code;
-        drugPrescription.PackageNames = selectedPackage.PrescriptionNames;
+        drugPrescription.PackageCode = selectedPackage.Code;
+        drugPrescription.PackageNames = selectedPackage.Names;
         drugPrescription.InstructionForPatient = this.drugFormGroup.get('instructionforpatient').value;
         drugPrescription.InstructionForReimbursement = this.drugFormGroup.get('instructionforreimbursement').value;
+        drugPrescription.BeginMoment = this.drugFormGroup.get('beginMoment').value;
         var duration = this.drugFormGroup.get('duration').value;
         var isPosologyFreeText = this.drugFormGroup.get('isPosologyFreeText').value;
         if (isPosologyFreeText) {
@@ -203,16 +258,6 @@ var AddPharmaPrescriptionComponent = (function () {
         var deleteDrugPrescription = new DeleteDrugPrescription(technicalId);
         this.store.dispatch(deleteDrugPrescription);
     };
-    AddPharmaPrescriptionComponent.prototype.setIsLoadingProduct = function (isLoadingProduct) {
-        if (isLoadingProduct) {
-            this.isLoadingDrugs = true;
-            this.drugSearchFormGroup.get('drugName').disable();
-        }
-        else {
-            this.isLoadingDrugs = false;
-            this.drugSearchFormGroup.get('drugName').enable();
-        }
-    };
     AddPharmaPrescriptionComponent.prototype.getTranslation = function (translations) {
         var defaultLang = this.translateService.currentLang;
         var filteredTranslations = translations.filter(function (tr) {
@@ -223,6 +268,32 @@ var AddPharmaPrescriptionComponent = (function () {
         }
         return filteredTranslations[0].Value;
     };
+    AddPharmaPrescriptionComponent.prototype.selectPatient = function (evt) {
+        var patient = this.filteredPatientsByNiss.filter(function (_) { return _.niss == evt.option.value; })[0];
+        this.store.dispatch(new SelectPatient(patient));
+    };
+    AddPharmaPrescriptionComponent.prototype.addPrescription = function () {
+        this.pharmaPrescription.CreateDateTime = this.createPrescriptionFormGroup.controls['startDate'].value;
+        this.pharmaPrescription.EndExecutionDate = this.createPrescriptionFormGroup.controls['expirationDate'].value;
+        this.pharmaPrescription.Type = this.createPrescriptionFormGroup.controls['prescriptionType'].value;
+        var session = this.medikitExtensionService.getEhealthSession();
+        this.isAddingPrescription = true;
+        this.appStore.dispatch(new AddPharmaPrescription(this.pharmaPrescription, session['assertion_token']));
+    };
+    AddPharmaPrescriptionComponent.prototype.ngOnDestroy = function () {
+        this.subscribeSessionCreated.unsubscribe();
+        this.subscribeSessionDropped.unsubscribe();
+    };
+    AddPharmaPrescriptionComponent.prototype.setIsLoadingProduct = function (isLoadingProduct) {
+        if (isLoadingProduct) {
+            this.isLoadingDrugs = true;
+            this.drugSearchFormGroup.get('drugName').disable();
+        }
+        else {
+            this.isLoadingDrugs = false;
+            this.drugSearchFormGroup.get('drugName').enable();
+        }
+    };
     AddPharmaPrescriptionComponent.prototype.newGuid = function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -231,9 +302,15 @@ var AddPharmaPrescriptionComponent = (function () {
     };
     AddPharmaPrescriptionComponent.prototype.init = function () {
         var _this = this;
-        forkJoin(this.referenceTableService.get('CD-ADMINISTRATIONUNIT'), this.referenceTableService.get('CD-TIMEUNIT')).subscribe(function (res) {
+        forkJoin(this.referenceTableService.get('CD-ADMINISTRATIONUNIT'), this.referenceTableService.get('CD-TIMEUNIT'), this.prescriptionService.getMetadata()).subscribe(function (res) {
             _this.administrationUnits = res[0].Content;
             _this.timeUnits = res[1].Content;
+            var prescriptionTypes = [];
+            res[2]['prescriptionTypes'].children.forEach(function (prescriptionType) {
+                var type = parseInt(Object.keys(prescriptionType)[0]);
+                prescriptionTypes.push(new PrescriptionType(type, prescriptionType[type].translations[0]['en']));
+            });
+            _this.prescriptionTypes = prescriptionTypes;
             _this.store.dispatch(new LoadPrescription());
         });
     };
@@ -260,9 +337,13 @@ var AddPharmaPrescriptionComponent = (function () {
             Store,
             Store,
             TranslateService,
+            ReferenceTableService,
+            PharmaPrescriptionService,
+            DatePipe,
+            MedikitExtensionService,
             ScannedActionsSubject,
             MatSnackBar,
-            ReferenceTableService])
+            Router])
     ], AddPharmaPrescriptionComponent);
     return AddPharmaPrescriptionComponent;
 }());

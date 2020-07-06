@@ -74,7 +74,7 @@ export class InstallExtensionHelpDialog {
 export class AppComponent implements OnInit, OnDestroy {
     logoUrl: string = process.env.REDIRECT_URL + "/assets/images/logo-no-text.svg";
     prescriptionsLogoUrl: string = process.env.REDIRECT_URL + "/assets/images/medical-prescription.png";
-    patientsLogoUrl: string = process.env.REDIRECT_URL + "/assets/images/patient-folder.png";
+    medicalFilesLogoUrl: string = process.env.REDIRECT_URL + "/assets/images/patient-folder.png";
     sessionValidityHour: number = 0;
     isExtensionInstalled: boolean = false;
     isEhealthSessionActive: boolean = false;

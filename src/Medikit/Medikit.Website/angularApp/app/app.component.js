@@ -14,17 +14,73 @@ import { Router } from '@angular/router';
 import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 import { authConfig } from './auth.config';
 import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 var medikitLanguageName = "medikitLanguage";
+var AuthPinDialog = (function () {
+    function AuthPinDialog(dialogRef) {
+        this.dialogRef = dialogRef;
+        this.authenticateFormGroup = new FormGroup({
+            pin: new FormControl('', [
+                Validators.required,
+                Validators.pattern('^[0-9]{4}$')
+            ])
+        });
+    }
+    AuthPinDialog.prototype.close = function () {
+        this.dialogRef.close();
+    };
+    AuthPinDialog.prototype.authenticate = function () {
+        if (this.authenticateFormGroup.invalid) {
+            return;
+        }
+        var pin = this.authenticateFormGroup.controls['pin'].value;
+        this.dialogRef.close({ pin: pin });
+    };
+    AuthPinDialog = __decorate([
+        Component({
+            selector: 'auth-pin',
+            templateUrl: './auth.pin.html'
+        }),
+        __metadata("design:paramtypes", [MatDialogRef])
+    ], AuthPinDialog);
+    return AuthPinDialog;
+}());
+export { AuthPinDialog };
+var InstallExtensionHelpDialog = (function () {
+    function InstallExtensionHelpDialog(dialogRef) {
+        this.dialogRef = dialogRef;
+        this.windowsUrl = process.env.REDIRECT_URL + "/assets/images/windows-os.svg";
+        this.chromeUrl = process.env.REDIRECT_URL + "/assets/images/chrome.svg";
+    }
+    InstallExtensionHelpDialog.prototype.close = function () {
+        this.dialogRef.close();
+    };
+    InstallExtensionHelpDialog = __decorate([
+        Component({
+            selector: 'install-extension-help',
+            templateUrl: './install-extension-help.html',
+            styleUrls: [
+                './install-extension-help.scss'
+            ],
+        }),
+        __metadata("design:paramtypes", [MatDialogRef])
+    ], InstallExtensionHelpDialog);
+    return InstallExtensionHelpDialog;
+}());
+export { InstallExtensionHelpDialog };
 var AppComponent = (function () {
-    function AppComponent(route, translate, router, oauthService, medikitExtensionService, snackBar) {
+    function AppComponent(route, translate, router, oauthService, medikitExtensionService, snackBar, dialog) {
         this.route = route;
         this.translate = translate;
         this.router = router;
         this.oauthService = oauthService;
         this.medikitExtensionService = medikitExtensionService;
         this.snackBar = snackBar;
+        this.dialog = dialog;
         this.logoUrl = process.env.REDIRECT_URL + "/assets/images/logo-no-text.svg";
+        this.prescriptionsLogoUrl = process.env.REDIRECT_URL + "/assets/images/medical-prescription.png";
+        this.medicalFilesLogoUrl = process.env.REDIRECT_URL + "/assets/images/patient-folder.png";
         this.sessionValidityHour = 0;
         this.isExtensionInstalled = false;
         this.isEhealthSessionActive = false;
@@ -39,6 +95,11 @@ var AppComponent = (function () {
         translate.use(this.activeLanguage);
         this.configureOAuth();
     }
+    AppComponent.prototype.openHelpDialog = function () {
+        this.dialog.open(InstallExtensionHelpDialog, {
+            width: '600px'
+        });
+    };
     AppComponent.prototype.configureOAuth = function () {
         this.oauthService.configure(authConfig);
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
@@ -54,7 +115,6 @@ var AppComponent = (function () {
         }, 3000);
     };
     AppComponent.prototype.login = function () {
-        console.log("BINGO");
         this.oauthService.customQueryParams = {
             'prompt': 'login'
         };
@@ -101,6 +161,29 @@ var AppComponent = (function () {
         });
     };
     AppComponent.prototype.createEHealthSessionWithEID = function () {
+        var _this = this;
+        var self = this;
+        var dialogRef = this.dialog.open(AuthPinDialog, {
+            width: '400px'
+        });
+        dialogRef.afterClosed().subscribe(function (_) {
+            if (!_) {
+                return;
+            }
+            self.medikitExtensionService.createEhealthSessionWithEID(_.pin).subscribe(function (_) {
+                if (_) {
+                    self.refreshEHealthSession();
+                    self.snackBar.open(_this.translate.instant('ehealth-session-created'), _this.translate.instant('undo'), {
+                        duration: 2000
+                    });
+                }
+                else {
+                    self.snackBar.open(_this.translate.instant('ehealth-session-not-created'), _this.translate.instant('undo'), {
+                        duration: 2000
+                    });
+                }
+            });
+        });
     };
     AppComponent.prototype.dropEhealthSession = function () {
         this.medikitExtensionService.disconnect();
@@ -185,7 +268,8 @@ var AppComponent = (function () {
             Router,
             OAuthService,
             MedikitExtensionService,
-            MatSnackBar])
+            MatSnackBar,
+            MatDialog])
     ], AppComponent);
     return AppComponent;
 }());

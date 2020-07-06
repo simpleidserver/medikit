@@ -7,80 +7,55 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MedikitExtensionService } from '@app/infrastructure/services/medikitextension.service';
-import * as fromAppState from '@app/stores/appstate';
-import * as fromPatientActions from '@app/stores/patient/patient-actions';
-import * as fromPrescriptionActions from '@app/stores/pharmaprescription/prescription-actions';
-import { select, Store } from '@ngrx/store';
-var ListPrescriptionComponent = (function () {
-    function ListPrescriptionComponent(store, medikitExtensionService) {
-        this.store = store;
-        this.medikitExtensionService = medikitExtensionService;
-        this.filteredPatientsByNiss = [];
-        this.nissFormGroup = new FormGroup({
-            niss: new FormControl()
-        });
-        this.sessionExists = false;
-        this.prescriptionIds = [];
+import { Component, Output, EventEmitter } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { AddressService } from '../services/address.service';
+var SearchAddressComponent = (function () {
+    function SearchAddressComponent(addressService) {
+        this.addressService = addressService;
+        this.addressText = new FormControl('');
+        this.addresses = [];
+        this.isLoadingAddresses = false;
+        this.select = new EventEmitter();
     }
-    ListPrescriptionComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        if (this.medikitExtensionService.getEhealthSession() !== null) {
-            this.sessionExists = true;
-        }
-        this.subscribeSessionCreated = this.medikitExtensionService.sessionCreated.subscribe(function () {
-            _this.sessionExists = true;
-        });
-        this.subscribeSessionDropped = this.medikitExtensionService.sessionDropped.subscribe(function () {
-            _this.sessionExists = false;
-        });
-        this.store.pipe(select(fromAppState.selectPharmaPrescriptionListResult)).subscribe(function (st) {
-            if (!st) {
-                return;
-            }
-            _this.prescriptionIds = st;
-        });
-        this.store.pipe(select(fromAppState.selectPatientsResult)).subscribe(function (st) {
-            if (!st) {
-                return;
-            }
-            _this.filteredPatientsByNiss = st.content;
-        });
+    SearchAddressComponent.prototype.ngOnInit = function () {
         var self = this;
-        this.nissFormGroup.controls["niss"].valueChanges.subscribe(function (_) {
-            self.store.dispatch(new fromPatientActions.SearchPatients(null, null, _));
+        var sub;
+        this.addressText.valueChanges.subscribe(function (_) {
+            self.isLoadingAddresses = true;
+            if (sub != null) {
+                sub.unsubscribe();
+            }
+            sub = self.addressService.search(_).subscribe(function (addresses) {
+                self.addresses = addresses;
+                sub = null;
+                self.isLoadingAddresses = false;
+            });
         });
     };
-    ListPrescriptionComponent.prototype.displayNiss = function (patient) {
-        return patient.niss;
+    SearchAddressComponent.prototype.selectAddress = function (evt) {
+        var val = evt.option.value;
+        this.select.emit(val);
     };
-    ListPrescriptionComponent.prototype.onSumitNissForm = function (form) {
-        this.onSubmit(form.niss);
-    };
-    ListPrescriptionComponent.prototype.ngOnDestroy = function () {
-        this.subscribeSessionCreated.unsubscribe();
-        this.subscribeSessionDropped.unsubscribe();
-    };
-    ListPrescriptionComponent.prototype.onSubmit = function (niss) {
-        if (!this.sessionExists) {
-            return;
+    SearchAddressComponent.prototype.displayFn = function (address) {
+        if (!address) {
+            return '';
         }
-        var session = this.medikitExtensionService.getEhealthSession();
-        var loadPharmaPrescriptions = new fromPrescriptionActions.LoadPharmaPrescriptions(niss, 0, session['assertion_token']);
-        this.store.dispatch(loadPharmaPrescriptions);
+        return address.houseNumber + " " + address.street + " " + address.postalcode + " " + address.municipality;
     };
-    ListPrescriptionComponent = __decorate([
+    __decorate([
+        Output(),
+        __metadata("design:type", EventEmitter)
+    ], SearchAddressComponent.prototype, "select", void 0);
+    SearchAddressComponent = __decorate([
         Component({
-            selector: 'list-prescription-component',
-            templateUrl: './list-prescription.component.html',
-            styleUrls: ['./list-prescription.component.scss']
+            selector: 'searchaddress',
+            templateUrl: './searchaddress.component.html',
+            styleUrls: ['./searchaddress.component.scss']
         }),
-        __metadata("design:paramtypes", [Store,
-            MedikitExtensionService])
-    ], ListPrescriptionComponent);
-    return ListPrescriptionComponent;
+        __metadata("design:paramtypes", [AddressService])
+    ], SearchAddressComponent);
+    return SearchAddressComponent;
 }());
-export { ListPrescriptionComponent };
-//# sourceMappingURL=list-prescription.component.js.map
+export { SearchAddressComponent };
+//# sourceMappingURL=searchaddress.component.js.map

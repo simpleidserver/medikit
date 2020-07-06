@@ -1,0 +1,42 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <div class="mat-h1">{{ "medicalfiles" | translate }}</div>
+    </div>
+</div>
+<div fxLayout="row">
+    <div fxFlex="80%" fxFlexOffset="10%" fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-card fxFlex="60%">
+                <form>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>{{ 'niss' | translate }}</mat-label>
+                        <input matInput placeholder="{{ 'enter-niss' | translate }}" name="niss" />
+                    </mat-form-field>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>{{ 'firstname' | translate }}</mat-label>
+                        <input matInput placeholder="{{ 'enter-firstname' | translate }}" name="firstname" />
+                    </mat-form-field>
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>{{ 'lastname' | translate }}</mat-label>
+                        <input matInput placeholder="{{ 'enter-lastname' | translate }}" name="lastname" />
+                    </mat-form-field>
+                    <button mat-raised-button color="primary">{{ 'search' | translate }}</button>
+                </form>
+            </mat-card>
+            <mat-card fxFlex="40%">
+                <mat-card-content>
+                    <button mat-raised-button color="primary" class="full-width">{{ 'add-medicalfile' | translate }}</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div>
+            <mat-card>
+                <mat-card-content>
+                    <div class="mat-elevation-z8 overflow-hidden">
+
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

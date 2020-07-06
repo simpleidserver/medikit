@@ -20,13 +20,28 @@ var PatientEffects = (function () {
         this.patientService = patientService;
         this.searchPatients$ = this.actions$
             .pipe(ofType(ActionTypes.SEARCH_PATIENTS), mergeMap(function (evt) {
-            return _this.patientService.search(evt.firstName, evt.lastName, evt.niss)
+            return _this.patientService.search(evt.firstname, evt.lastname, evt.niss, evt.startIndex, evt.count, evt.active, evt.direction)
                 .pipe(map(function (patients) { return { type: ActionTypes.PATIENTS_LOADED, patients: patients }; }), catchError(function () { return of({ type: ActionTypes.ERROR_SEARCH_PATIENTS }); }));
         }));
-        this.getPatient$ = this.actions$
-            .pipe(ofType(ActionTypes.GET_PATIENT), mergeMap(function (evt) {
-            return _this.patientService.get(evt.niss)
+        this.searchPatientsByNiss$ = this.actions$
+            .pipe(ofType(ActionTypes.SEARCH_PATIENTS_BY_NISS), mergeMap(function (evt) {
+            return _this.patientService.search(null, null, evt.niss, 0, 0)
+                .pipe(map(function (patients) { return { type: ActionTypes.PATIENTS_LOADED_BY_NISS, patients: patients }; }), catchError(function () { return of({ type: ActionTypes.ERROR_SEARCH_PATIENTS_BY_NISS }); }));
+        }));
+        this.getPatientById$ = this.actions$
+            .pipe(ofType(ActionTypes.GET_PATIENT_BY_ID), mergeMap(function (evt) {
+            return _this.patientService.getById(evt.id)
                 .pipe(map(function (patient) { return { type: ActionTypes.PATIENT_LOADED, patient: patient }; }), catchError(function () { return of({ type: ActionTypes.ERROR_GET_PATIENT }); }));
+        }));
+        this.getPatientByNiss$ = this.actions$
+            .pipe(ofType(ActionTypes.GET_PATIENT_BY_NISS), mergeMap(function (evt) {
+            return _this.patientService.getByNiss(evt.niss)
+                .pipe(map(function (patient) { return { type: ActionTypes.PATIENT_LOADED, patient: patient }; }), catchError(function () { return of({ type: ActionTypes.ERROR_GET_PATIENT }); }));
+        }));
+        this.addPatient$ = this.actions$
+            .pipe(ofType(ActionTypes.ADD_PATIENT), mergeMap(function (evt) {
+            return _this.patientService.add(evt.patient)
+                .pipe(map(function () { return { type: ActionTypes.ADD_PATIENT_SUCCESS }; }), catchError(function () { return of({ type: ActionTypes.ADD_PATIENT_ERROR }); }));
         }));
     }
     __decorate([
@@ -36,7 +51,19 @@ var PatientEffects = (function () {
     __decorate([
         Effect(),
         __metadata("design:type", Object)
-    ], PatientEffects.prototype, "getPatient$", void 0);
+    ], PatientEffects.prototype, "searchPatientsByNiss$", void 0);
+    __decorate([
+        Effect(),
+        __metadata("design:type", Object)
+    ], PatientEffects.prototype, "getPatientById$", void 0);
+    __decorate([
+        Effect(),
+        __metadata("design:type", Object)
+    ], PatientEffects.prototype, "getPatientByNiss$", void 0);
+    __decorate([
+        Effect(),
+        __metadata("design:type", Object)
+    ], PatientEffects.prototype, "addPatient$", void 0);
     PatientEffects = __decorate([
         Injectable(),
         __metadata("design:paramtypes", [Actions,

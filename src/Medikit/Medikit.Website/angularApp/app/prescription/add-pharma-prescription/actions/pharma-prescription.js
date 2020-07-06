@@ -2,6 +2,7 @@ export var ActionTypes;
 (function (ActionTypes) {
     ActionTypes["LOAD_PHARMA_PRESCRIPTION"] = "[AddPharmaPrescription] LOAD_ADD_PRESCRIPTION";
     ActionTypes["NEXT_STEP"] = "[AddPharmaPrescription] NEXT_STEP";
+    ActionTypes["SELECT_PATIENT"] = "[AddPharmaPrescription] SELECT_PATIENT";
     ActionTypes["PREVIOUS_STEP"] = "[AddPharmaPrescription] PREVIOUS_STEP";
     ActionTypes["ADD_DRUG_PRESCRIPTION"] = "[AddPharmaPrescription] ADD_DRUG_PRESCRIPTION";
     ActionTypes["DELETE_DRUG_PRESCRIPTION"] = "[DeletePharmaPrescription] DELETE_DRUG_PRESCRIPTION";
@@ -20,6 +21,14 @@ var NextStep = (function () {
     return NextStep;
 }());
 export { NextStep };
+var SelectPatient = (function () {
+    function SelectPatient(patient) {
+        this.patient = patient;
+        this.type = ActionTypes.SELECT_PATIENT;
+    }
+    return SelectPatient;
+}());
+export { SelectPatient };
 var PreviousStep = (function () {
     function PreviousStep() {
         this.type = ActionTypes.PREVIOUS_STEP;

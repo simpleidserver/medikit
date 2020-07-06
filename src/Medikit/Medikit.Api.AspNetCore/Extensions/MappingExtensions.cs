@@ -1,22 +1,31 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using Medikit.Api.Application;
-using Medikit.Api.Application.Common;
-using Medikit.Api.Application.Domains;
-using Medikit.Api.Application.MedicinalProduct.Queries.Results;
-using Medikit.Api.Application.Metadata;
-using Medikit.Api.Application.Patient.Commands;
-using Medikit.Api.Application.Patient.Queries.Results;
-using Medikit.Api.Application.Prescriptions.Results;
+using Medikit.Api.Common.Application.Metadata;
+using Medikit.Api.Common.Application.Persistence;
+using Medikit.Api.Common.Application.Queries;
+using Medikit.Api.EHealth.Application.KMEHRReference.Queries.Results;
+using Medikit.Api.EHealth.Application.MedicinalProduct.Queries.Results;
+using Medikit.Api.Medicalfile.Application.Medicalfile.Commands;
+using Medikit.Api.Medicalfile.Application.Medicalfile.Queries;
+using Medikit.Api.Medicalfile.Application.Medicalfile.Queries.Results;
+using Medikit.Api.Medicalfile.Prescription.Prescription.Results;
+using Medikit.Api.Patient.Application.Commands;
+using Medikit.Api.Patient.Application.Domains;
+using Medikit.Api.Patient.Application.Queries.Results;
+using Medikit.EHealth.Enums;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Medikit.Api.Medicalfile.Prescription.Prescription.Results.GetPharmaceuticalPrescriptionResult;
+using static Medikit.Api.Patient.Application.Queries.Results.GetPatientQueryResult;
 
 namespace Medikit.Api.AspNetCore.Extensions
 {
     public static class MappingExtensions
     {
+        #region DTOs
+
         #region Prescription
 
         public static JObject ToDto(this GetPharmaceuticalPrescriptionResult getPharmaceuticalPrescriptionResult)
@@ -34,7 +43,7 @@ namespace Medikit.Api.AspNetCore.Extensions
             return result;
         }
 
-        public static JObject ToDto(this GetPharmaceuticalPrescriptionPersonResult person)
+        public static JObject ToDto(this PersonResult person)
         {
             var result = new JObject
             {
@@ -45,21 +54,21 @@ namespace Medikit.Api.AspNetCore.Extensions
             return result;
         }
 
-        public static JObject ToDto(this GetPharmaceuticalPrescriptionPatientResult patient)
+        public static JObject ToDto(this PatientResult patient)
         {
-            var result = ToDto((GetPharmaceuticalPrescriptionPersonResult)patient);
+            var result = ToDto((PersonResult)patient);
             result.Add("niss", patient.Niss);
             return result;
         }
 
-        public static JObject ToDto(this GetPharmaceuticalPrescriptionPrescriberResult prescriber)
+        public static JObject ToDto(this PrescriberResult prescriber)
         {
-            var result = ToDto((GetPharmaceuticalPrescriptionPersonResult)prescriber);
+            var result = ToDto((PersonResult)prescriber);
             result.Add("inami", prescriber.INAMINumber);
             return result;
         }
 
-        public static JObject ToDto(this GetPharmaceuticalPrescriptionMedication medication)
+        public static JObject ToDto(this MedicationResult medication)
         {
             var result = new JObject
             {
@@ -80,14 +89,14 @@ namespace Medikit.Api.AspNetCore.Extensions
             return result;
         }
 
-        private static JObject ToDto(this GetPharmaceuticalPrescriptionPosology posology)
+        private static JObject ToDto(this PosologyResult posology)
         {
-            if (posology.Type == PosologyTypes.FreeText.Name)
+            if (posology.Type == PosologyTypes.FreeText.Code)
             {
                 return new JObject
                 {
-                    { "type", PosologyTypes.FreeText.Name.ToLowerInvariant() },
-                    { "content", ((GetPharmaceuticalPrescriptionPosologyFreeText)posology).Content }
+                    { "type", PosologyTypes.FreeText.Code.ToLowerInvariant() },
+                    { "content", ((PosologyFreeTextResult)posology).Content }
                 };
             }
 
@@ -123,17 +132,6 @@ namespace Medikit.Api.AspNetCore.Extensions
             return result;
         }
 
-        public static JArray ToDto(this ICollection<LinkTranslationResult> translations)
-        {
-            var names = new JArray();
-            foreach (var translation in translations)
-            {
-                names.Add(translation.ToDto());
-            }
-
-            return names;
-        }
-
         public static JArray ToDto(this ICollection<TranslationResult> translations)
         {
             var names = new JArray();
@@ -144,30 +142,26 @@ namespace Medikit.Api.AspNetCore.Extensions
             return names;
         }
 
-        public static JArray ToDto(this ICollection<MedicinalDeliveryMethod> deliveryMethods)
-        {
-            var result = new JArray();
-            foreach (var deliveryMethod in deliveryMethods)
-            {
-                result.Add(new JObject
-                {
-                    { "code", deliveryMethod.Code },
-                    { "code_type", deliveryMethod.CodeType },
-                    { "delivery_environment", deliveryMethod.DeliveryEnvironment }
-                });
-            }
-
-            return result;
-        }
-
         #endregion
 
         #region Patient 
 
-        public static JObject ToDto(this PatientResult patient, string baseUrl)
+        public static JObject ToDto(this PagedResult<GetPatientQueryResult> search, string baseUrl)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.SearchResultNames.Count, search.Count },
+                { MedikitApiConstants.SearchResultNames.StartIndex, search.StartIndex },
+                { MedikitApiConstants.SearchResultNames.TotalLength, search.TotalLength },
+                { MedikitApiConstants.SearchResultNames.Content, new JArray(search.Content.Select(_ => _.ToDto(baseUrl))) }
+            };
+        }
+
+        public static JObject ToDto(this GetPatientQueryResult patient, string baseUrl)
         {
             var result = new JObject
             {
+                { MedikitApiConstants.PatientNames.Id, patient.Id },
                 { MedikitApiConstants.PatientNames.BirthDate, patient.Birthdate },
                 { MedikitApiConstants.PatientNames.Firstname, patient.Firstname },
                 { MedikitApiConstants.PatientNames.Lastname, patient.Lastname },
@@ -204,12 +198,144 @@ namespace Medikit.Api.AspNetCore.Extensions
             };
         }
 
-        public static AddPatientCommand ToAddPatientCommand(this JObject jObj, string prescriberId)
+        public static JObject ToDto(this ContactInformationResult contactInfo)
         {
-            var result = new AddPatientCommand
+            return new JObject
             {
-                PrescriberId = prescriberId
+                { MedikitApiConstants.ContactInfoNames.Type, (int)contactInfo.Type },
+                { MedikitApiConstants.ContactInfoNames.Value, contactInfo.Value }
             };
+        }
+
+        #endregion
+
+        #region KMEHR Reference
+
+        public static JObject ToDto(this KMEHRReferenceTableResult referenceTable)
+        {
+            var result = new JObject
+            {
+                { "name", referenceTable.Name },
+                { "code", referenceTable.Code },
+                { "published_date", referenceTable.PublishedDateTime },
+                { "status", referenceTable.Status },
+                { "version", referenceTable.Version }
+            };
+            var content = new JObject();
+            foreach (var record in referenceTable.Content)
+            {
+                var translations = new JArray();
+                foreach (var translation in record.Translations)
+                {
+                    translations.Add(new JObject
+                    {
+                        { "language", translation.Language },
+                        { "value", translation.Value }
+                    });
+                }
+
+                var translationsAttr = new JObject
+                {
+                    { "translations", translations }
+                };
+                content.Add(record.Code, translationsAttr);
+            }
+
+            result.Add("content", content);
+            return result;
+        }
+
+        #endregion
+
+        #region Medical file
+
+        public static JObject ToDto(this PagedResult<GetMedicalfileResult> search)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.SearchResultNames.Count, search.Count },
+                { MedikitApiConstants.SearchResultNames.StartIndex, search.StartIndex },
+                { MedikitApiConstants.SearchResultNames.TotalLength, search.TotalLength },
+                { MedikitApiConstants.SearchResultNames.Content, new JArray(search.Content.Select(_ => _.ToDto())) }
+            };
+        }
+
+        public static JObject ToDto(this GetMedicalfileResult medicalfile)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.MedicalfileNames.Firstname, medicalfile.PatientFirstname },
+                { MedikitApiConstants.MedicalfileNames.Lastname, medicalfile.PatientLastname },
+                { MedikitApiConstants.MedicalfileNames.Niss, medicalfile.PatientNiss },
+                { MedikitApiConstants.MedicalfileNames.PatientId, medicalfile.PatientId },
+                { MedikitApiConstants.MedicalfileNames.Id, medicalfile.Id },
+                { MedikitApiConstants.MedicalfileNames.CreateDateTime, medicalfile.CreateDateTime },
+                { MedikitApiConstants.MedicalfileNames.UpdateDateTime, medicalfile.UpdateDateTime },
+            };
+        }
+
+        #endregion
+
+        #region Common
+
+        public static JObject ToDto(this MetadataResult metadata)
+        {
+            var result = new JObject();
+            foreach (var kvp in metadata.Content)
+            {
+                result.Add(kvp.Key, kvp.Value.ToDto());
+            }
+
+            return result;
+        }
+
+        public static JObject ToDto(this MetadataRecord record)
+        {
+            var result = new JObject();
+            var translations = new JArray();
+            var children = new JArray();
+            foreach(var translation in record.Translations)
+            {
+                translations.Add(new JObject
+                {
+                    { translation.Language, translation.Value }
+                });
+            }
+
+            if (record.Children != null)
+            {
+                foreach(var child in record.Children)
+                {
+                    children.Add(new JObject
+                    {
+                        { child.Key, child.Value.ToDto() }
+                    });
+                }
+            }
+
+            result.Add("translations", translations);
+            result.Add("children", children);
+            return result;
+        }
+
+        public static JObject ToDto(this TranslationResult translation)
+        {
+            return new JObject
+            {
+                { "language", translation.Language },
+                { "value", translation.Value }
+            };
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Command
+
+        public static AddPatientCommand ToAddPatientCommand(this JObject jObj)
+        {
+            var result = new AddPatientCommand();
             var values = jObj.ToObject<Dictionary<string, object>>();
             if (values.TryGet(MedikitApiConstants.PatientNames.Firstname, out string firstname))
             {
@@ -281,7 +407,7 @@ namespace Medikit.Api.AspNetCore.Extensions
                     var jArr = coordinates as JArray;
                     if (jArr != null)
                     {
-                        foreach(var r in jArr)
+                        foreach (var r in jArr)
                         {
                             if (double.TryParse(r.ToString(), out double d))
                             {
@@ -323,84 +449,43 @@ namespace Medikit.Api.AspNetCore.Extensions
             return result;
         }
 
-        public static JObject ToDto(this ContactInformationResult contactInfo)
+        public static AddMedicalfileCommand ToAddMedicalfileCommand(this JObject jObj, string prescriberId)
         {
-            return new JObject
+            var result = new AddMedicalfileCommand
             {
-                { MedikitApiConstants.ContactInfoNames.Type, (int)contactInfo.Type },
-                { MedikitApiConstants.ContactInfoNames.Value, contactInfo.Value }
+                PrescriberId = prescriberId
             };
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.MedicalfileNames.PatientId, out string patientId))
+            {
+                result.PatientId = patientId;
+            }
+
+            return result;
+        }
+
+        public static SearchMedicalfileQuery ToSearchMedicalfileQuery(this IEnumerable<KeyValuePair<string, object>> parameters)
+        {
+            var result = new SearchMedicalfileQuery();
+            result.ExtractSearchParameters(parameters);
+            if (parameters.TryGet(MedikitApiConstants.MedicalfileNames.Niss, out string niss))
+            {
+                result.Niss = niss;
+            }
+
+            if (parameters.TryGet(MedikitApiConstants.MedicalfileNames.Firstname, out string firstname))
+            {
+                result.Firstname = firstname;
+            }
+
+            if (parameters.TryGet(MedikitApiConstants.MedicalfileNames.Lastname, out string lastname))
+            {
+                result.Lastname = lastname;
+            }
+
+            return result;
         }
 
         #endregion
-
-        public static JObject ToDto(this LinkTranslationResult translation)
-        {
-            return new JObject
-            {
-                { "language", translation.Language },
-                { "href", translation.Href }
-            };
-        }
-
-        public static JObject ToDto(this TranslationResult translation)
-        {
-            return new JObject
-            {
-                { "language", translation.Language },
-                { "value", translation.Value }
-            };
-        }
-
-        public static JObject ToDto(this PagedResult<PatientResult> search, string baseUrl)
-        {
-            return new JObject
-            {
-                { "count", search.Count },
-                { "start_index", search.StartIndex },
-                { "total_length", search.TotalLength },
-                { "content", new JArray(search.Content.Select(_ => _.ToDto(baseUrl))) }
-            };
-        }
-
-        public static JObject ToDto(this MetadataResult metadata)
-        {
-            var result = new JObject();
-            foreach(var kvp in metadata.Content)
-            {
-                result.Add(kvp.Key, kvp.Value.ToDto());
-            }
-
-            return result;
-        }
-
-        public static JObject ToDto(this MetadataRecord record)
-        {
-            var result = new JObject();
-            var translations = new JArray();
-            var children = new JArray();
-            foreach(var translation in record.Translations)
-            {
-                translations.Add(new JObject
-                {
-                    { translation.Language, translation.Value }
-                });
-            }
-
-            if (record.Children != null)
-            {
-                foreach(var child in record.Children)
-                {
-                    children.Add(new JObject
-                    {
-                        { child.Key, child.Value.ToDto() }
-                    });
-                }
-            }
-
-            result.Add("translations", translations);
-            result.Add("children", children);
-            return result;
-        }
     }
 }

@@ -16,16 +16,17 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { AppComponent } from './app.component';
+import { AppComponent, AuthPinDialog, InstallExtensionHelpDialog } from './app.component';
 import { routes } from './app.routes';
 import { HomeModule } from './home/home.module';
 import { MaterialModule } from './infrastructure/material.module';
+import { AddressService } from './infrastructure/services/address.service';
 import { AuthGuard } from './infrastructure/services/auth-guard.service';
 import { MedikitExtensionService } from './infrastructure/services/medikitextension.service';
 import { SharedModule } from './infrastructure/shared.module';
-import { MedicinalProductService } from './medicinalproduct/services/medicinalproduct-service';
 import { ReferenceTableService } from './referencetable/services/reference-table-service';
 import { appReducer } from './stores/appstate';
+import { MedicinalProductService } from './stores/medicinalproduct/services/medicinalproduct-service';
 import { PatientEffects } from './stores/patient/patient-effects';
 import { PatientService } from './stores/patient/services/patient-service';
 import { PharmaPrescriptionEffects } from './stores/pharmaprescription/prescription-effects';
@@ -62,10 +63,11 @@ var AppModule = (function () {
                 })
             ],
             declarations: [
-                AppComponent
+                AppComponent, AuthPinDialog, InstallExtensionHelpDialog
             ],
+            entryComponents: [AuthPinDialog, InstallExtensionHelpDialog],
             bootstrap: [AppComponent],
-            providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AuthGuard]
+            providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AddressService, AuthGuard]
         })
     ], AppModule);
     return AppModule;

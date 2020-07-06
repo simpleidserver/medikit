@@ -28,6 +28,16 @@ var PharmaPrescriptionEffects = (function () {
             return _this.prescriptionService.getPrescription(evt.prescriptionId, evt.samlAssertion)
                 .pipe(map(function (prescription) { return { type: ActionTypes.PHARMA_PRESCRIPTION_LOADED, prescription: prescription }; }), catchError(function () { return of({ type: ActionTypes.ERROR_LOAD_PHARMA_PRESCRIPTION }); }));
         }));
+        this.addPrescription$ = this.actions$
+            .pipe(ofType(ActionTypes.ADD_PHARMA_PRESCRIPTION), mergeMap(function (evt) {
+            return _this.prescriptionService.addPrescription(evt.prescription, evt.samlAssertion)
+                .pipe(map(function (prescriptionId) { return { type: ActionTypes.ADD_PHARMA_PRESCRIPTION_SUCCESS, prescriptionId: prescriptionId }; }), catchError(function () { return of({ type: ActionTypes.ADD_PHARMA_PRESCRIPTION_ERROR }); }));
+        }));
+        this.revokePrescription$ = this.actions$
+            .pipe(ofType(ActionTypes.REVOKE_PHARMA_PRESCRIPTION), mergeMap(function (evt) {
+            return _this.prescriptionService.revokePrescription(evt.rid, evt.reason, evt.samlAssertion)
+                .pipe(map(function () { return { type: ActionTypes.REVOKE_PHARMA_PRESCRIPTION_SUCCESS, rid: evt.rid }; }), catchError(function () { return of({ type: ActionTypes.REVOKE_PHARMA_PRESCRIPTION_ERROR }); }));
+        }));
     }
     __decorate([
         Effect(),
@@ -37,6 +47,14 @@ var PharmaPrescriptionEffects = (function () {
         Effect(),
         __metadata("design:type", Object)
     ], PharmaPrescriptionEffects.prototype, "getPrescription$", void 0);
+    __decorate([
+        Effect(),
+        __metadata("design:type", Object)
+    ], PharmaPrescriptionEffects.prototype, "addPrescription$", void 0);
+    __decorate([
+        Effect(),
+        __metadata("design:type", Object)
+    ], PharmaPrescriptionEffects.prototype, "revokePrescription$", void 0);
     PharmaPrescriptionEffects = __decorate([
         Injectable(),
         __metadata("design:paramtypes", [Actions,

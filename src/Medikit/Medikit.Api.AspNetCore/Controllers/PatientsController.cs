@@ -1,9 +1,9 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using Medikit.Api.Application.Exceptions;
-using Medikit.Api.Application.Patient;
-using Medikit.Api.Application.Patient.Queries;
 using Medikit.Api.AspNetCore.Extensions;
+using Medikit.Api.Patient.Application;
+using Medikit.Api.Patient.Application.Exceptions;
+using Medikit.Api.Patient.Application.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -28,8 +28,7 @@ namespace Medikit.Api.AspNetCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] JObject jObj)
         {
-            // TODO : Get prescriberid from identity token.
-            var result = await _patientService.AddPatient(jObj.ToAddPatientCommand("admin"), CancellationToken.None);
+            var result = await _patientService.AddPatient(jObj.ToAddPatientCommand(), CancellationToken.None);
             return new ContentResult
             {
                 StatusCode = (int)HttpStatusCode.Created,

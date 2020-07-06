@@ -1,20 +1,19 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using Medikit.Api.Application.Reference;
-using Medikit.Api.Application.Reference.Exceptions;
-using Medikit.Api.Application.Reference.Queries.Results;
+using Medikit.Api.AspNetCore.Extensions;
+using Medikit.Api.EHealth.Application.KMEHRReference;
+using Medikit.Api.EHealth.Application.KMEHRReference.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace Medikit.Api.AspNetCore.Controllers
 {
-    [Route("referencetables")]
+    [Route(MedikitApiConstants.RouteNames.ReferenceTables)]
     public class ReferenceTablesController : Controller
     {
-        private readonly IReferenceTableService _referenceTableService;
+        private readonly IKMEHRReferenceTableService _referenceTableService;
 
-        public ReferenceTablesController(IReferenceTableService referenceTableService)
+        public ReferenceTablesController(IKMEHRReferenceTableService referenceTableService)
         {
             _referenceTableService = referenceTableService;
         }
@@ -31,46 +30,12 @@ namespace Medikit.Api.AspNetCore.Controllers
             try
             {
                 var result = await _referenceTableService.GetByCode(code, language);
-                return new OkObjectResult(ToDto(result));
+                return new OkObjectResult(result.ToDto());
             }
-            catch(UnknownReferenceTableException)
+            catch(UnknownKMEHRReferenceTableException)
             {
                 return new NotFoundResult();
             }
-        }
-
-        public static JObject ToDto(ReferenceTableResult referenceTable)
-        {
-            var result = new JObject
-            {
-                { "name", referenceTable.Name },
-                { "code", referenceTable.Code },
-                { "published_date", referenceTable.PublishedDateTime },
-                { "status", referenceTable.Status },
-                { "version", referenceTable.Version }
-            };
-            var content = new JObject();
-            foreach(var record in referenceTable.Content)
-            {
-                var translations = new JArray();
-                foreach(var translation in record.Translations)
-                {
-                    translations.Add(new JObject
-                    {
-                        { "language", translation.Language },
-                        { "value", translation.Value }
-                    });
-                }
-
-                var translationsAttr = new JObject
-                {
-                    { "translations", translations }
-                };
-                content.Add(record.Code, translationsAttr);
-            }
-
-            result.Add("content", content);
-            return result;
         }
     }
 }

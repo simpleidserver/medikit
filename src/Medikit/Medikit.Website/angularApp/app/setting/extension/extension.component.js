@@ -24,6 +24,11 @@ var ExtensionComponent = (function () {
         this.medikitExtensionService = medikitExtensionService;
         this.snackBar = snackBar;
         this.translateService = translateService;
+        this.qrCode = null;
+        this.generateQRCodeFormGroup = new FormGroup({
+            idCertificate: new FormControl(),
+            password: new FormControl()
+        });
         this.medicalProfessionForm = new FormGroup({
             profession: new FormControl()
         });
@@ -80,6 +85,22 @@ var ExtensionComponent = (function () {
                 self.snackBar.open(self.translateService.instant('identity-certificate-updated'), self.translateService.instant('undo'), {
                     duration: 2000,
                 });
+            }
+        });
+    };
+    ExtensionComponent.prototype.generateQRCode = function () {
+        var self = this;
+        var idCertificate = this.generateQRCodeFormGroup.controls['idCertificate'].value;
+        var password = this.generateQRCodeFormGroup.controls['password'].value;
+        this.medikitExtensionService.getIdentityCertificate(idCertificate, password).subscribe(function (e) {
+            if (e.type === 'error') {
+                self.snackBar.open(self.translateService.instant('bad-password'), self.translateService.instant('undo'), {
+                    duration: 2000,
+                });
+            }
+            else {
+                var qrCode = e.content.certificate + '$' + e.content.password + "$" + e.content.name;
+                self.qrCode = qrCode;
             }
         });
     };

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-using Medikit.Api.Application.Domains;
-using Medikit.Api.Application.MedicinalProduct;
-using Medikit.Api.Application.MedicinalProduct.Queries;
 using Medikit.Api.AspNetCore.Extensions;
+using Medikit.Api.EHealth.Application.MedicinalProduct;
+using Medikit.Api.EHealth.Application.MedicinalProduct.Queries;
+using Medikit.EHealth.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Medikit.Api.AspNetCore.Controllers
 {
-    [Route("medicinalproducts")]
+    [Route(MedikitApiConstants.RouteNames.MedicinalProducts)]
     public class MedicinalProductsController : Controller
     {
         private readonly IMedicinalProductService _nomenclatureService;
@@ -39,9 +39,9 @@ namespace Medikit.Api.AspNetCore.Controllers
             }
         }
 
-        private static SearchMedicinalPackage BuildRequest(IEnumerable<KeyValuePair<string, object>> query)
+        private static SearchMedicinalPackageQuery BuildRequest(IEnumerable<KeyValuePair<string, object>> query)
         {
-            var result = new SearchMedicinalPackage();
+            var result = new SearchMedicinalPackageQuery();
             int startIndex;
             int count;
             string searchText;
@@ -69,8 +69,7 @@ namespace Medikit.Api.AspNetCore.Controllers
 
             if (query.TryGet("delivery_environment", out deliveryEnvironmentInt))
             {
-                DeliveryEnvironments deliveryEnv;
-                if (Enumeration.TryParse<DeliveryEnvironments>(deliveryEnvironmentInt, out deliveryEnv))
+                if (Enumeration.TryParse(deliveryEnvironmentInt, out DeliveryEnvironments deliveryEnv))
                 {
                     result.DeliveryEnvironment = deliveryEnv;
                 }

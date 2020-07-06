@@ -9,7 +9,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { PharmaPrescription } from "@app/prescription/models/pharma-prescription";
+import { PharmaPrescription } from '@app/stores/pharmaprescription/models/pharma-prescription';
 import * as fromActions from '../actions/pharma-prescription';
 var sessionStorageKey = 'pharma-prescription';
 var persist = function (state) {
@@ -35,6 +35,9 @@ export function PharmaPrescriptionFormReducer(state, action) {
             state.stepperIndex = loaded.stepperIndex;
             state.prescription = loaded.prescription;
             state.nextPatientFormBtnDisabled = loaded.nextPatientFormBtnDisabled;
+            return __assign({}, state);
+        case fromActions.ActionTypes.SELECT_PATIENT:
+            state.prescription.Patient = action.patient;
             return __assign({}, state);
         case fromActions.ActionTypes.NEXT_STEP:
             state.stepperIndex += 1;

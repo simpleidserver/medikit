@@ -13,6 +13,9 @@ import * as fromActions from './patient-actions';
 export var initialListState = {
     content: null
 };
+export var initialListByNissState = {
+    content: null
+};
 export var initialGetState = {
     content: null
 };
@@ -20,6 +23,16 @@ export function ListPatientsReducer(state, action) {
     if (state === void 0) { state = initialListState; }
     switch (action.type) {
         case fromActions.ActionTypes.PATIENTS_LOADED:
+            state.content = action.patients;
+            return __assign({}, state);
+        default:
+            return state;
+    }
+}
+export function ListPatientsByNissReducer(state, action) {
+    if (state === void 0) { state = initialListByNissState; }
+    switch (action.type) {
+        case fromActions.ActionTypes.PATIENTS_LOADED_BY_NISS:
             state.content = action.patients;
             return __assign({}, state);
         default:

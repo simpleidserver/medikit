@@ -107,32 +107,32 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                             "Key",
                             "Value"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "firstname",
                             "firstname"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "lastname",
                             "lastname"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "niss",
                             "niss"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "gender",
                             "1"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "eid_cardnumber",
                             "eidcardnumber"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "address",
                             "{ street: \'street\', street_number: 2, postal_code: \'1000\', country: \'BE\' }"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "contact_infos",
                             "[ { type: 0, value : \'toto@mail.com\' } ]"});
 #line 4
- testRunner.When("execute HTTP POST JSON request \'http://localhost/patients\'", ((string)(null)), table1, "When ");
+ testRunner.When("execute HTTP POST JSON request \'http://localhost/patients\'", ((string)(null)), table2, "When ");
 #line hidden
 #line 14
  testRunner.And("extract JSON from body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

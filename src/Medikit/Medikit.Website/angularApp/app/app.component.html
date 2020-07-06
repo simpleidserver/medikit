@@ -41,7 +41,8 @@
         <mat-sidenav class="sidenav" #sidenav mode="side" opened [fixedInViewport]="false" [fixedTopGap]="0" [fixedBottomGap]="0">
             <mat-nav-list *ngIf="isConnected">
                 <a mat-list-item [routerLink]="['/prescription']" [routerLinkActive]="['is-active']"><img src="{{ prescriptionsLogoUrl }}" />{{ "prescriptions" | translate }}</a>
-                <a mat-list-item [routerLink]="['/patient']" [routerLinkActive]="['is-active']"><img src="{{ patientsLogoUrl }}" /> {{ "patients" | translate }}</a>
+                <a mat-list-item [routerLink]="['/medicalfile']" [routerLinkActive]="['is-active']"><img src="{{ medicalFilesLogoUrl }}" /> {{ 'medicalfiles' | translate }}</a>
+                <a mat-list-item [routerLink]="['/patient']" [routerLinkActive]="['is-active']"><mat-icon>person</mat-icon> {{ "patients" | translate }}</a>
                 <a mat-list-item [routerLink]="['/setting']" [routerLinkActive]="['is-active']"><mat-icon>settings</mat-icon> {{ "settings" | translate }}</a>
             </mat-nav-list>
         </mat-sidenav>
