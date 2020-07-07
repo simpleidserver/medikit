@@ -1,0 +1,24 @@
+﻿<h1 mat-dialog-title>{{ 'add-medicalfile' | translate }}</h1>
+<form [formGroup]="patientFormGroup" (submit)="confirm()">
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ "niss" | translate }}</mat-label>
+            <input matInput placeholder="{{ 'enter-niss' | translate }}" formControlName="niss" [matAutocomplete]="auto" required>
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selectPatient($event)">
+                <mat-option *ngFor="let patient of filteredPatientsByNiss" [value]="patient.niss">
+                    {{ patient.firstname }} - {{ patient.lastname}} ({{ patient.niss }})
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="patientFormGroup.get('niss').hasError('required')">
+                {{ "niss-required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="patientFormGroup.get('niss').hasError('pattern')">
+                {{ "niss-invalid" | translate }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button color="primary" [disabled]="patientFormGroup.get('niss').errors">{{ 'add' | translate }}</button>
+        <button mat-raised-button (click)="cancel()">{{ 'cancel' | translate }}</button>
+    </div>
+</form>

@@ -148,5 +148,8 @@
   "contactvalue-required": "Contact value is required",
   "patient-added": "Patient has been added",
   "error-add-patient": "An error occured while trying to add the patient",
-  "undo": "Undo"
+  "undo": "Undo",
+  "add-medicalfile": "Add medical file",
+  "medicalfile-added": "Medical file has been added",
+  "medicalfiles": "Medical files"
 }

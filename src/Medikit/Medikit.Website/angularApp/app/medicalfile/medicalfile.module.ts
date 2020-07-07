@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MaterialModule } from '@app/infrastructure/material.module';
 import { SharedModule } from '@app/infrastructure/shared.module';
+import { AddMedicalfileDialog, ListMedicalfileComponent } from './list/list-medicalfile.component';
 import { MedicalfileRoutes } from './medicalfile.routes';
 
 @NgModule({
@@ -13,6 +14,12 @@ import { MedicalfileRoutes } from './medicalfile.routes';
     ],
 
     declarations: [
+        ListMedicalfileComponent,
+        AddMedicalfileDialog
+    ],
+
+    entryComponents: [
+        AddMedicalfileDialog
     ],
 
     exports: [

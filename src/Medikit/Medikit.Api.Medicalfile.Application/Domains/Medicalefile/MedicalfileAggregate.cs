@@ -3,6 +3,8 @@
 using Medikit.Api.Common.Application.Domains;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Medikit.Api.Medicalfile.Application.Domains
 {
@@ -23,7 +25,8 @@ namespace Medikit.Api.Medicalfile.Application.Domains
 
         public static MedicalfileAggregate New(string prescriberId, string patientId, string patientNiss, string patientFirstname, string patientLastname)
         {
-            var evt = new MedicalfileAddedEvent(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), 0, prescriberId, patientId, patientNiss, patientFirstname, patientLastname, DateTime.UtcNow, DateTime.UtcNow);
+            var id = BuildId(prescriberId, patientId);
+            var evt = new MedicalfileAddedEvent(Guid.NewGuid().ToString(), id, 0, prescriberId, patientId, patientNiss, patientFirstname, patientLastname, DateTime.UtcNow, DateTime.UtcNow);
             var result = new MedicalfileAggregate();
             result.Handle(evt);
             result.DomainEvents.Add(evt);
@@ -44,6 +47,21 @@ namespace Medikit.Api.Medicalfile.Application.Domains
                 PatientLastname = PatientLastname,
                 PatientNiss = PatientNiss
             };
+        }
+
+        public static string BuildId(string prescriberId, string patientId)
+        {
+            using (var sha256Hash = SHA256.Create())
+            {
+                var bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes($"{prescriberId}{patientId}"));
+                var builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
         }
 
         public string GetStreamName()

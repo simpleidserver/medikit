@@ -148,5 +148,8 @@
   "contactvalue-required": "La valeur du contact est requise",
   "patient-added": "Le patient a été ajouté",
   "error-add-patient": "Une erreur est survenue lors de l'insertion du patient",
-  "undo": "Annuler"
+  "undo": "Annuler",
+  "add-medicalfile": "Ajouter le dossier médical",
+  "medicalfile-added": "Le dossier médical a été ajouté",
+  "medicalfiles": "Dossiers médicaux"
 }

@@ -4,6 +4,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\Medicalfile - Copier.feature.cs" />
     <SpecFlowObsoleteCodeBehindFiles Remove="Features\Patient - Copier.feature.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +29,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Features\MedicalfileErrors.feature.cs">
+      <DependentUpon>MedicalfileErrors.feature</DependentUpon>
+    </Compile>
     <Compile Update="Features\Medicalfile.feature.cs">
       <DependentUpon>Medicalfile.feature</DependentUpon>
     </Compile>
@@ -36,6 +40,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\MedicalfileErrors.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
     <SpecFlowFeatureFiles Update="Features\Medicalfile.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>

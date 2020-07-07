@@ -3,6 +3,7 @@
 using MediatR;
 using Medikit.Api.Common.Application;
 using Medikit.Api.EHealth.Application.MedicinalProduct.Queries.Handlers;
+using Medikit.Api.Medicalfile.Application.Domains;
 using Medikit.Api.Medicalfile.Application.Prescription.Commands.Handlers;
 using Medikit.Api.Patient.Application.Domains;
 using Medikit.Api.Patient.Application.Queries.Handlers;
@@ -40,6 +41,7 @@ namespace Medikit.Api.Host
                 .AllowAnyMethod()
                 .AllowAnyHeader()));
             var certificatesPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Certificates");
+            var patientId = Guid.NewGuid().ToString();
             services.AddMedikitApi(_ =>
             {
                 _.RootPath = _env.WebRootPath;
@@ -53,7 +55,7 @@ namespace Medikit.Api.Host
                 {
                     new PatientAggregate
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = patientId,
                         Firstname = "Fred",
                         Lastname = "Flintstone",
                         CreateDateTime = DateTime.UtcNow,

@@ -9,6 +9,7 @@
     <None Remove="angularApp\app\prescription\view\view-prescription.component.ts" />
     <None Remove="angularApp\app\stores\appstate.ts" />
     <None Remove="angularApp\app\stores\medicalfile\models\medicalfile.ts" />
+    <None Remove="angularApp\app\stores\medicalfile\models\search-medicalfile.ts" />
     <None Remove="angularApp\app\stores\medicalfile\services\medicalfile-service.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -19,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\medicalfile.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\search-medicalfile.ts" />
     <TypeScriptCompile Include="angularApp\app\stores\medicalfile\services\medicalfile-service.ts" />
   </ItemGroup>
 </Project>

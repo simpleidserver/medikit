@@ -1,6 +1,7 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using Medikit.Api.AspNetCore.Extensions;
+using Medikit.Api.Common.Application.Exceptions;
 using Medikit.Api.Medicalfile.Application.Exceptions;
 using Medikit.Api.Medicalfile.Application.Medicalfile;
 using Medikit.Api.Patient.Application.Exceptions;
@@ -34,7 +35,7 @@ namespace Medikit.Api.AspNetCore.Controllers
                 return new ContentResult
                 {
                     StatusCode = (int)HttpStatusCode.Created,
-                    Content = JsonConvert.SerializeObject(new { id = result }),
+                    Content = result.ToDto().ToString(),
                     ContentType = "application/json"
                 };
             }
@@ -44,6 +45,13 @@ namespace Medikit.Api.AspNetCore.Controllers
                 {
                     new KeyValuePair<string, string>(MedikitApiConstants.ErrorKeys.Parameter, ex.Message)
                 }, HttpStatusCode.NotFound, HttpContext.Request);
+            }
+            catch(BadRequestException ex)
+            {
+                return this.ToError(new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>(MedikitApiConstants.ErrorKeys.Parameter, ex.Message)
+                }, HttpStatusCode.BadRequest, HttpContext.Request);
             }
         }
 

@@ -120,6 +120,9 @@
   <data name="BadAssertionToken" xml:space="preserve">
     <value>Bad assertion token</value>
   </data>
+  <data name="ConcurrentMedicalfile" xml:space="preserve">
+    <value>Medical file already exists for the patient</value>
+  </data>
   <data name="UnknownMedicalFile" xml:space="preserve">
     <value>Unknown medical file {0}</value>
   </data>

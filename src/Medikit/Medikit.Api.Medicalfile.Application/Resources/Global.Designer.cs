@@ -70,6 +70,15 @@ namespace Medikit.Api.Medicalfile.Application.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Medical file already exists for the patient.
+        /// </summary>
+        internal static string ConcurrentMedicalfile {
+            get {
+                return ResourceManager.GetString("ConcurrentMedicalfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Unknown medical file {0}.
         /// </summary>
         internal static string UnknownMedicalFile {

@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IStoreEvents>(wireup);
             services.AddSingleton<IMessageBroker, InMemoryMessageBroker>();
             services.AddSingleton<ICommitAggregateHelper, CommitAggregateHelper>();
+            services.AddTransient<IEventStoreRepository, InMemoryEventStoreRepository>();
             services.AddSingleton<IAggregateSnapshotStore, InMemoryAggregateSnapshotStore>();
             services.AddTransient<IMetadataResultBuilder, MetadataResultBuilder>();
             services.AddTransient<ITranslationService, InMemoryTranslationService>();

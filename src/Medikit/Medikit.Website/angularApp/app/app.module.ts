@@ -24,6 +24,8 @@ import { MedicinalProductService } from './stores/medicinalproduct/services/medi
 import { PatientEffects } from './stores/patient/patient-effects';
 import { PatientService } from './stores/patient/services/patient-service';
 import { PharmaPrescriptionEffects } from './stores/pharmaprescription/prescription-effects';
+import { MedicalfileEffects } from './stores/medicalfile/medicalfile-effects';
+import { MedicalfileService } from './stores/medicalfile/services/medicalfile-service';
 
 export function createTranslateLoader(http: HttpClient) {
     let url = process.env.BASE_URL + 'assets/i18n/';
@@ -41,7 +43,7 @@ export function createTranslateLoader(http: HttpClient) {
         BrowserAnimationsModule,
         HttpClientModule,
         OAuthModule.forRoot(),
-        EffectsModule.forRoot([PatientEffects, PharmaPrescriptionEffects]),
+        EffectsModule.forRoot([PatientEffects, PharmaPrescriptionEffects, MedicalfileEffects]),
         StoreModule.forRoot(appReducer),
         StoreDevtoolsModule.instrument({
             maxAge: 10
@@ -59,6 +61,6 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     entryComponents: [AuthPinDialog, InstallExtensionHelpDialog],
     bootstrap: [AppComponent],
-    providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AddressService, AuthGuard ]
+    providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AddressService, MedicalfileService, AuthGuard ]
 })
 export class AppModule { }

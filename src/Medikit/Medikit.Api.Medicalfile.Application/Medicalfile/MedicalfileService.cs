@@ -19,7 +19,7 @@ namespace Medikit.Api.Medicalfile.Application.Medicalfile
             _mediator = mediator;
         }
 
-        public Task<string> AddMedicalfile(AddMedicalfileCommand command, CancellationToken token)
+        public Task<GetMedicalfileResult> AddMedicalfile(AddMedicalfileCommand command, CancellationToken token)
         {
             return _mediator.Send(command, token);
         }

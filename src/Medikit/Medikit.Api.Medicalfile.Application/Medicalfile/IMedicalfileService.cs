@@ -11,7 +11,7 @@ namespace Medikit.Api.Medicalfile.Application.Medicalfile
 {
     public interface IMedicalfileService
     {
-        Task<string> AddMedicalfile(AddMedicalfileCommand command, CancellationToken token);
+        Task<GetMedicalfileResult> AddMedicalfile(AddMedicalfileCommand command, CancellationToken token);
         Task<GetMedicalfileResult> GetMedicalfile(string id, CancellationToken token);
         Task<PagedResult<GetMedicalfileResult>> SearchMedicalfiles(SearchMedicalfileQuery query, CancellationToken token);
     }
