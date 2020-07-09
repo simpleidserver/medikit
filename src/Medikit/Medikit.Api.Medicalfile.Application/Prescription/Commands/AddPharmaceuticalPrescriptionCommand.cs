@@ -15,7 +15,7 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Commands
         }
 
         public string AssertionToken { get; set; }
-        public string PatientNiss { get; set; }
+        public string MedicalfileId { get; set; }
         public DateTime? CreateDateTime { get; set; }
         public DateTime? ExpirationDateTime { get; set; }
         public PrescriptionTypes PrescriptionType { get; set; }

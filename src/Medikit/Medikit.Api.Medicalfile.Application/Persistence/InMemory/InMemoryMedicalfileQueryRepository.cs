@@ -16,11 +16,11 @@ namespace Medikit.Api.Medicalfile.Application.Persistence.InMemory
     {
         private static Dictionary<string, string> MAPPING_MEDICALFILE_TO_PROPERTYNAME = new Dictionary<string, string>
         {
-            { "firstname", "Firstname" },
-            { "lastname", "Lastname" },
-            { "niss", "NationalIdentityNumber" },
-            { "create_datetime", "CreateDateTime" },
-            { "update_datetime", "UpdateDateTime" }
+            { "firstname", "PatientFirstname" },
+            { "lastname", "PatientLastname" },
+            { "niss", "PatientNiss" },
+            { "createDateTime", "CreateDateTime" },
+            { "updateDateTime", "UpdateDateTime" }
         };
         private readonly ConcurrentBag<MedicalfileAggregate> _medicalfiles;
 

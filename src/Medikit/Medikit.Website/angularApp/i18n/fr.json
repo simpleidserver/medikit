@@ -56,7 +56,7 @@
   "instructions-info": "Instructions",
   "add": "Ajouter",
   "back": "Précédent",
-  "enter-drug": "Saisir nom du médicament",
+  "enter-drug": "Recherche sur nom de spécialité",
   "niss-invalid": "NISS est invalide",
   "niss-required": "NISS est requis",
   "begin-moment": "Date de début du traitement",
@@ -151,5 +151,17 @@
   "undo": "Annuler",
   "add-medicalfile": "Ajouter le dossier médical",
   "medicalfile-added": "Le dossier médical a été ajouté",
-  "medicalfiles": "Dossiers médicaux"
+  "medicalfiles": "Dossiers médicaux",
+  "medical-prescriptions": "Prescriptions médicales",
+  "opened-prescriptions": "Afficher les prescriptions médicales ouvertes",
+  "medicalfile": "Dossier médical",
+  "revoke-prescription": "Révoquer une prescription",
+  "view-prescription": "Voir la prescription",
+  "error-getting-prescriptions": "Une erreur est survenue durant la récupération des prescriptions",
+  "error-revoking-prescription": "Une erreur est survenue durant la révocation de la prescription",
+  "error-get-prescription": "Une erreur est survenue durant la récupération de la prescription",
+  "extension-not-installed": "L'extension Medikit n'est pas installée",
+  "no-active-session": "Il n'y a pas de session EHEALTH active",
+  "prescription": "Prescription médicale",
+  "only-commercialised-drug-displayed": "Seul les médicaments commercialisés sont affichés"
 }

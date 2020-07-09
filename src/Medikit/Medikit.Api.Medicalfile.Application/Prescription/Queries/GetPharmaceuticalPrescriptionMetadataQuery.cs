@@ -7,5 +7,6 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Queries
 {
     public class GetPharmaceuticalPrescriptionMetadataQuery : IRequest<MetadataResult>
     {
+        public string MedicalfileId { get; set; }
     }
 }

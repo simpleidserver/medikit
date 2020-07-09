@@ -1,26 +1,26 @@
 ﻿import { createSelector } from '@ngrx/store';
-import * as fromPatientReducers from './patient/patient-reducer';
-import * as fromPatientStates from './patient/patient-state';
-import * as fromPharmaPrescriptionReducers from './pharmaprescription/prescription-reducer';
-import * as fromPharmaPrescriptionStates from './pharmaprescription/prescription-state';
 import * as fromMedicalfileReducers from './medicalfile/medicalfile-reducer';
 import * as fromMedicalfileStates from './medicalfile/medicalfile-state';
+import * as fromPatientReducers from './patient/patient-reducer';
+import * as fromPatientStates from './patient/patient-state';
 
 export interface AppState {
     patients: fromPatientStates.ListPatientState,
     patientsByNiss: fromPatientStates.ListPatientState,
     patient: fromPatientStates.PatientState,
-    pharmaPrescriptions: fromPharmaPrescriptionStates.PharmaPrescriptionListState,
-    pharmaPrescription: fromPharmaPrescriptionStates.PharmaPrescriptionState,
-    medicalfiles: fromMedicalfileStates.ListMedicalfileState
+    medicalfiles: fromMedicalfileStates.ListMedicalfileState,
+    medicalfile: fromMedicalfileStates.MedicalfileState,
+    prescriptions: fromMedicalfileStates.ListPrescriptionState,
+    prescription: fromMedicalfileStates.PrescriptionState
 }
 
 export const selectPatients = (state: AppState) => state.patients;
 export const selectPatientsByNiss = (state: AppState) => state.patientsByNiss;
 export const selectPatient = (state: AppState) => state.patient;
-export const selectPharmaPrescriptions = (state: AppState) => state.pharmaPrescriptions;
-export const selectPharmaPrescription = (state: AppState) => state.pharmaPrescription;
+export const selectPrescriptions = (state: AppState) => state.prescriptions;
+export const selectPrescription = (state: AppState) => state.prescription;
 export const selectMedicalfiles = (state: AppState) => state.medicalfiles;
+export const selectMedicalfile = (state: AppState) => state.medicalfile;
 
 export const selectPatientsResult = createSelector(
     selectPatients,
@@ -56,24 +56,24 @@ export const selectPatientResult = createSelector(
 );
 
 export const selectPharmaPrescriptionListResult = createSelector(
-    selectPharmaPrescriptions,
-    (state: fromPharmaPrescriptionStates.PharmaPrescriptionListState) => {
-        if (!state || state.prescriptionIds == null) {
+    selectPrescriptions,
+    (state: fromMedicalfileStates.ListPrescriptionState) => {
+        if (!state || state.content == null) {
             return null;
         }
 
-        return state.prescriptionIds;
+        return state.content;
     }
 );
 
 export const selectPharmaPrescriptionResult = createSelector(
-    selectPharmaPrescription,
-    (state: fromPharmaPrescriptionStates.PharmaPrescriptionState) => {
-        if (!state || state.prescription == null) {
+    selectPrescription,
+    (state: fromMedicalfileStates.PrescriptionState) => {
+        if (!state || state.content == null) {
             return null;
         }
 
-        return state.prescription;
+        return state.content;
     }
 );
 
@@ -88,11 +88,23 @@ export const selectMedicalfilesResult = createSelector(
     }
 );
 
+export const selectMedicalfileResult = createSelector(
+    selectMedicalfile,
+    (state: fromMedicalfileStates.MedicalfileState) => {
+        if (!state || state.content == null) {
+            return null;
+        }
+
+        return state.content;
+    }
+);
+
 export const appReducer = {
     patients: fromPatientReducers.ListPatientsReducer,
     patientsByNiss: fromPatientReducers.ListPatientsByNissReducer,
     patient: fromPatientReducers.GetPatientReducer,
-    pharmaPrescriptions: fromPharmaPrescriptionReducers.ListPharmaPrescriptionReducer,
-    pharmaPrescription: fromPharmaPrescriptionReducers.ViewPharmaPrescriptionReducer,
-    medicalfiles: fromMedicalfileReducers.ListMedicalfilesReducer
+    prescriptions: fromMedicalfileReducers.ListPrescriptionReducer,
+    prescription: fromMedicalfileReducers.PrescriptionReducer,
+    medicalfiles: fromMedicalfileReducers.ListMedicalfilesReducer,
+    medicalfile: fromMedicalfileReducers.MedicalfileReducer
 };

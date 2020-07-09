@@ -14,7 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
     styleUrls: ['./list-patient.component.scss']
 })
 export class ListPatientComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['logo', 'niss', 'firstname', 'lastname', 'updateDateTime', 'actions'];
+    displayedColumns: string[] = ['logo', 'niss', 'firstname', 'lastname', 'updateDateTime'];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     patients$: Patient[] = [];

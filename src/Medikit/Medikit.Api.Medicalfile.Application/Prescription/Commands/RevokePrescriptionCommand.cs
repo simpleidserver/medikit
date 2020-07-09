@@ -6,6 +6,7 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Commands
 {
     public class RevokePrescriptionCommand : IRequest<bool>
     {
+        public string MedicalfileId { get; set; }
         public string AssertionToken { get; set; }
         public string Rid { get; set; }
         public string Reason { get; set; }

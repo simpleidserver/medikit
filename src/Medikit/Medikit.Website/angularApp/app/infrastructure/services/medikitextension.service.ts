@@ -39,8 +39,8 @@ export class MedikitExtensionService {
 
             var medikitExtension = new win.MedikitExtension();
             medikitExtension.getEHEALTHCertificateAuth().then(function (e: any) {
-                self.sessionCreated.emit(e.content);
                 sessionStorage.setItem(ehealthSessionName, JSON.stringify(e.content));
+                self.sessionCreated.emit(e.content);
                 observer.next(true);
             }).catch(function () {
                 observer.error(false);
@@ -61,8 +61,8 @@ export class MedikitExtensionService {
 
             var medikitExtension = new win.MedikitExtension();
             medikitExtension.getEIDAuth(pin).then(function (e: any) {
-                self.sessionCreated.emit(e.content);
                 sessionStorage.setItem(ehealthSessionName, JSON.stringify(e.content));
+                self.sessionCreated.emit(e.content);
                 observer.next(true);
             }).catch(function () {
                 observer.error(false);

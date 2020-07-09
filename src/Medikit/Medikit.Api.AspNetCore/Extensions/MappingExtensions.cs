@@ -8,6 +8,9 @@ using Medikit.Api.EHealth.Application.MedicinalProduct.Queries.Results;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Commands;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Queries;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Queries.Results;
+using Medikit.Api.Medicalfile.Application.Prescription.Commands;
+using Medikit.Api.Medicalfile.Application.Prescription.Queries;
+using Medikit.Api.Medicalfile.Application.Prescription.Results;
 using Medikit.Api.Medicalfile.Prescription.Prescription.Results;
 using Medikit.Api.Patient.Application.Commands;
 using Medikit.Api.Patient.Application.Domains;
@@ -17,6 +20,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Medikit.Api.Medicalfile.Application.Prescription.Commands.AddPharmaceuticalPrescriptionCommand;
 using static Medikit.Api.Medicalfile.Prescription.Prescription.Results.GetPharmaceuticalPrescriptionResult;
 using static Medikit.Api.Patient.Application.Queries.Results.GetPatientQueryResult;
 
@@ -242,6 +246,30 @@ namespace Medikit.Api.AspNetCore.Extensions
             }
 
             result.Add("content", content);
+            return result;
+        }
+
+        #endregion
+
+        #region Medical prescription
+
+        public static JObject ToDto(this SearchPharmaceuticalPrescriptionResult search)
+        {
+            var result = new JObject
+            {
+                { MedikitApiConstants.SearchNames.HasMoreResults, search.HasMoreResults }
+            };
+            var jArr = new JArray();
+            foreach(var prescription in search.Prescriptions)
+            {
+                jArr.Add(new JObject
+                {
+                    { MedikitApiConstants.PrescriptionNames.Rid, prescription.RID },
+                    { MedikitApiConstants.PrescriptionNames.Status, prescription.Status }
+                });
+            }
+
+            result.Add(MedikitApiConstants.SearchNames.Prescriptions, jArr);
             return result;
         }
 
@@ -485,6 +513,162 @@ namespace Medikit.Api.AspNetCore.Extensions
 
             return result;
         }
+
+        public static GetPharmaceuticalPrescriptionsQuery ToGetPharmaceuticalPrescriptionsQuery(this JObject jObj, string medicalFileId)
+        {
+            var result = new GetPharmaceuticalPrescriptionsQuery
+            {
+                MedicalfileId = medicalFileId
+            };
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out string assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet(MedikitApiConstants.SearchNames.PageNumber, out int pageNumber))
+            {
+                result.PageNumber = pageNumber;
+            }
+
+            return result;
+        }
+
+        public static GetOpenedPharmaceuticalPrescriptionsQuery ToGetOpenedPharmaceuticalPrescriptionsQuery(this JObject jObj, string medicalFileId)
+        {
+            var result = new GetOpenedPharmaceuticalPrescriptionsQuery
+            {
+                MedicalfileId = medicalFileId
+            };
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out string assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet(MedikitApiConstants.SearchNames.PageNumber, out int pageNumber))
+            {
+                result.PageNumber = pageNumber;
+            }
+
+            return result;
+        }
+
+        public static GetPharmaceuticalPrescriptionQuery BuildGetPrescriptionParameter(this JObject jObj, string medicalfileid, string rid)
+        {
+            var result = new GetPharmaceuticalPrescriptionQuery
+            {
+                MedicalfileId = medicalfileid,
+                PrescriptionId = rid
+            };
+            string assertionToken;
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            return result;
+        }
+
+
+        public static RevokePrescriptionCommand BuildRevokePrescriptionCommand(this JObject jObj, string medicalfileid, string rid)
+        {
+            var result = new RevokePrescriptionCommand { MedicalfileId = medicalfileid, Rid = rid };
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out string assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PrescriptionNames.Reason, out string reason))
+            {
+                result.Reason = reason;
+            }
+
+            return result;
+        }
+
+
+        public static AddPharmaceuticalPrescriptionCommand BuildAddPharmaceuticalPrescription(this JObject jObj, string medicalfileId)
+        {
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            var result = new AddPharmaceuticalPrescriptionCommand { MedicalfileId = medicalfileId };
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out string assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PrescriptionNames.MedicalfileId, out string medicalfileid))
+            {
+                result.MedicalfileId = medicalfileid;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PrescriptionNames.CreateDateTime, out DateTime createDateTime))
+            {
+                result.CreateDateTime = createDateTime;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PrescriptionNames.ExpirationDateTime, out DateTime expirationDateTime))
+            {
+                result.ExpirationDateTime = expirationDateTime;
+            }
+
+            if (values.TryGet(MedikitApiConstants.PrescriptionNames.PrescriptionType, out PrescriptionTypes prescriptionType))
+            {
+                result.PrescriptionType = prescriptionType;
+            }
+
+            var medications = jObj.SelectToken(MedikitApiConstants.PrescriptionNames.Medications) as JArray;
+            if (medications != null)
+            {
+                foreach (JObject medication in medications)
+                {
+                    var medicationDic = medication.ToObject<Dictionary<string, object>>();
+                    var newMedication = new AddMedicationCommand();
+                    if (medicationDic.TryGet(MedikitApiConstants.MedicationNames.PackageCode, out string packageCode))
+                    {
+                        newMedication.PackageCode = packageCode;
+                    }
+
+                    if (medicationDic.TryGet(MedikitApiConstants.MedicationNames.InstructionForPatient, out string instructionForPatient))
+                    {
+                        newMedication.InstructionForPatient = instructionForPatient;
+                    }
+
+                    if (medicationDic.TryGet(MedikitApiConstants.MedicationNames.InstructionForReimbursement, out string instructionForReimbursement))
+                    {
+                        newMedication.InstructionForReimbursement = instructionForReimbursement;
+                    }
+
+                    if (medicationDic.TryGet(MedikitApiConstants.MedicationNames.BeginMoment, out DateTime beginMoment))
+                    {
+                        newMedication.BeginMoment = beginMoment;
+                    }
+
+                    var posology = medication.SelectToken(MedikitApiConstants.MedicationNames.Posology) as JObject;
+                    if (posology != null)
+                    {
+                        var posologyType = posology.SelectToken(MedikitApiConstants.PosologyNames.Type).ToString();
+                        if (posologyType != null)
+                        {
+                            if (posologyType == "freetext")
+                            {
+                                newMedication.Posology = new AddPosologyFreeTextCommand
+                                {
+                                    Content = posology.SelectToken(MedikitApiConstants.PosologyNames.Value).ToString()
+                                };
+                            }
+                        }
+                    }
+
+                    result.Medications.Add(newMedication);
+                }
+            }
+
+            return result;
+        }
+
 
         #endregion
     }

@@ -9,7 +9,6 @@ import { AddPatientComponent } from './add/add-patient.component';
 import { StoreModule } from '@ngrx/store';
 import * as reducersAddPatient from './add/reducers/patient-reducer';
 import { SearchAddressComponent } from '@app/infrastructure/components/searchaddress.component';
-import { ViewPatientComponent } from './view/view-patient.component';
 
 @NgModule({
     imports: [
@@ -24,8 +23,7 @@ import { ViewPatientComponent } from './view/view-patient.component';
     declarations: [
         ListPatientComponent,
         AddPatientComponent,
-        SearchAddressComponent,
-        ViewPatientComponent
+        SearchAddressComponent
     ],
 
     exports: [

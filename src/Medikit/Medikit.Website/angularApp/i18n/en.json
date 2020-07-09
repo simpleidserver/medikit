@@ -56,7 +56,7 @@
   "instructions-info": "Instructions",
   "add": "Add",
   "back": "Back",
-  "enter-drug": "Enter drug name",
+  "enter-drug": "Search by name of the speciality",
   "niss-invalid": "NISS is invalid",
   "niss-required": "NISS is required",
   "begin-moment": "Begin date of the treatment",
@@ -151,5 +151,17 @@
   "undo": "Undo",
   "add-medicalfile": "Add medical file",
   "medicalfile-added": "Medical file has been added",
-  "medicalfiles": "Medical files"
+  "medicalfiles": "Medical files",
+  "medical-prescriptions": "Medical prescriptions",
+  "opened-prescriptions": "Display opened prescriptions",
+  "medicalfile": "Medical file",
+  "revoke-prescription": "Revoke prescription",
+  "view-prescription": "View prescription",
+  "error-getting-prescriptions": "An error occured while trying to get the prescriptions",
+  "error-revoking-prescription": "An error occured while trying to revoke the prescription",
+  "error-get-prescription": "An error occured while trying to get the prescription",
+  "extension-not-installed": "Medikit extension is not installed",
+  "no-active-session": "There is no active EHEALTH session",
+  "prescription": "Medical prescription",
+  "only-commercialised-drug-displayed": "Only commercialised drugs are displayed"
 }

@@ -1,1 +1,0 @@
-{"version":3,"file":"view-patient.component.js","sourceRoot":"","sources":["view-patient.component.ts"],"names":[],"mappings":";;;;;;AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,eAAe,CAAC;AAO1C;IAAA;IAEA,CAAC;IAFY,oBAAoB;QALhC,SAAS,CAAC;YACP,QAAQ,EAAE,wBAAwB;YAClC,WAAW,EAAE,+BAA+B;YAC5C,SAAS,EAAE,CAAC,+BAA+B,CAAC;SAC/C,CAAC;OACW,oBAAoB,CAEhC;IAAD,2BAAC;CAAA,AAFD,IAEC;SAFY,oBAAoB"}

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using MediatR;
+using Medikit.Api.Medicalfile.Application.Persistence;
 using Medikit.Api.Medicalfile.Application.Resources;
 using Medikit.Api.Patient.Application.Exceptions;
-using Medikit.Api.Patient.Application.Persistence;
 using Medikit.EHealth;
 using Medikit.EHealth.Enums;
 using Medikit.EHealth.Exceptions;
@@ -30,14 +30,14 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Commands.Handlers
         };
         private const string DEFAULT_LANGUAGE = "fr";
         private readonly EHealthOptions _options;
-        private readonly IPatientQueryRepository _patientQueryRepository;
+        private readonly IMedicalfileQueryRepository _medicalfileQueryRepository;
         private readonly IKeyStoreManager _keyStoreManager;
         private readonly IRecipeService _recipeService;
 
-        public AddPharmaceuticalPrescriptionCommandHandler(IOptions<EHealthOptions> options, IPatientQueryRepository patientQueryRepository, IKeyStoreManager keyStoreManager, IRecipeService recipeService)
+        public AddPharmaceuticalPrescriptionCommandHandler(IOptions<EHealthOptions> options, IMedicalfileQueryRepository medicalfileQueryRepository, IKeyStoreManager keyStoreManager, IRecipeService recipeService)
         {
             _options = options.Value;
-            _patientQueryRepository = patientQueryRepository;
+            _medicalfileQueryRepository = medicalfileQueryRepository;
             _keyStoreManager = keyStoreManager;
             _recipeService = recipeService;
         }
@@ -45,10 +45,10 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Commands.Handlers
         public async Task<string> Handle(AddPharmaceuticalPrescriptionCommand command, CancellationToken token)
         {
             SAMLAssertion assertion;
-            var person = await _patientQueryRepository.GetByNiss(command.PatientNiss, token);
-            if (person == null)
+            var medicalfile = await _medicalfileQueryRepository.Get(command.MedicalfileId, token);
+            if (medicalfile == null)
             {
-                throw new UnknownPatientException(command.PatientNiss, string.Format(Global.UnknownPatient, command.PatientNiss));
+                throw new UnknownPatientException(command.MedicalfileId, string.Format(Global.UnknownMedicalFile, command.MedicalfileId));
             }
 
             try
@@ -90,7 +90,7 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Commands.Handlers
                 })
                 .AddFolder("1", (_) =>
                 {
-                    _.New(person.NationalIdentityNumber, person.Lastname, new string[] { person.Firstname });
+                    _.New(medicalfile.PatientNiss, medicalfile.PatientLastname, new string[] { medicalfile.PatientFirstname });
                 }, (_) =>
                 {
                     _.AddTransaction((tr) =>
@@ -135,7 +135,7 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Commands.Handlers
                     });
                 })
                 .Build(createDateTime);
-            var result = await _recipeService.CreatePrescription(Enum.GetName(typeof(PrescriptionTypes), command.PrescriptionType), command.PatientNiss, command.ExpirationDateTime.Value, msgType, assertion);
+            var result = await _recipeService.CreatePrescription(Enum.GetName(typeof(PrescriptionTypes), command.PrescriptionType), medicalfile.PatientNiss, command.ExpirationDateTime.Value, msgType, assertion);
             return result.RID;
         }
     }

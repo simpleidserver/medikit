@@ -4,8 +4,8 @@ using MediatR;
 using Medikit.Api.Common.Application.Metadata;
 using Medikit.Api.Medicalfile.Application.Prescription.Commands;
 using Medikit.Api.Medicalfile.Application.Prescription.Queries;
+using Medikit.Api.Medicalfile.Application.Prescription.Results;
 using Medikit.Api.Medicalfile.Prescription.Prescription.Results;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +25,12 @@ namespace Medikit.Api.Medicalfile.Application.Prescription
             return _mediator.Send(query, token);
         }
 
-        public Task<ICollection<string>> GetOpenedPrescriptions(GetOpenedPharmaceuticalPrescriptionQuery query, CancellationToken token)
+        public Task<SearchPharmaceuticalPrescriptionResult> GetOpenedPrescriptions(GetOpenedPharmaceuticalPrescriptionsQuery query, CancellationToken token)
+        {
+            return _mediator.Send(query, token);
+        }
+
+        public Task<SearchPharmaceuticalPrescriptionResult> GetPrescriptions(GetPharmaceuticalPrescriptionsQuery query, CancellationToken token)
         {
             return _mediator.Send(query, token);
         }
@@ -35,9 +40,9 @@ namespace Medikit.Api.Medicalfile.Application.Prescription
             return _mediator.Send(query, token);
         }
 
-        public Task<MetadataResult> GetMetadata(CancellationToken token)
+        public Task<MetadataResult> GetMetadata(GetPharmaceuticalPrescriptionMetadataQuery query, CancellationToken token)
         {
-            return _mediator.Send(new GetPharmaceuticalPrescriptionMetadataQuery(), token);
+            return _mediator.Send(query, token);
         }
 
         public Task<bool> RevokePrescription(RevokePrescriptionCommand command, CancellationToken token)

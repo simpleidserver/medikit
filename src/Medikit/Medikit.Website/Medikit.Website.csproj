@@ -4,13 +4,8 @@
     <TypeScriptToolsVersion>3.6</TypeScriptToolsVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="angularApp\app\auth.config.ts" />
-    <None Remove="angularApp\app\infrastructure\auth-guard.service.ts" />
-    <None Remove="angularApp\app\prescription\view\view-prescription.component.ts" />
-    <None Remove="angularApp\app\stores\appstate.ts" />
-    <None Remove="angularApp\app\stores\medicalfile\models\medicalfile.ts" />
-    <None Remove="angularApp\app\stores\medicalfile\models\search-medicalfile.ts" />
-    <None Remove="angularApp\app\stores\medicalfile\services\medicalfile-service.ts" />
+    <None Remove="angularApp\app\stores\medicalfile\models\search-prescription-record.ts" />
+    <None Remove="angularApp\app\stores\medicalfile\models\search-prescription-result.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -19,8 +14,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\medicalfile.ts" />
-    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\search-medicalfile.ts" />
-    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\services\medicalfile-service.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\search-prescription-result.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\search-prescription-record.ts" />
   </ItemGroup>
 </Project>

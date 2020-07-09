@@ -1,0 +1,22 @@
+.medicalfile-drawer {
+    position: absolute;
+    top: 88px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.medicalfile-drawer mat-drawer {
+    padding-top: 5px;
+    width: 200px;
+}
+
+.medicalfile-drawer mat-drawer .fullname {
+    padding-left: 5px;
+}
+
+.prescription-lst {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

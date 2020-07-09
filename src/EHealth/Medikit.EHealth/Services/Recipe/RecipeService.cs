@@ -252,8 +252,8 @@ namespace Medikit.EHealth.Services.Recipe
                 .SignWithCertificate(orgCertificate)
                 .Build();
             var result = await _soapClient.Send(soapRequest, new Uri(_options.PrescriberUrl), "urn:be:fgov:ehealth:recipe:protocol:v4:ListOpenRids");
-            result.EnsureSuccessStatusCode();
             var xml = await result.Content.ReadAsStringAsync();
+            result.EnsureSuccessStatusCode();
             var response = SOAPEnvelope<ListOpenPrescriptionResponseBody>.Deserialize(xml);
             var securedContent = response.Body.ListOpenPrescriptionResponse.SecuredListOpenRidsResponse.SecuredContent;
             byte[] decrypted;
@@ -327,6 +327,67 @@ namespace Medikit.EHealth.Services.Recipe
             xml = Encoding.UTF8.GetString(decrypted);
             xml = xml.ClearBadFormat();
             var res = RevokePrescriptionResult.Deserialize(xml);
+            return res;
+        }
+
+        public Task<ListRidsHistoryResult> GetHistoryPrescriptions(string patientId, Page page)
+        {
+            var assertion = _sessionService.GetSession().Body.Response.Assertion;
+            return GetHistoryPrescriptions(patientId, page, assertion);
+        }
+
+        public async Task<ListRidsHistoryResult> GetHistoryPrescriptions(string patientId, Page page, SAMLAssertion assertion)
+        {
+            var orgCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            var issueInstant = DateTime.UtcNow;
+            var recipeETK = await _etkService.GetRecipeETK();
+            var symKey = new TripleDESCryptoServiceProvider();
+            symKey.Padding = PaddingMode.None;
+            symKey.Mode = CipherMode.ECB;
+            var listPrescriptionHistoryParameter = new ListPrescriptionHistoryParameter
+            {
+                PatientId = patientId,
+                Page = page,
+                SymmKey = Convert.ToBase64String(symKey.Key)
+            };
+            var serializedPrescriptionParameter = Encoding.UTF8.GetBytes(listPrescriptionHistoryParameter.Serialize().SerializeToString(false, true));
+            byte[] sealedContent = TripleWrapper.Seal(serializedPrescriptionParameter, orgCertificate, recipeETK.Certificate);
+            var listPrescriptionHistoryRequest = new ListPrescriptionHistoryRequest
+            {
+                Id = $"id{Guid.NewGuid().ToString()}",
+                IssueInstant = issueInstant,
+                ProgramId = _options.ProductName,
+                SecuredListRidsHistoryRequest = new SecuredContentType
+                {
+                    SecuredContent = Convert.ToBase64String(sealedContent)
+                }
+            };
+
+            var soapRequest = SOAPRequestBuilder<ListPrescriptionHistoryRequestBody>.New(new ListPrescriptionHistoryRequestBody
+            {
+                Id = $"id-{Guid.NewGuid().ToString()}",
+                Request = listPrescriptionHistoryRequest
+            })
+                .AddTimestamp(issueInstant, issueInstant.AddHours(1))
+                .AddSAMLAssertion(assertion)
+                .AddReferenceToSAMLAssertion()
+                .SignWithCertificate(orgCertificate)
+                .Build();
+            var result = await _soapClient.Send(soapRequest, new Uri(_options.PrescriberUrl), "urn:be:fgov:ehealth:recipe:protocol:v4:listRidsHistory");
+            result.EnsureSuccessStatusCode();
+            var xml = await result.Content.ReadAsStringAsync();
+            var response = SOAPEnvelope<ListPrescriptionHistoryResponseBody>.Deserialize(xml);
+            var securedContent = response.Body.ListPrescriptionHistoryResponse.SecuredListRidsHistoryResponse.SecuredContent;
+            byte[] decrypted;
+            using (var decryptor = symKey.CreateDecryptor())
+            {
+                var payload = Convert.FromBase64String(securedContent);
+                decrypted = decryptor.TransformFinalBlock(payload, 0, payload.Length);
+            }
+
+            xml = Encoding.UTF8.GetString(decrypted);
+            xml = xml.ClearBadFormat();
+            var res = ListRidsHistoryResult.Deserialize(xml);
             return res;
         }
 

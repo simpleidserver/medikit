@@ -4,9 +4,11 @@ using Medikit.Api.AspNetCore.Extensions;
 using Medikit.Api.Common.Application.Exceptions;
 using Medikit.Api.Medicalfile.Application.Exceptions;
 using Medikit.Api.Medicalfile.Application.Medicalfile;
+using Medikit.Api.Medicalfile.Application.Prescription;
+using Medikit.Api.Medicalfile.Application.Prescription.Queries;
 using Medikit.Api.Patient.Application.Exceptions;
+using Medikit.EHealth.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net;
@@ -19,11 +21,12 @@ namespace Medikit.Api.AspNetCore.Controllers
     public class MedicalfilesController : Controller
     {
         private readonly IMedicalfileService _medicalFileService;
+        private readonly IPrescriptionService _prescriptionService;
 
-
-        public MedicalfilesController(IMedicalfileService medicalFileService)
+        public MedicalfilesController(IMedicalfileService medicalFileService, IPrescriptionService prescriptionService)
         {
             _medicalFileService = medicalFileService;
+            _prescriptionService = prescriptionService;
         }
 
         [HttpPost]
@@ -75,6 +78,60 @@ namespace Medikit.Api.AspNetCore.Controllers
             {
                 return new NotFoundResult();
             }
+        }
+
+        [HttpPost("{medicalfileid}/prescriptions")]
+        public async Task<IActionResult> GetPrescriptions(string medicalfileid, [FromBody] JObject jObj)
+        {
+            var query = jObj.ToGetPharmaceuticalPrescriptionsQuery(medicalfileid);
+            var result = await _prescriptionService.GetPrescriptions(query, CancellationToken.None);
+            return new OkObjectResult(result.ToDto());
+        }
+
+        [HttpPost("{medicalfileid}/prescriptions/add")]
+        public async Task<IActionResult> AddPrescription(string medicalfileid, [FromBody] JObject jObj)
+        {
+            var query = jObj.BuildAddPharmaceuticalPrescription(medicalfileid);
+            var result = await _prescriptionService.AddPrescription(query, CancellationToken.None);
+            return new OkObjectResult(new { id = result });
+        }
+
+        [HttpPost("{medicalfileid}/prescriptions/opened")]
+        public async Task<IActionResult> GetOpenedPrescriptions(string medicalfileid, [FromBody] JObject jObj)
+        {
+            var query = jObj.ToGetOpenedPharmaceuticalPrescriptionsQuery(medicalfileid);
+            var result = await _prescriptionService.GetOpenedPrescriptions(query, CancellationToken.None);
+            return new OkObjectResult(result.ToDto());
+        }
+
+        [HttpPost("{medicalfileid}/prescriptions/{id}")]
+        public async Task<IActionResult> GetPrescription(string medicalfileId, string id, [FromBody] JObject jObj)
+        {
+            try
+            {
+                var query = jObj.BuildGetPrescriptionParameter(medicalfileId, id);
+                var result = await _prescriptionService.GetPrescription(query, CancellationToken.None);
+                return new OkObjectResult(result.ToDto());
+            }
+            catch (UnknownPrescriptionException)
+            {
+                return new NotFoundResult();
+            }
+        }
+
+        [HttpPost("{medicalfileid}/prescriptions/{id}/revoke")]
+        public async Task<IActionResult> RevokePrescription(string medicalfileid, string id, [FromBody] JObject jObj)
+        {
+            var query = jObj.BuildRevokePrescriptionCommand(medicalfileid, id);
+            await _prescriptionService.RevokePrescription(query, CancellationToken.None);
+            return new NoContentResult();
+        }
+
+        [HttpGet("{medicalfileid}/prescriptions/metadata")]
+        public async Task<IActionResult> GetMetadata(string medicalfileid)
+        {
+            var result = await _prescriptionService.GetMetadata(new GetPharmaceuticalPrescriptionMetadataQuery { MedicalfileId = medicalfileid },  CancellationToken.None);
+            return new OkObjectResult(result.ToDto());
         }
     }
 }

@@ -29,14 +29,18 @@ namespace Medikit.EHealth.EHealthServices
             {
                 FindByPackage = new DICSFindByPackage
                 {
-                    AnyNamePart = request.ProductName
+                    AnyNamePart = request.ProductName,
+                    Commercialised = request.IsCommercialised
                 }
             });
-            var amppLst = soapResponse.Body.Response.Amp.SelectMany(_ => _.AmppLst).Where(_ => _.Status == "AUTHORIZED").ToList();
+            var amppLst = soapResponse.Body.Response.Amp.SelectMany(_ => _.AmppLst).Where(_ => _.Status == "AUTHORIZED" && _.PrescriptionNames.Any()).ToList();
             for(var y = amppLst.Count() - 1; y >= 0; y--)
             {
                 var ampp = amppLst.ElementAt(y);
-                if (request.IsCommercialised != null && ((ampp.Commercialization == null && request.IsCommercialised.Value) || (ampp.Commercialization != null && !request.IsCommercialised.Value)))
+                if (
+                    (request.IsCommercialised != null && ((ampp.Commercialization == null && request.IsCommercialised.Value) || (ampp.Commercialization != null && !request.IsCommercialised.Value))) ||
+                    !ampp.DmppLst.Any()
+                )
                 {
                     amppLst.RemoveAt(y);
                     continue;
@@ -45,7 +49,7 @@ namespace Medikit.EHealth.EHealthServices
                 if (!string.IsNullOrWhiteSpace(request.DeliveryEnvironment))
                 {
                     // Note : Only public !
-                    ampp.DmppLst = ampp.DmppLst.Where(p => request.DeliveryEnvironment == p.DeliveryEnvironment && p.CodeType == "CNK").ToList();
+                    ampp.DmppLst = ampp.DmppLst.Where(p => request.DeliveryEnvironment == p.DeliveryEnvironment && p.CodeType == "CNK" && p.Price > 0).ToList();
                     if (!ampp.DmppLst.Any())
                     {
                         amppLst.RemoveAt(y);

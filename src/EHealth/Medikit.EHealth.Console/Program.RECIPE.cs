@@ -33,5 +33,17 @@ namespace Medikit.EHealth.Console
             var recipeService = (IRecipeService)_serviceProvider.GetService(typeof(IRecipeService));
             await recipeService.RevokePrescription("BEP011D2G1BZ", "bad");
         }
+
+        public static async Task GetPrescriptionsHistory()
+        {
+            var recipeService = (IRecipeService)_serviceProvider.GetService(typeof(IRecipeService));
+            var result = await recipeService.GetHistoryPrescriptions("76020727360", new Page
+            {
+                PageNumber = 0,
+                Month = 1,
+                Year = 2020
+            });
+            string sss = "";
+        }
     }
 }

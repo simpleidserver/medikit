@@ -7,6 +7,7 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Queries
 {
     public class GetPharmaceuticalPrescriptionQuery : IRequest<GetPharmaceuticalPrescriptionResult>
     {
+        public string MedicalfileId { get; set; }
         public string PrescriptionId { get; set; }
         public string AssertionToken { get; set; }
     }

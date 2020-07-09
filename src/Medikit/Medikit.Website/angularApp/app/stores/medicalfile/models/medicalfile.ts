@@ -5,6 +5,7 @@
     niss: string;
     createDateTime: Date;
     updateDateTime: Date;
+    patientId: string;
 
     public static fromJson(json: any): Medicalfile {
         var result = new Medicalfile();
@@ -14,6 +15,7 @@
         result.niss = json['niss'];
         result.createDateTime = json['create_datetime'];
         result.updateDateTime = json['update_datetime'];
+        result.patientId = json['patient_id'];
         return result;
     }
 }

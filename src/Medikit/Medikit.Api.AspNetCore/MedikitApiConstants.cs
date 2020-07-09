@@ -8,7 +8,6 @@
             public const string Files = "files";
             public const string Medicalfiles = "medicalfiles";
             public const string MedicinalProducts = "medicinalproducts";
-            public const string Prescriptions = "prescriptions";
             public const string ReferenceTables = "referencetables";
         }
 
@@ -18,6 +17,41 @@
             public const string StartIndex = "start_index";
             public const string TotalLength = "total_length";
             public const string Content = "content";
+        }
+
+        public static class SearchNames
+        {
+            public const string AssertionToken = "assertion_token";
+            public const string PageNumber = "page_number";
+            public const string HasMoreResults = "has_more_results";
+            public const string Prescriptions = "prescriptions";
+        }
+
+        public static class PrescriptionNames
+        {
+            public const string Rid = "rid";
+            public const string Status = "status";
+            public const string Reason = "reason";
+            public const string MedicalfileId = "medicalfile_id";
+            public const string CreateDateTime = "create_datetime";
+            public const string ExpirationDateTime = "expiration_datetime";
+            public const string PrescriptionType = "prescription_type";
+            public const string Medications = "medications";
+        }
+
+        public static class MedicationNames
+        {
+            public const string InstructionForPatient = "instruction_for_patient";
+            public const string InstructionForReimbursement = "instruction_for_reimbursement";
+            public const string BeginMoment = "begin_moment";
+            public const string Posology = "posology";
+            public const string PackageCode = "package_code";
+        }
+
+        public static class PosologyNames
+        {
+            public const string Type = "type";
+            public const string Value = "value";
         }
 
         public static class PatientNames

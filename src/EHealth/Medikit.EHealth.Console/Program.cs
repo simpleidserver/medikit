@@ -27,13 +27,13 @@ namespace Medikit.EHealth.Console
                 string sss = "";
             });
             */
-            /*
             BuildSTSIdentityRequest().ContinueWith((s) =>
             {
                 // AddPrescription(s.Result.Body.Response.Assertion);
                 // GetPrescription();
                 // GetOpenedPrescriptions();
-                RejectPrescription();
+                // RejectPrescription();
+                GetPrescriptionsHistory();
             });
             /*
             GetKGSS().ContinueWith((s) =>
@@ -41,6 +41,7 @@ namespace Medikit.EHealth.Console
 
             });
             */
+            /*
             FindAmpByPackageName().ContinueWith((s) =>
             {
 

@@ -1,0 +1,135 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <ul class="breadcrumb">
+            <li>
+                <div class="mat-h1">
+                    <a [routerLink]="['/medicalfile']">{{ "medicalfiles" | translate }}</a>
+                </div>
+            </li>
+            <li class="separator"><div class="mat-h1">\</div></li>
+            <li>
+                <div class="mat-h1">
+                    {{ "medicalfile" | translate }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<mat-drawer-container class="medicalfile-drawer">
+    <mat-drawer mode="side" opened>
+        <div *ngIf="!isLoading">
+            <ngx-avatar class="center" *ngIf="patient.logoUrl" src="{{ patient.logoUrl }}"></ngx-avatar>
+            <ngx-avatar class="center" *ngIf="!patient.logoUrl" name="{{ patient.firstname }}"></ngx-avatar>
+            <h2 class="fullname">{{ patient.firstname }} {{ patient.lastname }} ({{ patient.niss }})</h2>
+            <mat-list>
+                <mat-list-item>
+                    <div fxLayout="row" fxLayoutGap="10px" class="full-width">
+                        <div fxFlex="20%">
+                            <img matTooltip="{{ 'birthdate' | translate }}" src="{{ birthdateUrl }}" />
+                        </div>
+                        <div fxFlex="80%">
+                            <small>{{ patient.birthdate | date:'fullDate' }}</small>
+                        </div>
+                    </div>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngIf="patient.address && patient.address.street">
+                    <div fxLayout="row" fxLayoutGap="10px" class="full-width">
+                        <div fxFlex="20%">
+                            <mat-icon matTooltip="{{ 'address' | translate }}">location_one</mat-icon>
+                        </div>
+                        <div fxFlex="80%">
+                            <small>{{ patient.address.houseNumber }} {{ patient.address.street }} {{ patient.address.municipality }} ({{ patient.address.postalcode }})</small>
+                        </div>
+                    </div>
+                </mat-list-item>
+                <div *ngFor="let contactInfo of patient.contactInformations">
+                    <mat-divider></mat-divider>
+                    <mat-list-item [ngSwitch]="contactInfo.type">
+                        <div fxLayout="row" fxLayoutGap="10px" class="full-width" *ngSwitchCase="0">
+                            <div fxFlex="20%">
+                                <mat-icon matTooltip="{{ 'email' | translate }}">email</mat-icon>
+                            </div>
+                            <div fxFlex="80%">
+                                <small>{{ contactInfo.value }}</small>
+                            </div>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" class="full-width" *ngSwitchCase="1">
+                            <div fxFlex="20%">
+                                <mat-icon matTooltip="{{ 'fax' | translate }}">scanner</mat-icon>
+                            </div>
+                            <div fxFlex="80%">
+                                <small>{{ contactInfo.value }}</small>
+                            </div>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" class="full-width" *ngSwitchCase="2">
+                            <div fxFlex="20%">
+                                <mat-icon matTooltip="{{ 'mobile-number' | translate }}">stay_current_portrait</mat-icon>
+                            </div>
+                            <div fxFlex="80%">
+                                <small>{{ contactInfo.value }}</small>
+                            </div>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="10px" class="full-width" *ngSwitchCase="3">
+                            <div fxFlex="20%">
+                                <mat-icon matTooltip="{{ 'home-number' | translate }}">home-number</mat-icon>
+                            </div>
+                            <div fxFlex="80%">
+                                <small>{{ contactInfo.value }}</small>
+                            </div>
+                        </div>
+                    </mat-list-item>
+                </div>
+            </mat-list>
+        </div>
+    </mat-drawer>
+    <mat-drawer-content>
+        <div fxLayout="row">
+            <div fxFlex="90%" fxFlexOffset="5%" fxLayout="row" fxLayoutGap="10px">
+                <mat-card fxFlex="50%">
+                    <mat-card-header>
+                        <mat-card-title>{{ 'medical-prescriptions' | translate }}</mat-card-title>
+                        <div fxFlex></div>
+                        <button  matTooltip="{{ 'add-prescription' | translate }}" mat-icon-button [routerLink]="['/medicalfile/' + medicalFile.id + '/prescription/add']">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div [hidden]="!isSessionActive">
+                            <mat-checkbox (change)="toggleIsOpened($event.checked)">{{ 'opened-prescriptions' | translate }}</mat-checkbox>
+                            <div [hidden]="isLoadingPrescriptions || searchPrescriptionResult.prescriptions.length === 0">
+                                <mat-list class="prescription-lst">
+                                    <mat-list-item *ngFor="let prescription of searchPrescriptionResult.prescriptions">
+                                        <span>{{ prescription.rid }}</span>
+                                        <div class="spacer"></div>
+                                        <mat-chip-list>
+                                            <mat-chip>{{ prescription.status }}</mat-chip>
+                                        </mat-chip-list>
+                                        <button [disabled]="prescription.status !== 'opened'" mat-icon-button matTooltip="{{ 'revoke-prescription' | translate }}" (click)="deletePrescription(prescription.rid)">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                        <button [disabled]="prescription.status !== 'opened'" mat-icon-button matTooltip="{{ 'view-prescription' | translate }}" [routerLink]="['/medicalfile/' + medicalFile.id + '/prescription/' + prescription.rid + '/view']">
+                                            <mat-icon>visibility</mat-icon>
+                                        </button>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                            <div [hidden]="!isLoadingPrescriptions">
+                                <mat-spinner class="center"></mat-spinner>
+                            </div>
+                            <div [hidden]="isLoadingPrescriptions || searchPrescriptionResult.prescriptions.length > 0">
+                                <span>{{ 'no-prescription' | translate }}</span>
+                            </div>
+                        </div>
+                        <div [hidden]="isSessionActive">
+                            <span>{{ 'no-ehealth-session-active' | translate }}</span>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card fxFlex="50%">
+
+                </mat-card>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

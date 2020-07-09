@@ -20,12 +20,11 @@ import { MedikitExtensionService } from './infrastructure/services/medikitextens
 import { SharedModule } from './infrastructure/shared.module';
 import { ReferenceTableService } from './referencetable/services/reference-table-service';
 import { appReducer } from './stores/appstate';
+import { MedicalfileEffects } from './stores/medicalfile/medicalfile-effects';
+import { MedicalfileService } from './stores/medicalfile/services/medicalfile-service';
 import { MedicinalProductService } from './stores/medicinalproduct/services/medicinalproduct-service';
 import { PatientEffects } from './stores/patient/patient-effects';
 import { PatientService } from './stores/patient/services/patient-service';
-import { PharmaPrescriptionEffects } from './stores/pharmaprescription/prescription-effects';
-import { MedicalfileEffects } from './stores/medicalfile/medicalfile-effects';
-import { MedicalfileService } from './stores/medicalfile/services/medicalfile-service';
 
 export function createTranslateLoader(http: HttpClient) {
     let url = process.env.BASE_URL + 'assets/i18n/';
@@ -43,7 +42,7 @@ export function createTranslateLoader(http: HttpClient) {
         BrowserAnimationsModule,
         HttpClientModule,
         OAuthModule.forRoot(),
-        EffectsModule.forRoot([PatientEffects, PharmaPrescriptionEffects, MedicalfileEffects]),
+        EffectsModule.forRoot([PatientEffects, MedicalfileEffects]),
         StoreModule.forRoot(appReducer),
         StoreDevtoolsModule.instrument({
             maxAge: 10

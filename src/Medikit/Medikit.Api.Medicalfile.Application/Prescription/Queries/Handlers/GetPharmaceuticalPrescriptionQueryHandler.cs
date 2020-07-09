@@ -56,7 +56,7 @@ namespace Medikit.Api.Medicalfile.Application.Prescription.Queries.Handlers
             var patient = await _patientQueryRepository.GetByNiss(prescription.PatientNiss, token);
             var cnkCodes = prescription.Medications.Select(m => m.PackageCode);
             var lst = new List<Task<AmpResult>>();
-            foreach(var cnkCode in cnkCodes)
+            foreach (var cnkCode in cnkCodes)
             {
                 lst.Add(_ampService.SearchByCnkCode(DeliveryEnvironments.Public.Code, cnkCode, token));
             }

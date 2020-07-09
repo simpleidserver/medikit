@@ -6,7 +6,7 @@ using Medikit.EHealth.Enums;
 using Medikit.EHealth.Services.Recipe;
 using Medikit.EHealth.Services.Recipe.Kmehr.Xsd;
 using Medikit.EHealth.Services.Recipe.Request;
-using System.Collections.Generic;
+using Medikit.EHealth.Services.Recipe.Response;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,10 +22,14 @@ namespace Medikit.EHealth.EHealthServices
             _recipeService = recipeService;
         }
 
-        public async Task<ICollection<string>> GetOpenedPrescriptions(GetOpenedPrescriptionsParameter parameter, CancellationToken token)
+        public Task<ListOpenRidsResult> GetOpenedPrescriptions(GetPrescriptionsParameter parameter, CancellationToken token)
         {
-            var result = await  _recipeService.GetOpenedPrescriptions(parameter.PatientNiss, new Page { PageNumber = parameter.PageNumber }, parameter.Assertion);
-            return result.Prescriptions;
+            return _recipeService.GetOpenedPrescriptions(parameter.PatientNiss, parameter.Page, parameter.Assertion);
+        }
+
+        public Task<ListRidsHistoryResult> GetHistoryPrescriptions(GetPrescriptionsParameter parameter, CancellationToken token)
+        {
+            return _recipeService.GetHistoryPrescriptions(parameter.PatientNiss, parameter.Page, parameter.Assertion);
         }
 
         public async Task<PharmaceuticalPrescriptionResult> GetPrescription(GetPrescriptionParameter parameter, CancellationToken token)
