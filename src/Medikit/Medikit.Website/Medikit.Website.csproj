@@ -6,6 +6,10 @@
   <ItemGroup>
     <None Remove="angularApp\app\stores\medicalfile\models\search-prescription-record.ts" />
     <None Remove="angularApp\app\stores\medicalfile\models\search-prescription-result.ts" />
+    <None Remove="angularApp\app\stores\message\models\destination.ts" />
+    <None Remove="angularApp\app\stores\message\models\message.ts" />
+    <None Remove="angularApp\app\stores\message\models\sender.ts" />
+    <None Remove="angularApp\app\stores\message\services\message.service.ts" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -18,5 +22,13 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="angularApp\app\stores\medicalfile\models\search-prescription-record.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\message\models\destination.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\message\models\message.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\message\models\sender.ts" />
+    <TypeScriptCompile Include="angularApp\app\stores\message\services\message.service.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="angularApp\app\message\bin\" />
+    <Folder Include="angularApp\app\message\outbox\" />
   </ItemGroup>
 </Project>

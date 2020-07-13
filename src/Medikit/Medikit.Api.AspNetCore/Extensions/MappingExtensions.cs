@@ -5,6 +5,8 @@ using Medikit.Api.Common.Application.Persistence;
 using Medikit.Api.Common.Application.Queries;
 using Medikit.Api.EHealth.Application.KMEHRReference.Queries.Results;
 using Medikit.Api.EHealth.Application.MedicinalProduct.Queries.Results;
+using Medikit.Api.EHealth.Application.Message.Queries;
+using Medikit.Api.EHealth.Application.Message.Queries.Results;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Commands;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Queries;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Queries.Results;
@@ -304,6 +306,50 @@ namespace Medikit.Api.AspNetCore.Extensions
 
         #endregion
 
+        #region Message
+
+        public static JObject ToDto(this MessageResult message)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.MessageNames.ContentType, message.ContentType },
+                { MedikitApiConstants.MessageNames.Destination, message.Destination.ToDto() },
+                { MedikitApiConstants.MessageNames.ExpirationDate, message.ExpirationDate },
+                { MedikitApiConstants.MessageNames.HasAnnex, message.HasAnnex },
+                { MedikitApiConstants.MessageNames.Id, message.Id },
+                { MedikitApiConstants.MessageNames.IsImportant, message.IsImportant },
+                { MedikitApiConstants.MessageNames.MimeType, message.MimeType },
+                { MedikitApiConstants.MessageNames.PublicationDate, message.PublicationDate },
+                { MedikitApiConstants.MessageNames.Sender, message.Sender.ToDto() },
+                { MedikitApiConstants.MessageNames.Size, message.Size },
+                { MedikitApiConstants.MessageNames.Title, message.Title }
+            };
+        }
+
+        public static JObject ToDto(this MessageResult.IdentityResult message)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.IdentityNames.Id, message.Id },
+                { MedikitApiConstants.IdentityNames.Quality, message.Quality },
+                { MedikitApiConstants.IdentityNames.Type, message.Type }
+            };
+        }
+
+        public static JObject ToDto(this MessageResult.SenderResult message)
+        {
+            return new JObject
+            {
+                { MedikitApiConstants.IdentityNames.Id, message.Id },
+                { MedikitApiConstants.IdentityNames.Quality, message.Quality },
+                { MedikitApiConstants.IdentityNames.Type, message.Type },
+                { MedikitApiConstants.SenderNames.Name, message.Name },
+                { MedikitApiConstants.SenderNames.Firstname, message.FirstName }
+            };
+        }
+
+        #endregion
+
         #region Common
 
         public static JObject ToDto(this MetadataResult metadata)
@@ -487,6 +533,28 @@ namespace Medikit.Api.AspNetCore.Extensions
             if (values.TryGet(MedikitApiConstants.MedicalfileNames.PatientId, out string patientId))
             {
                 result.PatientId = patientId;
+            }
+
+            return result;
+        }
+
+        public static GetMessagesQuery ToGetMessagesQuery(this JObject jObj)
+        {
+            var result = new GetMessagesQuery();
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out string assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet(MedikitApiConstants.SearchNames.StartIndex, out int startIndex))
+            {
+                result.StartIndex = startIndex;
+            }
+
+            if (values.TryGet(MedikitApiConstants.SearchNames.EndIndex, out int endIndex))
+            {
+                result.EndIndex = endIndex;
             }
 
             return result;

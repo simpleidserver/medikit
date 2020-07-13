@@ -21,6 +21,8 @@ namespace Medikit.EHealth
         {
             public const string CertificateHolderPersonSSIN = "urn:be:fgov:ehealth:1.0:certificateholder:person:ssin";
             public const string PersonSSIN = "urn:be:fgov:person:ssin";
+            public const string RecognisedPerson = "urn:be:fgov:person:ssin:ehealth:1.0:recognisedperson:boolean";
+            public const string CertificateHolder = "urn:be:fgov:ehealth:1.0:certificateholder:person:ssin:usersession:boolean";
         }
 
         public static class AttributeStatementNamespaces
@@ -50,6 +52,8 @@ namespace Medikit.EHealth
             public const string PRESCRIBER = "http:/services.recipe.be/prescriber";
             public const string PATIENT = "http:/services.recipe.be/patient";
             public const string EXECUTOR = "http:/services.recipe.be/executor";
+            public const string EHEALTHBOX_PUBLICATION = "urn:be:fgov:ehealth:ehbox:publication:protocol:v3";
+            public const string EHEALTHBOX_CONSULTATION = "urn:be:fgov:ehealth:ehbox:consultation:protocol:v3";
         }
 
         public static class XMLNamespaces
@@ -72,6 +76,8 @@ namespace Medikit.EHealth
             public static XNamespace PRESCRIBER = Namespaces.PRESCRIBER;
             public static XNamespace PATIENT = Namespaces.PATIENT;
             public static XNamespace EXECUTOR = Namespaces.EXECUTOR;
+            public static XNamespace EHEALTHBOX_CONSULTATION = Namespaces.EHEALTHBOX_CONSULTATION;
+            public static XNamespace EHEALTHBOX_PUBLICATION = Namespaces.EHEALTHBOX_PUBLICATION;
         }
     }
 }

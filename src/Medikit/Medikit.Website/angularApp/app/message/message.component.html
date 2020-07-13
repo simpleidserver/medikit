@@ -1,0 +1,23 @@
+﻿<div fxLayout="row" class="breadcrumb">
+    <div fxFlex="80%" fxFlexOffset="10%">
+        <ul class="breadcrumb">
+            <li>
+                <div class="mat-h1">
+                    {{ "messages" | translate }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<mat-drawer-container class="internal-drawer">
+    <mat-drawer mode="side" opened>
+        <mat-nav-list>
+            <a mat-list-item [routerLink]="['/message/inbox']" [routerLinkActive]="['is-active']"><mat-icon>move_to_inbox</mat-icon> {{ 'inbox' | translate }}</a>
+            <a mat-list-item [routerLink]="['/message/sentbox']" [routerLinkActive]="['is-active']"><mat-icon>send</mat-icon> {{ 'sentbox' | translate }}</a>
+            <a mat-list-item [routerLink]="['/message/bin']" [routerLinkActive]="['is-active']"><mat-icon>delete</mat-icon> {{ 'bin' | translate }}</a>
+        </mat-nav-list>
+    </mat-drawer>
+    <mat-drawer-content>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

@@ -163,5 +163,14 @@
   "extension-not-installed": "Medikit extension is not installed",
   "no-active-session": "There is no active EHEALTH session",
   "prescription": "Medical prescription",
-  "only-commercialised-drug-displayed": "Only commercialised drugs are displayed"
+  "only-commercialised-drug-displayed": "Only commercialised drugs are displayed",
+  "is_important": "Is important",
+  "has_annex": "Has annex",
+  "destination": "Destination",
+  "description": "Description",
+  "sender": "Sender",
+  "messages": "Messages",
+  "sentbox": "Sent box",
+  "inbox": "Inbox",
+  "bin": "Bin"
 }

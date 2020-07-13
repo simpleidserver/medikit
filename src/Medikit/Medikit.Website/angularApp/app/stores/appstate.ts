@@ -2,7 +2,9 @@
 import * as fromMedicalfileReducers from './medicalfile/medicalfile-reducer';
 import * as fromMedicalfileStates from './medicalfile/medicalfile-state';
 import * as fromPatientReducers from './patient/patient-reducer';
+import * as fromMessageReducers from './message/message-reducer';
 import * as fromPatientStates from './patient/patient-state';
+import * as fromMessageStates from './message/message-state';
 
 export interface AppState {
     patients: fromPatientStates.ListPatientState,
@@ -11,7 +13,8 @@ export interface AppState {
     medicalfiles: fromMedicalfileStates.ListMedicalfileState,
     medicalfile: fromMedicalfileStates.MedicalfileState,
     prescriptions: fromMedicalfileStates.ListPrescriptionState,
-    prescription: fromMedicalfileStates.PrescriptionState
+    prescription: fromMedicalfileStates.PrescriptionState,
+    messages: fromMessageStates.ListMessageState
 }
 
 export const selectPatients = (state: AppState) => state.patients;
@@ -21,6 +24,7 @@ export const selectPrescriptions = (state: AppState) => state.prescriptions;
 export const selectPrescription = (state: AppState) => state.prescription;
 export const selectMedicalfiles = (state: AppState) => state.medicalfiles;
 export const selectMedicalfile = (state: AppState) => state.medicalfile;
+export const selectMessages = (state: AppState) => state.messages;
 
 export const selectPatientsResult = createSelector(
     selectPatients,
@@ -99,6 +103,17 @@ export const selectMedicalfileResult = createSelector(
     }
 );
 
+export const selectMessagesResult = createSelector(
+    selectMessages,
+    (state: fromMessageStates.ListMessageState) => {
+        if (!state || state.content == null) {
+            return null;
+        }
+
+        return state.content;
+    }
+);
+
 export const appReducer = {
     patients: fromPatientReducers.ListPatientsReducer,
     patientsByNiss: fromPatientReducers.ListPatientsByNissReducer,
@@ -106,5 +121,6 @@ export const appReducer = {
     prescriptions: fromMedicalfileReducers.ListPrescriptionReducer,
     prescription: fromMedicalfileReducers.PrescriptionReducer,
     medicalfiles: fromMedicalfileReducers.ListMedicalfilesReducer,
-    medicalfile: fromMedicalfileReducers.MedicalfileReducer
+    medicalfile: fromMedicalfileReducers.MedicalfileReducer,
+    messages: fromMessageReducers.ListMessageReducer
 };

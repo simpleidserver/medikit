@@ -163,5 +163,14 @@
   "extension-not-installed": "L'extension Medikit n'est pas installée",
   "no-active-session": "Il n'y a pas de session EHEALTH active",
   "prescription": "Prescription médicale",
-  "only-commercialised-drug-displayed": "Seul les médicaments commercialisés sont affichés"
+  "only-commercialised-drug-displayed": "Seul les médicaments commercialisés sont affichés",
+  "is_important": "Est important",
+  "has_annex": "A des annexes",
+  "destination": "Destinataire",
+  "description": "Description",
+  "sender": "Créateur",
+  "messages": "Messages",
+  "sentbox": "Boîte d'envoie",
+  "inbox": "Boîte de réception",
+  "bin": "Corbeille"
 }

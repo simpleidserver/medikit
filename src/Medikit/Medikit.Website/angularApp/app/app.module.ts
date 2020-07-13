@@ -23,6 +23,8 @@ import { appReducer } from './stores/appstate';
 import { MedicalfileEffects } from './stores/medicalfile/medicalfile-effects';
 import { MedicalfileService } from './stores/medicalfile/services/medicalfile-service';
 import { MedicinalProductService } from './stores/medicinalproduct/services/medicinalproduct-service';
+import { MessageEffects } from './stores/message/message-effects';
+import { MessageService } from './stores/message/services/message.service';
 import { PatientEffects } from './stores/patient/patient-effects';
 import { PatientService } from './stores/patient/services/patient-service';
 
@@ -42,7 +44,7 @@ export function createTranslateLoader(http: HttpClient) {
         BrowserAnimationsModule,
         HttpClientModule,
         OAuthModule.forRoot(),
-        EffectsModule.forRoot([PatientEffects, MedicalfileEffects]),
+        EffectsModule.forRoot([PatientEffects, MedicalfileEffects, MessageEffects]),
         StoreModule.forRoot(appReducer),
         StoreDevtoolsModule.instrument({
             maxAge: 10
@@ -60,6 +62,6 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     entryComponents: [AuthPinDialog, InstallExtensionHelpDialog],
     bootstrap: [AppComponent],
-    providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AddressService, MedicalfileService, AuthGuard ]
+    providers: [PatientService, MedicinalProductService, ReferenceTableService, MedikitExtensionService, AddressService, MedicalfileService, MessageService, AuthGuard ]
 })
 export class AppModule { }

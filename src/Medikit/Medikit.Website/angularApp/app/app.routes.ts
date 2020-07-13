@@ -7,6 +7,7 @@ export const routes: Routes = [
     { path: 'medicalfile', loadChildren: './medicalfile/medicalfile.module#MedicalfileModule', canActivate: [AuthGuard] },
     { path: 'setting', loadChildren: './setting/setting.module#SettingModule', canActivate: [AuthGuard] },
     { path: 'patient', loadChildren: './patient/patient.module#PatientModule', canActivate: [AuthGuard] },
+    { path: 'message', loadChildren: './message/message.module#MessageModule', canActivate: [AuthGuard] },
     { path: 'status', loadChildren: './status/status.module#StatusModule' },
     { path: '**', redirectTo: '/status/404' }
 ];

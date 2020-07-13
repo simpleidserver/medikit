@@ -122,6 +122,11 @@ namespace Medikit.EHealth.SAML
                 {
                     AttributeName = _options.IdentityProfession.Code,
                     AttributeNamespace = Constants.AttributeStatementNamespaces.Certified
+                },
+                new SAMLAttribute
+                {
+                    AttributeName = _options.IdentityProfession.CertificationAttribute,
+                    AttributeNamespace = Constants.AttributeStatementNamespaces.Certified
                 }
             };
             var issueInstant = DateTime.UtcNow;

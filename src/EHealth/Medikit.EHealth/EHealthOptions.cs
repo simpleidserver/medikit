@@ -19,6 +19,8 @@ namespace Medikit.EHealth
             StsUrl = "https://services-acpt.ehealth.fgov.be/IAM/Saml11TokenService/v1";
             PrescriberUrl = "https://services-acpt.ehealth.fgov.be/Recip-e/v4/Prescriber";
             CivicsUrl = "https://services-acpt.ehealth.fgov.be/ChapIVInformation/Consultation/v2";
+            EHealthboxConsultation = "https://services-acpt.ehealth.fgov.be/ehBoxConsultation/v3";
+            EhealthboxPublication = "https://services-acpt.ehealth.fgov.be/ehBoxPublication/v3";
             OrgType = ETKTypes.CBE;
             IdentityProfession = MedicalProfessions.Doctor;
         }
@@ -32,6 +34,8 @@ namespace Medikit.EHealth
         public string StsUrl { get; set; }
         public string PrescriberUrl { get; set; }
         public string CivicsUrl { get; set; }
+        public string EHealthboxConsultation { get; set; }
+        public string EhealthboxPublication { get; set; }
         public string OrgCertificateStore{ get; set; }
         public string OrgCertificateStorePassword { get; set; }
         public ETKTypes OrgType { get; set; }

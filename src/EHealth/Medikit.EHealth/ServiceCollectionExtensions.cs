@@ -8,6 +8,7 @@ using Medikit.EHealth.KeyStore;
 using Medikit.EHealth.SAML;
 using Medikit.EHealth.Services.CIVICS;
 using Medikit.EHealth.Services.DICS;
+using Medikit.EHealth.Services.EHealthBox;
 using Medikit.EHealth.Services.KGSS;
 using Medikit.EHealth.Services.Recipe;
 using Medikit.EHealth.SOAP;
@@ -74,6 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IKGSSService, KGSSService>();
             services.AddTransient<IRecipeService, RecipeService>();
             services.AddTransient<ICIVICSService, CIVICSService>();
+            services.AddTransient<IEHealthBoxService, EHealthBoxService>();
             return services;
         }
 

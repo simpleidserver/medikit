@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using System.Xml.Serialization;
 
-namespace Medikit.EHealth.ETK.Response
+namespace Medikit.EHealth.Services.Common
 {
-    public class ETKStatus
+    public class EHealthStatus
     {
         [XmlElement("Code", Namespace = "")]
         public int Code { get; set; }
         [XmlElement("Message", Namespace = "")]
-        public ETKMessage Message { get; set; }
+        public EHealthMessage Message { get; set; }
     }
 }

@@ -33,7 +33,10 @@ namespace Medikit.EHealth.Console
                 // GetPrescription();
                 // GetOpenedPrescriptions();
                 // RejectPrescription();
-                GetPrescriptionsHistory();
+                // GetPrescriptionsHistory();
+                // GetBoxInfo();
+                // GetMessagesList();
+                // SendMessage();
             });
             /*
             GetKGSS().ContinueWith((s) =>

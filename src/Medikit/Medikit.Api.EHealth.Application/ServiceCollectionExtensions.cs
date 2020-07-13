@@ -3,6 +3,7 @@
 using Medikit.Api.EHealth.Application.Domains;
 using Medikit.Api.EHealth.Application.KMEHRReference;
 using Medikit.Api.EHealth.Application.MedicinalProduct;
+using Medikit.Api.EHealth.Application.Message;
 using Medikit.Api.EHealth.Application.Persistence;
 using Medikit.Api.EHealth.Application.Persistence.InMemory;
 using System.Collections.Concurrent;
@@ -14,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddEHealthApplication(this IServiceCollection services)
         {
             services.AddTransient<IMedicinalProductService, MedicinalProductService>();
+            services.AddTransient<IMessageService, MessageService>();
             var referenceTables = new ConcurrentBag<KMEHRReferenceTable>();
             services.AddTransient<IKMEHRReferenceTableService, KMEHRReferenceTableService>();
             services.AddSingleton<IKMEHRReferenceTableQueryRepository>(new InMemoryKMEHRReferenceTableQueryRepository(referenceTables));

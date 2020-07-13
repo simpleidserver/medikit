@@ -63,6 +63,23 @@ html, body {
     cursor: default;
 }
 
+.internal-drawer {
+    position: absolute !important;
+    top: 88px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.internal-drawer mat-drawer {
+    padding-top: 5px;
+    width: 200px;
+}
+
+.internal-drawer mat-drawer .fullname {
+    padding-left: 5px;
+}
+
 /* Bar style */
 .ol-control.ol-bar {
     left: 50%;

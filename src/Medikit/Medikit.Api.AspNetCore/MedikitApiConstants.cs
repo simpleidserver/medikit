@@ -9,6 +9,7 @@
             public const string Medicalfiles = "medicalfiles";
             public const string MedicinalProducts = "medicinalproducts";
             public const string ReferenceTables = "referencetables";
+            public const string Messages = "messages";
         }
 
         public static class SearchResultNames
@@ -25,6 +26,36 @@
             public const string PageNumber = "page_number";
             public const string HasMoreResults = "has_more_results";
             public const string Prescriptions = "prescriptions";
+            public const string StartIndex = "start_index";
+            public const string EndIndex = "end_index";
+        }
+
+        public static class MessageNames
+        {
+            public const string Id = "id";
+            public const string Destination = "destination";
+            public const string Sender = "sender";
+            public const string Title = "title";
+            public const string ContentType = "content_type";
+            public const string MimeType = "mime_type";
+            public const string HasAnnex = "has_annex";
+            public const string PublicationDate = "publication_date";
+            public const string ExpirationDate = "expiration_date";
+            public const string Size = "size";
+            public const string IsImportant = "is_important";
+        }
+
+        public static class IdentityNames
+        {
+            public const string Id = "id";
+            public const string Type = "type";
+            public const string Quality = "quality";
+        }
+
+        public static class SenderNames
+        {
+            public const string Name = "name";
+            public const string Firstname = "firstname";
         }
 
         public static class PrescriptionNames
