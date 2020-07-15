@@ -30,6 +30,11 @@
             public const string EndIndex = "end_index";
         }
 
+        public static class DeleteMessageNames
+        {
+            public const string MessageIds = "message_ids";
+        }
+
         public static class MessageNames
         {
             public const string Id = "id";

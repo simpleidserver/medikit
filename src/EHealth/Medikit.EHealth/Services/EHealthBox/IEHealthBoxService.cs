@@ -19,5 +19,7 @@ namespace Medikit.EHealth.Services.EHealthBox
         Task<SOAPEnvelope<EHealthBoxSendMessageResponseBody>> SendMessage(EHealthBoxSendMessageRequest request, SAMLAssertion assertion);
         Task<SOAPEnvelope<EHealthBoxSendMessageResponseBody>> SendMessage(EHealthBoxSendMessageRequest request, Action<EHealthBoxSendMessageRequestBuilder> callback);
         Task<SOAPEnvelope<EHealthBoxSendMessageResponseBody>> SendMessage(EHealthBoxSendMessageRequest request, Action<EHealthBoxSendMessageRequestBuilder> callback, SAMLAssertion assertion);
+        Task<SOAPEnvelope<EHealthBoxDeleteMessageResponseBody>> DeleteMessage(EHealthBoxDeleteMessageRequest request);
+        Task<SOAPEnvelope<EHealthBoxDeleteMessageResponseBody>> DeleteMessage(EHealthBoxDeleteMessageRequest request, SAMLAssertion assertion);
     }
 }

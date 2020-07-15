@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MaterialModule } from '@app/infrastructure/material.module';
 import { SharedModule } from '@app/infrastructure/shared.module';
 import { AvatarModule } from 'ngx-avatar';
-import { MessageboxViewerComponent } from './common/messageboxviewer.component';
+import { MessageboxViewerComponent, ConfirmDeleteMessagesDialog } from './common/messageboxviewer.component';
 import { InboxComponent } from './inbox/inbox.component';
 import { MessageComponent } from './message.component';
 import { MessageRoutes } from './message.routes';
@@ -22,10 +22,12 @@ import { SentboxComponent } from './sentbox/sentbox.component';
         InboxComponent,
         MessageComponent,
         MessageboxViewerComponent,
-        SentboxComponent
+        SentboxComponent,
+        ConfirmDeleteMessagesDialog
     ],
 
     entryComponents: [
+        ConfirmDeleteMessagesDialog
     ],
 
     exports: [

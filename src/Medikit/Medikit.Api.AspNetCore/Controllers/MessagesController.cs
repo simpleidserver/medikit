@@ -34,5 +34,21 @@ namespace Medikit.Api.AspNetCore.Controllers
             var messages = await _messageService.SearchSentboxMessages(query);
             return new OkObjectResult(messages.Select(_ => _.ToDto()));
         }
+
+        [HttpPost("inbox/delete")]
+        public async Task<IActionResult> DeleteInboxMessages([FromBody] JObject jObj)
+        {
+            var cmd = jObj.ToDeleteMessageCommand();
+            await _messageService.DeleteInboxMessages(cmd);
+            return new NoContentResult();
+        }
+
+        [HttpPost("sentbox/delete")]
+        public async Task<IActionResult> DeleteSentboxMessages([FromBody] JObject jObj)
+        {
+            var cmd = jObj.ToDeleteMessageCommand();
+            await _messageService.DeleteSentboxMessages(cmd);
+            return new NoContentResult();
+        }
     }
 }

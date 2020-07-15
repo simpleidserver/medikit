@@ -5,6 +5,7 @@ using Medikit.Api.Common.Application.Persistence;
 using Medikit.Api.Common.Application.Queries;
 using Medikit.Api.EHealth.Application.KMEHRReference.Queries.Results;
 using Medikit.Api.EHealth.Application.MedicinalProduct.Queries.Results;
+using Medikit.Api.EHealth.Application.Message.Commands;
 using Medikit.Api.EHealth.Application.Message.Queries;
 using Medikit.Api.EHealth.Application.Message.Queries.Results;
 using Medikit.Api.Medicalfile.Application.Medicalfile.Commands;
@@ -555,6 +556,23 @@ namespace Medikit.Api.AspNetCore.Extensions
             if (values.TryGet(MedikitApiConstants.SearchNames.EndIndex, out int endIndex))
             {
                 result.EndIndex = endIndex;
+            }
+
+            return result;
+        }
+
+        public static DeleteMessageCommand ToDeleteMessageCommand(this JObject jObj)
+        {
+            var result = new DeleteMessageCommand();
+            var values = jObj.ToObject<Dictionary<string, object>>();
+            if (values.TryGet(MedikitApiConstants.SearchNames.AssertionToken, out string assertionToken))
+            {
+                result.AssertionToken = assertionToken;
+            }
+
+            if (values.TryGet(MedikitApiConstants.DeleteMessageNames.MessageIds, out string message))
+            {
+                result.MessageIds = JArray.Parse(message).Select(_ => _.ToString()).ToList();
             }
 
             return result;

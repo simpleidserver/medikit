@@ -32,7 +32,8 @@ export class ListMedicalfileComponent implements OnInit {
     length: number;
 
 
-    constructor(private store: Store<fromAppState.AppState>, private dialog: MatDialog,
+    constructor(private store: Store<fromAppState.AppState>,
+        private dialog: MatDialog,
         private actions$: ScannedActionsSubject,
         private snackBar: MatSnackBar,
         private translateService: TranslateService) { }

@@ -2,7 +2,7 @@
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ActionTypes, SearchMessages } from './message-actions';
+import { ActionTypes, DeleteMessages, SearchMessages } from './message-actions';
 import { MessageService } from './services/message.service';
 
 @Injectable()
@@ -33,4 +33,26 @@ export class MessageEffects {
             }
             )
     );
+
+    @Effect()
+    deleteMessages$ = this.actions$
+        .pipe(
+            ofType(ActionTypes.DELETE_MESSAGES),
+            mergeMap((evt: DeleteMessages) => {
+                if (evt.boxType === 'inbox') {
+                    return this.messageService.deleteInboxMessages(evt.messageIds, evt.samlAssertion)
+                        .pipe(
+                            map(() => { return { type: ActionTypes.MESSAGE_DELETED }; }),
+                            catchError(() => of({ type: ActionTypes.ERROR_DELETE_MESSAGES }))
+                        );
+                }
+
+                return this.messageService.deleteSentboxMessages(evt.messageIds, evt.samlAssertion)
+                    .pipe(
+                        map(() => { return { type: ActionTypes.MESSAGE_DELETED  }; }),
+                        catchError(() => of({ type: ActionTypes.ERROR_DELETE_MESSAGES }))
+                    );
+            }
+            )
+        );
 }

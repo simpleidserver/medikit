@@ -122,5 +122,32 @@ namespace Medikit.EHealth.Services.EHealthBox
             var result = SOAPEnvelope<EHealthBoxSendMessageResponseBody>.Deserialize(xml);
             return result;
         }
+        
+        public Task<SOAPEnvelope<EHealthBoxDeleteMessageResponseBody>> DeleteMessage(EHealthBoxDeleteMessageRequest request)
+        {
+            var assertion = _sessionService.GetSession().Body.Response.Assertion;
+            return DeleteMessage(request, assertion);
+        }
+
+        public async Task<SOAPEnvelope<EHealthBoxDeleteMessageResponseBody>> DeleteMessage(EHealthBoxDeleteMessageRequest request, SAMLAssertion assertion)
+        {
+            var issueInstant = DateTime.UtcNow;
+            var orgCertificate = _keyStoreManager.GetOrgAuthCertificate();
+            var soapRequest = SOAPRequestBuilder<EHealthBoxDeleteMessageRequestBody>.New(new EHealthBoxDeleteMessageRequestBody
+            {
+                Id = $"id-{Guid.NewGuid().ToString()}",
+                Request = request
+            })
+                .AddTimestamp(issueInstant, issueInstant.AddHours(1))
+                .AddSAMLAssertion(assertion)
+                .AddReferenceToSAMLAssertion()
+                .SignWithCertificate(orgCertificate)
+                .Build();
+            var httpResult = await _soapClient.Send(soapRequest, new Uri(_options.EHealthboxConsultation), "urn:be:fgov:ehealth:ehbox:consultation:protocol:v3:deleteMessage");
+            var xml = await httpResult.Content.ReadAsStringAsync();
+            httpResult.EnsureSuccessStatusCode();
+            var result = SOAPEnvelope<EHealthBoxDeleteMessageResponseBody>.Deserialize(xml);
+            return result;
+        }
     }
 }

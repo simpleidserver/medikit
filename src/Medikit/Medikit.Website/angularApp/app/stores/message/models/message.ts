@@ -13,6 +13,7 @@ export class Message {
     title: string;
     sender: Sender;
     destination: Destination;
+    isSelected: boolean = false;
 
     public static fromJson(json: any): Message {
         var result = new Message();

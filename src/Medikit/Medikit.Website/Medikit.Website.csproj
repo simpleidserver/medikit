@@ -29,6 +29,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="angularApp\app\message\bin\" />
-    <Folder Include="angularApp\app\message\outbox\" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) SimpleIdServer. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 using MediatR;
+using Medikit.Api.EHealth.Application.Message.Commands;
 using Medikit.Api.EHealth.Application.Message.Queries;
 using Medikit.Api.EHealth.Application.Message.Queries.Results;
 using Medikit.EHealth.Services.EHealthBox;
@@ -28,6 +29,18 @@ namespace Medikit.Api.EHealth.Application.Message
         {
             query.Source = EHealthBoxSources.SENTBOX;
             return _mediator.Send(query);
+        }
+
+        public Task<bool> DeleteInboxMessages(DeleteMessageCommand command)
+        {
+            command.Source = EHealthBoxSources.INBOX;
+            return _mediator.Send(command);
+        }
+
+        public Task<bool> DeleteSentboxMessages(DeleteMessageCommand command)
+        {
+            command.Source = EHealthBoxSources.SENTBOX;
+            return _mediator.Send(command);
         }
     }
 }

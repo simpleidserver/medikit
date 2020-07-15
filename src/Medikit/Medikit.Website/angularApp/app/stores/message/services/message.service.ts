@@ -51,4 +51,36 @@ export class MessageService {
             })
         );
     }
+
+    deleteSentboxMessages(messageIds: Array<string>, samlAssertion: string) {
+        const request = JSON.stringify({ assertion_token: samlAssertion, message_ids: messageIds });
+        let headers = new HttpHeaders();
+        let targetUrl = process.env.API_URL + "/messages/sentbox/delete";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers }).pipe(
+            map((res: any) => {
+                return res;
+            }),
+            catchError(err => {
+                return throwError(err);
+            })
+        );
+    }
+
+    deleteInboxMessages(messageIds: Array<string>, samlAssertion: string) {
+        const request = JSON.stringify({ assertion_token: samlAssertion, message_ids: messageIds });
+        let headers = new HttpHeaders();
+        let targetUrl = process.env.API_URL + "/messages/inbox/delete";
+        headers = headers.set('Accept', 'application/json');
+        headers = headers.set('Content-Type', 'application/json');
+        return this.http.post(targetUrl, request, { headers: headers }).pipe(
+            map((res: any) => {
+                return res;
+            }),
+            catchError(err => {
+                return throwError(err);
+            })
+        );
+    }
 }
