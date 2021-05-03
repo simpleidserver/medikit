@@ -115,7 +115,9 @@ export class AppComponent implements OnInit, OnDestroy {
         let self = this;
         this.oauthService.loadDiscoveryDocumentAndTryLogin({
             disableOAuth2StateCheck: true
-        });
+        }).then(() => {
+            this.oauthService.loadUserProfile();
+        });;
         this.sessionCheckTimer = setInterval(function () {
             if (!self.oauthService.hasValidIdToken()) {
                 self.oauthService.logOut();
@@ -234,7 +236,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.oauthService.events.subscribe((e: any) => {
             if (e.type === "logout") {
                 this.isConnected = false;
-            } else if (e.type === "token_received") {
+            } else if (e.type === "user_profile_loaded") {
                 this.init();
             }
         });
