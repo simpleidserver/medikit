@@ -53,7 +53,7 @@
         "core-js": "^2.6.5",
         "ie-shim": "0.1.0",
         "jsbarcode": "^3.11.0",
-        "jspdf": "^1.5.3",
+        "jspdf": "^2.3.1",
         "leaflet": "^1.5.1",
         "ngx-monaco-editor": "^8.1.1",
         "pdfobject": "^2.1.1",
