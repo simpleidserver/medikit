@@ -115,7 +115,9 @@ export class AppComponent implements OnInit, OnDestroy {
         let self = this;
         this.oauthService.loadDiscoveryDocumentAndTryLogin({
             disableOAuth2StateCheck: true
-        });
+        }).then(() => {
+            this.oauthService.loadUserProfile();
+        });;
         this.sessionCheckTimer = setInterval(function () {
             if (!self.oauthService.hasValidIdToken()) {
                 self.oauthService.logOut();
